@@ -40,6 +40,7 @@ public class Login extends AppCompatActivity {
             }
         });
 
+
         buttonRegisterNow.setOnClickListener(view -> {
             Intent intent = new Intent(Login.this, Register.class);
             startActivity(intent);
