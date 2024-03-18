@@ -3,7 +3,7 @@ package com.example.riskapp;
 import android.os.Bundle;
 
 import android.text.TextUtils;
-import android.view.View;
+
 import android.widget.Button;
 import android.widget.Toast;
 import androidx.appcompat.app.AppCompatActivity;
