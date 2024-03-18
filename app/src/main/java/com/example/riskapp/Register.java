@@ -1,5 +1,6 @@
 package com.example.riskapp;
 
+import android.content.Intent;
 import android.os.Bundle;
 
 import android.text.TextUtils;
@@ -10,12 +11,11 @@ import androidx.appcompat.app.AppCompatActivity;
 import com.google.android.material.textfield.TextInputEditText;
 
 public class Register extends AppCompatActivity {
-
     TextInputEditText usernameText, passwordText;
     Button buttonRegister;
 
     @Override
-    public void onCreate(Bundle savedInstanceState) {
+    protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_register);
 
@@ -24,6 +24,7 @@ public class Register extends AppCompatActivity {
         buttonRegister = findViewById(R.id.btn_register);
 
         buttonRegister.setOnClickListener(view -> {
+
             String username, password;
             username = String.valueOf(usernameText.getText());
             password = String.valueOf(passwordText.getText());
@@ -38,7 +39,8 @@ public class Register extends AppCompatActivity {
                 return;
             }
 
-            setContentView(R.layout.activity_login);
+            Intent intent = new Intent(Register.this, Login.class);
+            startActivity(intent);
         });
     }
 }
