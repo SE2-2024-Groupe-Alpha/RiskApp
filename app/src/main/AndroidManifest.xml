@@ -13,10 +13,13 @@
             android:roundIcon="@mipmap/ic_launcher_round"
             android:supportsRtl="true"
             android:theme="@style/Theme.Material3.Dark"
+
+            android:usesCleartextTraffic="true"
             >
 
+<!--            TODO remove usesCleartextTraffic after debugging-->
         <activity
-                android:name=".Login"
+                android:name=".activities.Login"
                 android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN"/>
@@ -25,12 +28,12 @@
         </activity>
 
         <activity
-                android:name=".Register"
+                android:name=".activities.Register"
                 android:exported="true">
         </activity>
 
         <activity
-                android:name=".Join"
+                android:name=".activities.MainMenu"
                 android:exported="true">
         </activity>
 
