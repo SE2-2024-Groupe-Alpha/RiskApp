@@ -1,3 +1,14 @@
 <resources>
     <string name="app_name">RiskApp</string>
+    <string name="title">Welcome to the risky RISK</string>
+    <string name="create_lobby">Create Lobby</string>
+    <string name="join_lobby">Join Lobby</string>
+    <string name="login">Login</string>
+    <string name="username">username</string>
+    <string name="password">password</string>
+    <string name="register">Register</string>
+    <string name="register_info">Dont have an Account yet?</string>
+    <string name="register_now">Register now</string>
+    <string name="lobby_identifier">Lobby Identifier</string>
+    <string name="logout">Logout</string>
 </resources>
