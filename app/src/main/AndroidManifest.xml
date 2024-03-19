@@ -19,6 +19,7 @@
 
 <!--            TODO remove usesCleartextTraffic after debugging-->
         <activity
+                android:permission=""
                 android:name=".activities.Login"
                 android:exported="true">
             <intent-filter>
@@ -28,11 +29,13 @@
         </activity>
 
         <activity
+                android:permission=""
                 android:name=".activities.Register"
                 android:exported="true">
         </activity>
 
         <activity
+                android:permission=""
                 android:name=".activities.MainMenu"
                 android:exported="true">
         </activity>

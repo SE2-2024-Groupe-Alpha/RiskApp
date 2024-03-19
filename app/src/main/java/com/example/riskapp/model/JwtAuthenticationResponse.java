@@ -1,5 +1,9 @@
 package com.example.riskapp.model;
 
 public class JwtAuthenticationResponse {
-    public String token;
+    private String token;
+
+    public String getToken() {
+        return token;
+    }
 }

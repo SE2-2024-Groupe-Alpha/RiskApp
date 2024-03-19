@@ -19,7 +19,9 @@ import com.google.android.material.textfield.TextInputEditText;
 import org.json.JSONException;
 
 public class Login extends AppCompatActivity {
-    TextInputEditText usernameText, passwordText;
+    TextInputEditText usernameText;
+    TextInputEditText passwordText;
+
     Button buttonLogin;
     Button buttonRegisterNow;
     BackendService backendService;
@@ -46,7 +48,9 @@ public class Login extends AppCompatActivity {
         }
 
         buttonLogin.setOnClickListener(view -> {
-            String username, password;
+            String username;
+            String password;
+
             username = String.valueOf(usernameText.getText());
             password = String.valueOf(passwordText.getText());
 
@@ -70,7 +74,7 @@ public class Login extends AppCompatActivity {
                     public void onSuccess(JwtAuthenticationResponse response) {
                         Toast.makeText(Login.this, "Login successful", Toast.LENGTH_SHORT).show();
 
-                        new SecurePreferences(Login.this).saveSessionToken(response.token);
+                        new SecurePreferences(Login.this).saveSessionToken(response.getToken());
 
                         Intent intent = new Intent(Login.this, MainMenu.class);
                         startActivity(intent);

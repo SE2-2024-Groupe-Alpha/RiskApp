@@ -12,7 +12,9 @@ import com.example.riskapp.R;
 import com.google.android.material.textfield.TextInputEditText;
 
 public class Register extends AppCompatActivity {
-    TextInputEditText usernameText, passwordText;
+    TextInputEditText usernameText;
+    TextInputEditText passwordText;
+
     Button buttonRegister;
 
     @Override
@@ -25,8 +27,9 @@ public class Register extends AppCompatActivity {
         buttonRegister = findViewById(R.id.btn_register);
 
         buttonRegister.setOnClickListener(view -> {
+            String username;
+            String password;
 
-            String username, password;
             username = String.valueOf(usernameText.getText());
             password = String.valueOf(passwordText.getText());
 

@@ -2,6 +2,7 @@ package com.example.riskapp.service;
 
 import android.os.Handler;
 import android.os.Looper;
+import android.util.Log;
 import com.example.riskapp.model.JwtAuthenticationResponse;
 import com.example.riskapp.model.SignInRequest;
 import com.google.gson.Gson;
@@ -22,7 +23,8 @@ public class BackendService {
 
     private ExecutorService executorService = Executors.newFixedThreadPool(4); // Customize the thread count as needed
     private Gson gson = new Gson();
-    private final String apiUrl = BuildConfig.API_URL;
+    private static final String apiUrl = BuildConfig.API_URL;
+    private static final String encoding = "utf-8";
 
     public interface NetworkCallback {
         void onResult(String result);
@@ -50,17 +52,17 @@ public class BackendService {
                 URL url = new URL(urlString);
                 urlConnection = (HttpURLConnection) url.openConnection();
                 urlConnection.setRequestMethod("POST");
-                urlConnection.setRequestProperty("Content-Type", "application/json; utf-8");
+                urlConnection.setRequestProperty("Content-Type", "application/json; " + encoding);
                 urlConnection.setRequestProperty("Accept", "application/json");
                 urlConnection.setDoOutput(true);
 
                 try(OutputStream os = urlConnection.getOutputStream()) {
-                    byte[] input = postData.toString().getBytes("utf-8");
+                    byte[] input = postData.toString().getBytes(encoding);
                     os.write(input, 0, input.length);
                 }
 
                 StringBuilder response = new StringBuilder();
-                try(BufferedReader br = new BufferedReader(new InputStreamReader(urlConnection.getInputStream(), "utf-8"))) {
+                try(BufferedReader br = new BufferedReader(new InputStreamReader(urlConnection.getInputStream(), encoding))) {
                     String responseLine;
                     while ((responseLine = br.readLine()) != null) {
                         response.append(responseLine.trim());
@@ -71,7 +73,7 @@ public class BackendService {
                 new Handler(Looper.getMainLooper()).post(() -> callback.onResult(response.toString()));
             } catch (Exception e) {
                 new Handler(Looper.getMainLooper()).post(() -> errorCallback.onResult(e.toString()));
-                e.printStackTrace();
+                Log.e("BackendService-Error", e.toString());
             } finally {
                 if (urlConnection != null) {
                     urlConnection.disconnect();
@@ -89,7 +91,7 @@ public class BackendService {
                 urlConnection.setRequestMethod("GET");
                 urlConnection.setRequestProperty("Accept", "application/json");
                 StringBuilder response = new StringBuilder();
-                try (BufferedReader br = new BufferedReader(new InputStreamReader(urlConnection.getInputStream(), "utf-8"))) {
+                try (BufferedReader br = new BufferedReader(new InputStreamReader(urlConnection.getInputStream(), encoding))) {
                     String responseLine;
                     while ((responseLine = br.readLine()) != null) {
                         response.append(responseLine.trim());
@@ -99,7 +101,7 @@ public class BackendService {
                 // Execute callback on the main thread
                 new Handler(Looper.getMainLooper()).post(() -> callback.onResult(response.toString()));
             } catch (Exception e) {
-                e.printStackTrace();
+                Log.e("BackendService-Error", e.toString());
             } finally {
                 if (urlConnection != null) {
                     urlConnection.disconnect();
