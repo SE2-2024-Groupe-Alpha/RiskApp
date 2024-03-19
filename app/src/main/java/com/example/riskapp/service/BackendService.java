@@ -23,8 +23,8 @@ public class BackendService {
 
     private ExecutorService executorService = Executors.newFixedThreadPool(4); // Customize the thread count as needed
     private Gson gson = new Gson();
-    private static final String apiUrl = BuildConfig.API_URL;
-    private static final String encoding = "utf-8";
+    private static final String API_URL = BuildConfig.API_URL;
+    private static final String ENCODING = "utf-8";
 
     public interface NetworkCallback {
         void onResult(String result);
@@ -39,7 +39,7 @@ public class BackendService {
         String jsonString = gson.toJson(request);
         JSONObject jsonObject = new JSONObject(jsonString);
 
-        makePostRequest(apiUrl + "/auth/signin", jsonObject, result -> {
+        makePostRequest(API_URL + "/auth/signin", jsonObject, result -> {
             JwtAuthenticationResponse tokenResponse = gson.fromJson(result, JwtAuthenticationResponse.class);
             callback.onSuccess(tokenResponse);
         }, callback::onError);
@@ -52,17 +52,17 @@ public class BackendService {
                 URL url = new URL(urlString);
                 urlConnection = (HttpURLConnection) url.openConnection();
                 urlConnection.setRequestMethod("POST");
-                urlConnection.setRequestProperty("Content-Type", "application/json; " + encoding);
+                urlConnection.setRequestProperty("Content-Type", "application/json; " + ENCODING);
                 urlConnection.setRequestProperty("Accept", "application/json");
                 urlConnection.setDoOutput(true);
 
                 try(OutputStream os = urlConnection.getOutputStream()) {
-                    byte[] input = postData.toString().getBytes(encoding);
+                    byte[] input = postData.toString().getBytes(ENCODING);
                     os.write(input, 0, input.length);
                 }
 
                 StringBuilder response = new StringBuilder();
-                try(BufferedReader br = new BufferedReader(new InputStreamReader(urlConnection.getInputStream(), encoding))) {
+                try(BufferedReader br = new BufferedReader(new InputStreamReader(urlConnection.getInputStream(), ENCODING))) {
                     String responseLine;
                     while ((responseLine = br.readLine()) != null) {
                         response.append(responseLine.trim());
@@ -91,7 +91,7 @@ public class BackendService {
                 urlConnection.setRequestMethod("GET");
                 urlConnection.setRequestProperty("Accept", "application/json");
                 StringBuilder response = new StringBuilder();
-                try (BufferedReader br = new BufferedReader(new InputStreamReader(urlConnection.getInputStream(), encoding))) {
+                try (BufferedReader br = new BufferedReader(new InputStreamReader(urlConnection.getInputStream(), ENCODING))) {
                     String responseLine;
                     while ((responseLine = br.readLine()) != null) {
                         response.append(responseLine.trim());
