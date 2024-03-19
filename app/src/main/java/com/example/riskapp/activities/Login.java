@@ -13,6 +13,7 @@ import com.example.riskapp.R;
 import com.example.riskapp.data.SecurePreferences;
 import com.example.riskapp.model.JwtAuthenticationResponse;
 import com.example.riskapp.model.SignInRequest;
+import com.example.riskapp.model.ValidationRequest;
 import com.example.riskapp.service.BackendService;
 
 import com.google.android.material.textfield.TextInputEditText;
@@ -41,9 +42,32 @@ public class Login extends AppCompatActivity {
         SecurePreferences securePreferences = new SecurePreferences(this);
 
         if (securePreferences.getSessionToken() != null){
-            //TODO validate token
-            Intent intent = new Intent(Login.this, MainMenu.class);
-            startActivity(intent);
+            ValidationRequest validationRequest = new ValidationRequest(securePreferences.getSessionToken());
+
+            try {
+                backendService.makeValidationRequest(validationRequest, new BackendService.ValidationCallback() {
+                    @Override
+                    public void onSuccess(boolean response) {
+                        if (response){
+                            Toast.makeText(Login.this, "Welcome back!", Toast.LENGTH_SHORT).show();
+                            Intent intent = new Intent(Login.this, MainMenu.class);
+                            startActivity(intent);
+                        }else {
+                            securePreferences.saveSessionToken(null);
+                            Toast.makeText(Login.this, "Please login again", Toast.LENGTH_SHORT).show();
+                        }
+                    }
+
+                    @Override
+                    public void onError(String error) {
+                        Toast.makeText(Login.this, "Token validation failed: " + error, Toast.LENGTH_SHORT).show();
+                    }
+                });
+
+            } catch (JSONException e) {
+                throw new RuntimeException(e);
+            }
+
             return;
         }
 

@@ -5,6 +5,7 @@ import android.os.Looper;
 import android.util.Log;
 import com.example.riskapp.model.JwtAuthenticationResponse;
 import com.example.riskapp.model.SignInRequest;
+import com.example.riskapp.model.ValidationRequest;
 import com.google.gson.Gson;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -42,6 +43,21 @@ public class BackendService {
         makePostRequest(API_URL + "/auth/signin", jsonObject, result -> {
             JwtAuthenticationResponse tokenResponse = gson.fromJson(result, JwtAuthenticationResponse.class);
             callback.onSuccess(tokenResponse);
+        }, callback::onError);
+    }
+
+    public interface ValidationCallback {
+        void onSuccess(boolean response);
+        void onError(String error);
+    }
+
+    public void makeValidationRequest(ValidationRequest request, ValidationCallback callback) throws JSONException {
+        String jsonString = gson.toJson(request);
+        JSONObject jsonObject = new JSONObject(jsonString);
+
+        makePostRequest(API_URL + "/auth/validate", jsonObject, result -> {
+            boolean validationResponse = gson.fromJson(result, boolean.class);
+            callback.onSuccess(validationResponse);
         }, callback::onError);
     }
 
