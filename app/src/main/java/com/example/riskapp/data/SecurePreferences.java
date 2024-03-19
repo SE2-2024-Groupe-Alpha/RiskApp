@@ -3,6 +3,7 @@ package com.example.riskapp.data;
 import android.content.Context;
 import android.content.SharedPreferences;
 
+import android.util.Log;
 import androidx.security.crypto.EncryptedSharedPreferences;
 import androidx.security.crypto.MasterKeys;
 
@@ -26,7 +27,7 @@ public class SecurePreferences {
                     EncryptedSharedPreferences.PrefKeyEncryptionScheme.AES256_SIV,
                     EncryptedSharedPreferences.PrefValueEncryptionScheme.AES256_GCM);
         } catch (GeneralSecurityException | IOException e) {
-            e.printStackTrace();
+            Log.e(this.getClass().getSimpleName(), "Something went terribly wrong in saving Preferences");
         }
     }
 

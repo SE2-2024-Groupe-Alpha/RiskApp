@@ -15,12 +15,14 @@ import java.net.URL;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.Future;
+import com.example.riskapp.BuildConfig;
+
 
 public class BackendService {
 
     private ExecutorService executorService = Executors.newFixedThreadPool(4); // Customize the thread count as needed
-    private final String apiUrl = "http://172.23.131.93:8080/api/v1";
     private Gson gson = new Gson();
+    private final String apiUrl = BuildConfig.API_URL;
 
     public interface NetworkCallback {
         void onResult(String result);
@@ -38,9 +40,7 @@ public class BackendService {
         makePostRequest(apiUrl + "/auth/signin", jsonObject, result -> {
             JwtAuthenticationResponse tokenResponse = gson.fromJson(result, JwtAuthenticationResponse.class);
             callback.onSuccess(tokenResponse);
-        }, error -> {
-            callback.onError(error);
-        });
+        }, callback::onError);
     }
 
     public Future<?> makePostRequest(String urlString, JSONObject postData, NetworkCallback callback, NetworkCallback errorCallback) {

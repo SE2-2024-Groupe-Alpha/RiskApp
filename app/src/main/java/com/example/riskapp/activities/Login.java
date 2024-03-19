@@ -14,6 +14,7 @@ import com.example.riskapp.data.SecurePreferences;
 import com.example.riskapp.model.JwtAuthenticationResponse;
 import com.example.riskapp.model.SignInRequest;
 import com.example.riskapp.service.BackendService;
+
 import com.google.android.material.textfield.TextInputEditText;
 import org.json.JSONException;
 
@@ -38,7 +39,7 @@ public class Login extends AppCompatActivity {
         SecurePreferences securePreferences = new SecurePreferences(this);
 
         if (securePreferences.getSessionToken() != null){
-                        //TODO validate token
+            //TODO validate token
             Intent intent = new Intent(Login.this, MainMenu.class);
             startActivity(intent);
             return;
@@ -77,6 +78,7 @@ public class Login extends AppCompatActivity {
 
                     @Override
                     public void onError(String error) {
+
                         Toast.makeText(Login.this, "Login failed: " + error, Toast.LENGTH_SHORT).show();
                     }
                 });
