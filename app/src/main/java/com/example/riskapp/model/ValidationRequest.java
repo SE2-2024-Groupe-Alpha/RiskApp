@@ -1,6 +1,8 @@
 package com.example.riskapp.model;
 
-public class ValidationRequest {
+import java.io.Serializable;
+
+public class ValidationRequest implements Serializable {
     private String token;
 
     public ValidationRequest(String token) {

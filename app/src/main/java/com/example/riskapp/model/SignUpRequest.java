@@ -1,6 +1,8 @@
 package com.example.riskapp.model;
 
-public class SignUpRequest {
+import java.io.Serializable;
+
+public class SignUpRequest implements Serializable {
     private String username;
     private String password;
 

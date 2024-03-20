@@ -5,6 +5,7 @@ import android.os.Looper;
 import android.util.Log;
 import com.example.riskapp.model.JwtAuthenticationResponse;
 import com.example.riskapp.model.SignInRequest;
+import com.example.riskapp.model.SignUpRequest;
 import com.example.riskapp.model.ValidationRequest;
 import com.google.gson.Gson;
 import org.json.JSONException;
@@ -41,6 +42,21 @@ public class BackendService {
         JSONObject jsonObject = new JSONObject(jsonString);
 
         makePostRequest(API_URL + "/auth/signin", jsonObject, result -> {
+            JwtAuthenticationResponse tokenResponse = gson.fromJson(result, JwtAuthenticationResponse.class);
+            callback.onSuccess(tokenResponse);
+        }, callback::onError);
+    }
+
+    public interface SignUpCallback {
+        void onSuccess(JwtAuthenticationResponse response);
+        void onError(String error);
+    }
+
+    public void makeSignUpRequest(SignUpRequest request, SignUpCallback callback) throws JSONException {
+        String jsonString = gson.toJson(request);
+        JSONObject jsonObject = new JSONObject(jsonString);
+
+        makePostRequest(API_URL + "/auth/signup", jsonObject, result -> {
             JwtAuthenticationResponse tokenResponse = gson.fromJson(result, JwtAuthenticationResponse.class);
             callback.onSuccess(tokenResponse);
         }, callback::onError);
@@ -88,8 +104,24 @@ public class BackendService {
                 // Use callback on the main thread
                 new Handler(Looper.getMainLooper()).post(() -> callback.onResult(response.toString()));
             } catch (Exception e) {
-                new Handler(Looper.getMainLooper()).post(() -> errorCallback.onResult(e.toString()));
-                Log.e("BackendService-Error", e.toString());
+
+                StringBuilder errorResponse = new StringBuilder();
+
+                if (urlConnection != null) {
+                    try (BufferedReader br = new BufferedReader(new InputStreamReader(urlConnection.getErrorStream(), ENCODING))) {
+                        String responseLine;
+                        while ((responseLine = br.readLine()) != null) {
+                            errorResponse.append(responseLine.trim());
+                        }
+                    } catch (Exception ex) {
+                        errorResponse = new StringBuilder("Error reading error stream");
+                    }
+                }
+
+                final String errorResult = errorResponse.toString();
+
+                new Handler(Looper.getMainLooper()).post(() -> errorCallback.onResult(errorResult));
+                Log.e("BackendService-Error", errorResult);
             } finally {
                 if (urlConnection != null) {
                     urlConnection.disconnect();
