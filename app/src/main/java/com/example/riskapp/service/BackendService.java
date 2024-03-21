@@ -13,7 +13,9 @@ import com.example.riskapp.model.auth.JwtAuthenticationResponse;
 import com.example.riskapp.model.auth.SignInRequest;
 import com.example.riskapp.model.auth.SignUpRequest;
 import com.example.riskapp.model.auth.ValidationRequest;
+import com.example.riskapp.model.game.GameSession;
 import com.google.gson.Gson;
+import com.google.gson.reflect.TypeToken;
 import org.json.JSONException;
 import org.json.JSONObject;
 import java.io.BufferedReader;
@@ -21,6 +23,8 @@ import java.io.InputStreamReader;
 import java.io.OutputStream;
 import java.net.HttpURLConnection;
 import java.net.URL;
+import java.util.Collections;
+import java.util.List;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.Future;
@@ -108,17 +112,18 @@ public class BackendService extends Service {
     }
 
     public interface LobbyCallback {
-        void onSuccess(String response);
+        void onSuccess(List<GameSession> response);
         void onError(String error);
     }
 
-//    public void makeLobbyRequest(, LobbyCallback callback){
-//        //TODO implement Lobby data handling
-//        makeGetRequest(API_URL + "/game/lobby", lobbyListRequest.getJwtToken(), result -> {
-//            callback.onSuccess();
-//
-//        }, callback::onError);
-//    }
+    public void makeLobbyRequest(LobbyCallback callback){
+        makeGetRequest(API_URL + "/game/lobby", getSessionToken(), result -> {
+            Log.e("Data", result);
+            List<GameSession> activeLobbys = gson.fromJson(result, new TypeToken<List<GameSession>>(){}.getType());
+            callback.onSuccess(activeLobbys);
+
+        }, callback::onError);
+    }
 
     public Future<?> makePostRequest(String urlString, JSONObject postData, NetworkCallback callback, NetworkCallback errorCallback) {
         return executorService.submit(() -> {

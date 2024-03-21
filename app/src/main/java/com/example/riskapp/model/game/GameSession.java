@@ -1,11 +1,23 @@
 package com.example.riskapp.model.game;
 
-import lombok.Getter;
-
 import java.util.UUID;
 
-@Getter
 public class GameSession {
+    public UUID getSessionId() {
+        return sessionId;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public Integer getUsers() {
+        return users;
+    }
+
+    public GameState getState() {
+        return state;
+    }
 
     private UUID sessionId;
 
