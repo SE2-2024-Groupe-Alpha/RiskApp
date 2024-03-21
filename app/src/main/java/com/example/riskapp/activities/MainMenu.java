@@ -11,6 +11,7 @@ import com.example.riskapp.data.SecurePreferences;
 
 public class MainMenu extends AppCompatActivity {
     Button buttonLogout;
+    Button buttonLobbyList;
     @Override
 
     public void onCreate(Bundle savedInstanceState) {
@@ -18,6 +19,7 @@ public class MainMenu extends AppCompatActivity {
         setContentView(R.layout.activity_main_menu);
 
         buttonLogout = findViewById(R.id.btn_logout);
+        buttonLobbyList = findViewById(R.id.btn_join_lobby);
 
         buttonLogout.setOnClickListener(view -> {
             Toast.makeText(MainMenu.this, "Logout successful", Toast.LENGTH_SHORT).show();
@@ -25,6 +27,11 @@ public class MainMenu extends AppCompatActivity {
             new SecurePreferences(MainMenu.this).saveSessionToken(null);
 
             Intent intent = new Intent(MainMenu.this, Login.class);
+            startActivity(intent);
+        });
+
+        buttonLobbyList.setOnClickListener(view -> {
+            Intent intent = new Intent(MainMenu.this, LobbyList.class);
             startActivity(intent);
         });
     }

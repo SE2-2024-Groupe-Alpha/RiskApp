@@ -1,8 +1,11 @@
 package com.example.riskapp.activities;
 
+import android.content.ComponentName;
+import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 
+import android.os.IBinder;
 import android.text.TextUtils;
 
 import android.view.View;
@@ -12,12 +15,12 @@ import android.widget.Toast;
 import androidx.appcompat.app.AppCompatActivity;
 import com.example.riskapp.R;
 import com.example.riskapp.data.SecurePreferences;
-import com.example.riskapp.model.JwtAuthenticationResponse;
-import com.example.riskapp.model.SignInRequest;
-import com.example.riskapp.model.SignUpRequest;
+import com.example.riskapp.model.auth.JwtAuthenticationResponse;
+import com.example.riskapp.model.auth.SignUpRequest;
 import com.example.riskapp.service.BackendService;
 import com.google.android.material.textfield.TextInputEditText;
 import org.json.JSONException;
+import android.content.ServiceConnection;
 
 public class Register extends AppCompatActivity {
     TextInputEditText usernameText;
@@ -25,6 +28,23 @@ public class Register extends AppCompatActivity {
 
     Button buttonRegister;
     BackendService backendService;
+
+    private boolean isBound = false;
+
+    private final ServiceConnection connection = new ServiceConnection() {
+        @Override
+        public void onServiceConnected(ComponentName name, IBinder service) {
+            BackendService.LocalBinder binder = (BackendService.LocalBinder) service;
+            backendService = binder.getService();
+            isBound = true;
+            buttonRegister.setEnabled(true);
+        }
+
+        @Override
+        public void onServiceDisconnected(ComponentName name) {
+            isBound = false;
+        }
+    };
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -35,7 +55,10 @@ public class Register extends AppCompatActivity {
         passwordText = findViewById(R.id.password);
         buttonRegister = findViewById(R.id.btn_register);
 
-        backendService = new BackendService();
+        buttonRegister.setEnabled(false);
+
+        Intent connectBackend = new Intent(this, BackendService.class);
+        bindService(connectBackend, connection, Context.BIND_AUTO_CREATE);
 
         buttonRegister.setOnClickListener(view -> {
             String username;
@@ -88,6 +111,15 @@ public class Register extends AppCompatActivity {
         View currentFocusedView = getCurrentFocus();
         if (currentFocusedView != null) {
             inputMethodManager.hideSoftInputFromWindow(currentFocusedView.getWindowToken(), InputMethodManager.HIDE_NOT_ALWAYS);
+        }
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        if (isBound) {
+            unbindService(connection);
+            isBound = false;
         }
     }
 }

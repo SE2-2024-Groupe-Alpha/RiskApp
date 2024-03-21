@@ -1,12 +1,18 @@
 package com.example.riskapp.service;
 
+import android.app.Service;
+import android.content.Intent;
+import android.os.Binder;
 import android.os.Handler;
+import android.os.IBinder;
 import android.os.Looper;
 import android.util.Log;
-import com.example.riskapp.model.JwtAuthenticationResponse;
-import com.example.riskapp.model.SignInRequest;
-import com.example.riskapp.model.SignUpRequest;
-import com.example.riskapp.model.ValidationRequest;
+import androidx.annotation.Nullable;
+import com.example.riskapp.data.SecurePreferences;
+import com.example.riskapp.model.auth.JwtAuthenticationResponse;
+import com.example.riskapp.model.auth.SignInRequest;
+import com.example.riskapp.model.auth.SignUpRequest;
+import com.example.riskapp.model.auth.ValidationRequest;
 import com.google.gson.Gson;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -21,12 +27,36 @@ import java.util.concurrent.Future;
 import com.example.riskapp.BuildConfig;
 
 
-public class BackendService {
+public class BackendService extends Service {
 
     private ExecutorService executorService = Executors.newFixedThreadPool(4); // Customize the thread count as needed
     private Gson gson = new Gson();
     private static final String API_URL = BuildConfig.API_URL;
     private static final String ENCODING = "utf-8";
+    private SecurePreferences securePreferences;
+    private final IBinder binder = new LocalBinder();
+
+    public class LocalBinder extends Binder {
+        public BackendService getService() {
+            // Return this instance of BackendService so clients can call public methods
+            return BackendService.this;
+        }
+    }
+
+    @Nullable
+    @Override
+    public IBinder onBind(Intent intent) {
+        securePreferences = new SecurePreferences(this);
+        return binder;
+    }
+
+    public String getSessionToken() {
+        return securePreferences.getSessionToken();
+    }
+
+    public void saveSessionToken(String token) {
+        securePreferences.saveSessionToken(token);
+    }
 
     public interface NetworkCallback {
         void onResult(String result);
@@ -77,6 +107,19 @@ public class BackendService {
         }, callback::onError);
     }
 
+    public interface LobbyCallback {
+        void onSuccess(String response);
+        void onError(String error);
+    }
+
+//    public void makeLobbyRequest(, LobbyCallback callback){
+//        //TODO implement Lobby data handling
+//        makeGetRequest(API_URL + "/game/lobby", lobbyListRequest.getJwtToken(), result -> {
+//            callback.onSuccess();
+//
+//        }, callback::onError);
+//    }
+
     public Future<?> makePostRequest(String urlString, JSONObject postData, NetworkCallback callback, NetworkCallback errorCallback) {
         return executorService.submit(() -> {
             HttpURLConnection urlConnection = null;
@@ -101,27 +144,9 @@ public class BackendService {
                     }
                 }
 
-                // Use callback on the main thread
                 new Handler(Looper.getMainLooper()).post(() -> callback.onResult(response.toString()));
             } catch (Exception e) {
-
-                StringBuilder errorResponse = new StringBuilder();
-
-                if (urlConnection != null) {
-                    try (BufferedReader br = new BufferedReader(new InputStreamReader(urlConnection.getErrorStream(), ENCODING))) {
-                        String responseLine;
-                        while ((responseLine = br.readLine()) != null) {
-                            errorResponse.append(responseLine.trim());
-                        }
-                    } catch (Exception ex) {
-                        errorResponse = new StringBuilder("Error reading error stream");
-                    }
-                }
-
-                final String errorResult = errorResponse.toString();
-
-                new Handler(Looper.getMainLooper()).post(() -> errorCallback.onResult(errorResult));
-                Log.e("BackendService-Error", errorResult);
+                handleRequestError(urlConnection, errorCallback, e);
             } finally {
                 if (urlConnection != null) {
                     urlConnection.disconnect();
@@ -130,7 +155,7 @@ public class BackendService {
         });
     }
 
-    public Future<?> makeGetRequest(String urlString, NetworkCallback callback) {
+    public Future<?> makeGetRequest(String urlString, String JwtToken, NetworkCallback callback, NetworkCallback errorCallback) {
         return executorService.submit(() -> {
             HttpURLConnection urlConnection = null;
             try {
@@ -138,6 +163,8 @@ public class BackendService {
                 urlConnection = (HttpURLConnection) url.openConnection();
                 urlConnection.setRequestMethod("GET");
                 urlConnection.setRequestProperty("Accept", "application/json");
+                urlConnection.setRequestProperty("Authorization", "Bearer " + JwtToken);
+
                 StringBuilder response = new StringBuilder();
                 try (BufferedReader br = new BufferedReader(new InputStreamReader(urlConnection.getInputStream(), ENCODING))) {
                     String responseLine;
@@ -146,15 +173,35 @@ public class BackendService {
                     }
                 }
 
-                // Execute callback on the main thread
                 new Handler(Looper.getMainLooper()).post(() -> callback.onResult(response.toString()));
             } catch (Exception e) {
-                Log.e("BackendService-Error", e.toString());
+                handleRequestError(urlConnection, errorCallback, e);
             } finally {
                 if (urlConnection != null) {
                     urlConnection.disconnect();
                 }
             }
         });
+    }
+
+    private void handleRequestError(HttpURLConnection urlConnection, NetworkCallback errorCallback ,Exception e){
+        StringBuilder errorResponse = new StringBuilder();
+
+        if (urlConnection != null) {
+            try (BufferedReader br = new BufferedReader(new InputStreamReader(urlConnection.getErrorStream(), ENCODING))) {
+                String responseLine;
+                while ((responseLine = br.readLine()) != null) {
+                    errorResponse.append(responseLine.trim());
+                }
+            } catch (Exception ex) {
+                Log.e("Communication Error", ex.toString());
+                errorResponse = new StringBuilder("Error reading error stream");
+            }
+        }
+
+        final String errorResult = errorResponse.toString();
+
+        new Handler(Looper.getMainLooper()).post(() -> errorCallback.onResult(errorResult));
+        Log.e("BackendService-Error", errorResult);
     }
 }

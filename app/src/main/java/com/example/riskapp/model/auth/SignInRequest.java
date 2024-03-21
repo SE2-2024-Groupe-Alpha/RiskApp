@@ -1,4 +1,4 @@
-package com.example.riskapp.model;
+package com.example.riskapp.model.auth;
 
 import java.io.Serializable;
 

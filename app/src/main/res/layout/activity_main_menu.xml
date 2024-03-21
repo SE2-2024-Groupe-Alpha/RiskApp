@@ -34,7 +34,6 @@
 <!--    </com.google.android.material.textfield.TextInputLayout>-->
 
     <Button
-            android:layout_margin="20sp"
             android:textSize="15sp"
             android:id="@+id/btn_join_lobby"
             android:textAllCaps="true"
@@ -44,6 +43,7 @@
 
 
     <Button
+            android:layout_margin="20sp"
             android:textSize="15sp"
             android:id="@+id/btn_create_lobby"
             android:textAllCaps="true"
@@ -52,7 +52,6 @@
             android:layout_height="60dp"/>
 
     <Button
-            android:layout_marginTop="15sp"
             android:textSize="15sp"
             android:id="@+id/btn_logout"
             android:textAllCaps="true"
