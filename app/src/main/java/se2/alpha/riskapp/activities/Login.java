@@ -13,14 +13,17 @@ import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.Toast;
 import androidx.appcompat.app.AppCompatActivity;
+
 import se2.alpha.riskapp.R;
 import se2.alpha.riskapp.model.auth.JwtAuthenticationResponse;
 import se2.alpha.riskapp.model.auth.SignInRequest;
 import se2.alpha.riskapp.model.auth.ValidationRequest;
+
 import se2.alpha.riskapp.service.BackendService;
 
 import com.google.android.material.textfield.TextInputEditText;
 import org.json.JSONException;
+
 
 public class Login extends AppCompatActivity {
     TextInputEditText usernameText;
@@ -124,7 +127,7 @@ public class Login extends AppCompatActivity {
                     @Override
                     public void onError(String error) {
 
-                        Toast.makeText(Login.this, "Login failed: " + error, Toast.LENGTH_SHORT).show();
+                        Toast.makeText(Login.this, "Login failed", Toast.LENGTH_SHORT).show();
                     }
                 });
 
