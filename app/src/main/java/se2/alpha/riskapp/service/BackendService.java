@@ -1,4 +1,4 @@
-package com.example.riskapp.service;
+package se2.alpha.riskapp.service;
 
 import android.app.Service;
 import android.content.Intent;
@@ -8,12 +8,12 @@ import android.os.IBinder;
 import android.os.Looper;
 import android.util.Log;
 import androidx.annotation.Nullable;
-import com.example.riskapp.data.SecurePreferences;
-import com.example.riskapp.model.auth.JwtAuthenticationResponse;
-import com.example.riskapp.model.auth.SignInRequest;
-import com.example.riskapp.model.auth.SignUpRequest;
-import com.example.riskapp.model.auth.ValidationRequest;
-import com.example.riskapp.model.game.GameSession;
+import se2.alpha.riskapp.data.SecurePreferences;
+import se2.alpha.riskapp.model.auth.JwtAuthenticationResponse;
+import se2.alpha.riskapp.model.auth.SignInRequest;
+import se2.alpha.riskapp.model.auth.SignUpRequest;
+import se2.alpha.riskapp.model.auth.ValidationRequest;
+import se2.alpha.riskapp.model.game.GameSession;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 import org.json.JSONException;
@@ -23,12 +23,11 @@ import java.io.InputStreamReader;
 import java.io.OutputStream;
 import java.net.HttpURLConnection;
 import java.net.URL;
-import java.util.Collections;
 import java.util.List;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.Future;
-import com.example.riskapp.BuildConfig;
+import se2.alpha.riskapp.BuildConfig;
 
 
 public class BackendService extends Service {

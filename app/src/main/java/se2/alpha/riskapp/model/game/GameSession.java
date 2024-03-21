@@ -1,4 +1,4 @@
-package com.example.riskapp.model.game;
+package se2.alpha.riskapp.model.game;
 
 import java.util.UUID;
 

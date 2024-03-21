@@ -1,4 +1,4 @@
-package com.example.riskapp;
+package se2.alpha.riskapp;
 
 import org.junit.Test;
 

@@ -1,4 +1,4 @@
-package com.example.riskapp.data;
+package se2.alpha.riskapp.data;
 
 import android.content.Context;
 import android.content.SharedPreferences;

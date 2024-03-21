@@ -1,4 +1,4 @@
-package com.example.riskapp.activities;
+package se2.alpha.riskapp.activities;
 
 import android.content.ComponentName;
 import android.content.Context;
@@ -13,11 +13,11 @@ import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.Toast;
 import androidx.appcompat.app.AppCompatActivity;
-import com.example.riskapp.R;
-import com.example.riskapp.data.SecurePreferences;
-import com.example.riskapp.model.auth.JwtAuthenticationResponse;
-import com.example.riskapp.model.auth.SignUpRequest;
-import com.example.riskapp.service.BackendService;
+import se2.alpha.riskapp.R;
+import se2.alpha.riskapp.data.SecurePreferences;
+import se2.alpha.riskapp.model.auth.JwtAuthenticationResponse;
+import se2.alpha.riskapp.model.auth.SignUpRequest;
+import se2.alpha.riskapp.service.BackendService;
 import com.google.android.material.textfield.TextInputEditText;
 import org.json.JSONException;
 import android.content.ServiceConnection;
@@ -49,7 +49,7 @@ public class Register extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_register);
+        setContentView(R.layout.register_activity);
 
         usernameText = findViewById(R.id.username);
         passwordText = findViewById(R.id.password);

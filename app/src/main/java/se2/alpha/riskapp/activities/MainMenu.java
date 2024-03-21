@@ -1,4 +1,4 @@
-package com.example.riskapp.activities;
+package se2.alpha.riskapp.activities;
 
 import android.content.Intent;
 import android.os.Bundle;
@@ -6,8 +6,8 @@ import android.os.Bundle;
 import android.widget.Button;
 import android.widget.Toast;
 import androidx.appcompat.app.AppCompatActivity;
-import com.example.riskapp.R;
-import com.example.riskapp.data.SecurePreferences;
+import se2.alpha.riskapp.R;
+import se2.alpha.riskapp.data.SecurePreferences;
 
 public class MainMenu extends AppCompatActivity {
     Button buttonLogout;
@@ -16,7 +16,7 @@ public class MainMenu extends AppCompatActivity {
 
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main_menu);
+        setContentView(R.layout.main_menu_activity);
 
         buttonLogout = findViewById(R.id.btn_logout);
         buttonLobbyList = findViewById(R.id.btn_join_lobby);

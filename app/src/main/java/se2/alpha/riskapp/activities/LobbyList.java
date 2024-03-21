@@ -1,4 +1,4 @@
-package com.example.riskapp.activities;
+package se2.alpha.riskapp.activities;
 
 import android.content.ComponentName;
 import android.content.Context;
@@ -9,17 +9,15 @@ import android.os.Bundle;
 
 import android.os.IBinder;
 import android.view.View;
-import android.widget.ArrayAdapter;
 import android.widget.ListView;
 import android.widget.ProgressBar;
 import android.widget.Toast;
 import androidx.appcompat.app.AppCompatActivity;
-import com.example.riskapp.R;
-import com.example.riskapp.data.LobbyArrayAdapter;
-import com.example.riskapp.data.SecurePreferences;
-import com.example.riskapp.model.game.GameSession;
-import com.example.riskapp.model.game.GameState;
-import com.example.riskapp.service.BackendService;
+import se2.alpha.riskapp.R;
+import se2.alpha.riskapp.data.LobbyArrayAdapter;
+import se2.alpha.riskapp.model.game.GameSession;
+import se2.alpha.riskapp.model.game.GameState;
+import se2.alpha.riskapp.service.BackendService;
 
 import java.util.List;
 import java.util.stream.Collectors;
@@ -51,7 +49,7 @@ public class LobbyList extends AppCompatActivity {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_lobby_list);
+        setContentView(R.layout.lobby_list_activity);
 
         lobbyList = findViewById(R.id.lobby_list);
         progressBar = findViewById(R.id.progressBar);

@@ -3,11 +3,11 @@ plugins {
 }
 
 android {
-    namespace = "com.example.riskapp"
+    namespace = "se2.alpha.riskapp"
     compileSdk = 34
 
     defaultConfig {
-        applicationId = "com.example.riskapp"
+        applicationId = "se2.alpha.riskapp"
         minSdk = 31
         targetSdk = 34
         versionCode = 1

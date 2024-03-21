@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-          package="com.example.riskapp"
+          package="se2.alpha.riskapp"
 >
 
     <uses-permission android:name="android.permission.INTERNET"/>
@@ -17,12 +17,12 @@
             android:usesCleartextTraffic="true"
             >
 
-        <service android:name=".service.BackendService"/>
+        <service android:name="se2.alpha.riskapp.service.BackendService"/>
 
 <!--            TODO remove usesCleartextTraffic after debugging-->
         <activity
                 android:permission=""
-                android:name=".activities.Login"
+                android:name="se2.alpha.riskapp.activities.Login"
                 android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN"/>
@@ -32,18 +32,18 @@
 
         <activity
                 android:permission=""
-                android:name=".activities.Register"
+                android:name="se2.alpha.riskapp.activities.Register"
                 android:exported="true">
         </activity>
 
         <activity
                 android:permission=""
-                android:name=".activities.MainMenu"
+                android:name="se2.alpha.riskapp.activities.MainMenu"
                 android:exported="true">
         </activity>
 
         <activity android:permission=""
-                  android:name=".activities.LobbyList"
+                  android:name="se2.alpha.riskapp.activities.LobbyList"
                   android:exported="true">
         </activity>
 
