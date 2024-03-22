@@ -1,14 +1,11 @@
 package se2.alpha.riskapp.service;
 
-import android.app.Service;
 import android.content.Context;
-import android.content.Intent;
-import android.os.Binder;
 import android.os.Handler;
-import android.os.IBinder;
 import android.os.Looper;
 import android.util.Log;
-import androidx.annotation.Nullable;
+import okhttp3.*;
+import org.jetbrains.annotations.NotNull;
 import se2.alpha.riskapp.model.auth.JwtAuthenticationResponse;
 import se2.alpha.riskapp.model.auth.SignInRequest;
 import se2.alpha.riskapp.model.auth.SignUpRequest;
@@ -19,14 +16,13 @@ import com.google.gson.reflect.TypeToken;
 import org.json.JSONException;
 import org.json.JSONObject;
 import java.io.BufferedReader;
+import java.io.IOException;
 import java.io.InputStreamReader;
-import java.io.OutputStream;
 import java.net.HttpURLConnection;
-import java.net.URL;
 import java.util.List;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
-import java.util.concurrent.Future;
+
 import se2.alpha.riskapp.BuildConfig;
 
 import javax.inject.Inject;
@@ -39,24 +35,12 @@ public class BackendService {
     private static final String API_URL = BuildConfig.API_URL;
     private static final String ENCODING = "utf-8";
     private final SecurePreferencesService securePreferencesService;
-//    private final IBinder binder = new LocalBinder();
+    private OkHttpClient client = new OkHttpClient();
 
     @Inject
     public BackendService(Context context, SecurePreferencesService securePreferences) {
         this.securePreferencesService = securePreferences;
     }
-
-//    public class LocalBinder extends Binder {
-//        public BackendService getService() {
-//            return BackendService.this;
-//        }
-//    }
-//
-//    @Nullable
-//    @Override
-//    public IBinder onBind(Intent intent) {
-//        return binder;
-//    }
 
     public String getSessionToken() {
         return securePreferencesService.getSessionToken();
@@ -121,7 +105,7 @@ public class BackendService {
     }
 
     public void makeLobbyRequest(LobbyCallback callback){
-        makeGetRequest(API_URL + "/game/lobby", getSessionToken(), result -> {
+        makeGetRequest(API_URL + "/game/lobby", result -> {
             Log.e("Data", result);
             List<GameSession> activeLobbys = gson.fromJson(result, new TypeToken<List<GameSession>>(){}.getType());
             callback.onSuccess(activeLobbys);
@@ -129,67 +113,54 @@ public class BackendService {
         }, callback::onError);
     }
 
-    public Future<?> makePostRequest(String urlString, JSONObject postData, NetworkCallback callback, NetworkCallback errorCallback) {
-        return executorService.submit(() -> {
-            HttpURLConnection urlConnection = null;
-            try {
-                URL url = new URL(urlString);
-                urlConnection = (HttpURLConnection) url.openConnection();
-                urlConnection.setRequestMethod("POST");
-                urlConnection.setRequestProperty("Content-Type", "application/json; " + ENCODING);
-                urlConnection.setRequestProperty("Accept", "application/json");
-                urlConnection.setDoOutput(true);
+    public void makePostRequest(String urlString, JSONObject postData, NetworkCallback callback, NetworkCallback errorCallback) {
+        RequestBody body = RequestBody.create(postData.toString(), MediaType.get("application/json; charset=utf-8"));
+        Request.Builder requestBuilder = new Request.Builder().url(urlString).post(body);
 
-                try(OutputStream os = urlConnection.getOutputStream()) {
-                    byte[] input = postData.toString().getBytes(ENCODING);
-                    os.write(input, 0, input.length);
-                }
+        if (getSessionToken()!= null){
+            requestBuilder.addHeader("Authorization", "Bearer " + getSessionToken());
+        }
 
-                StringBuilder response = new StringBuilder();
-                try(BufferedReader br = new BufferedReader(new InputStreamReader(urlConnection.getInputStream(), ENCODING))) {
-                    String responseLine;
-                    while ((responseLine = br.readLine()) != null) {
-                        response.append(responseLine.trim());
-                    }
-                }
-
-                new Handler(Looper.getMainLooper()).post(() -> callback.onResult(response.toString()));
-            } catch (Exception e) {
-                handleRequestError(urlConnection, errorCallback, e);
-            } finally {
-                if (urlConnection != null) {
-                    urlConnection.disconnect();
-                }
-            }
-        });
+        Request request = requestBuilder.build();
+        executeRequest(request, callback, errorCallback);
     }
 
-    public Future<?> makeGetRequest(String urlString, String JwtToken, NetworkCallback callback, NetworkCallback errorCallback) {
-        return executorService.submit(() -> {
-            HttpURLConnection urlConnection = null;
-            try {
-                URL url = new URL(urlString);
-                urlConnection = (HttpURLConnection) url.openConnection();
-                urlConnection.setRequestMethod("GET");
-                urlConnection.setRequestProperty("Accept", "application/json");
-                urlConnection.setRequestProperty("Authorization", "Bearer " + JwtToken);
+    public void makeGetRequest(String urlString, NetworkCallback callback, NetworkCallback errorCallback) {
+        Request.Builder requestBuilder = new Request.Builder().url(urlString);
 
-                StringBuilder response = new StringBuilder();
-                try (BufferedReader br = new BufferedReader(new InputStreamReader(urlConnection.getInputStream(), ENCODING))) {
-                    String responseLine;
-                    while ((responseLine = br.readLine()) != null) {
-                        response.append(responseLine.trim());
+        if (getSessionToken()!= null){
+            requestBuilder.addHeader("Authorization", "Bearer " + getSessionToken());
+        }
+
+        Request request = requestBuilder.build();
+
+        executeRequest(request, callback, errorCallback);
+    }
+
+    private void executeRequest(Request request, NetworkCallback callback, NetworkCallback errorCallback) {
+        executorService.submit(() -> {
+            client.newCall(request).enqueue(new Callback() {
+                @Override
+                public void onFailure(@NotNull Call call, @NotNull IOException e) {
+                    new Handler(Looper.getMainLooper()).post(() -> errorCallback.onResult(e.getMessage()));
+                }
+
+                @Override
+                public void onResponse(@NotNull Call call, @NotNull Response response) throws IOException {
+                    if (response.isSuccessful()) {
+                        new Handler(Looper.getMainLooper()).post(() -> {
+                            try {
+                                assert response.body() != null;
+                                callback.onResult(response.body().string());
+                            } catch (IOException e) {
+                                Log.e("OH", "OH NO");
+                            }
+                        });
+                    } else {
+                        new Handler(Looper.getMainLooper()).post(() -> errorCallback.onResult(response.message()));
                     }
                 }
-
-                new Handler(Looper.getMainLooper()).post(() -> callback.onResult(response.toString()));
-            } catch (Exception e) {
-                handleRequestError(urlConnection, errorCallback, e);
-            } finally {
-                if (urlConnection != null) {
-                    urlConnection.disconnect();
-                }
-            }
+            });
         });
     }
 

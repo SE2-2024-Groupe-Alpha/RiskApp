@@ -54,5 +54,6 @@ dependencies {
     androidTestImplementation("androidx.test.espresso:espresso-core:3.5.1")
     implementation("com.google.dagger:dagger:2.51")
     annotationProcessor("com.google.dagger:dagger-compiler:2.51")
+    implementation("com.squareup.okhttp3:okhttp:4.12.0")
 
 }
