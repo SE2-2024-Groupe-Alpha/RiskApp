@@ -8,7 +8,6 @@ import android.widget.*;
 import androidx.appcompat.app.AppCompatActivity;
 import se2.alpha.riskapp.R;
 import se2.alpha.riskapp.data.RiskApplication;
-import se2.alpha.riskapp.model.game.GameSession;
 import se2.alpha.riskapp.service.BackendService;
 import se2.alpha.riskapp.service.GameService;
 
@@ -19,6 +18,8 @@ import java.util.List;
 public class Lobby extends AppCompatActivity {
     ListView playerList;
     ProgressBar progressBar;
+    Button buttonReady;
+    Button buttonLeave;
     private ArrayAdapter<String> adapter;
 
     @Inject

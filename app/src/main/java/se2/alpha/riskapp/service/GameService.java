@@ -20,6 +20,4 @@ public class GameService {
     public void updateUsers(List<String> newUserNames){
         userNames.postValue(newUserNames);
     }
-
-
 }
