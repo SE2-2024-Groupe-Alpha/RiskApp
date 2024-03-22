@@ -51,7 +51,9 @@ public class LobbyList extends AppCompatActivity {
             JoinWebsocketMessage joinWebsocketMessage = new JoinWebsocketMessage(sessionToJoin.getSessionId());
             backendService.sendMessage(joinWebsocketMessage);
 
-
+            Intent intent = new Intent(this, Lobby.class);
+            startActivity(intent);
+            finish();
         });
     }
 
@@ -73,7 +75,7 @@ public class LobbyList extends AppCompatActivity {
             @Override
             public void onSuccess(List<GameSession> response) {
                 filteredLobbies = response.stream()
-                        .filter(gameSession -> gameSession.getState() == GameState.Lobby)
+                        .filter(gameSession -> gameSession.getState() == GameState.Lobby && gameSession.getUsers() < 6)
                         .collect(Collectors.toList());
 
                 LobbyArrayAdapter adapter = new LobbyArrayAdapter(LobbyList.this, filteredLobbies);

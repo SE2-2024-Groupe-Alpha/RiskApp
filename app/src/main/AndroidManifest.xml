@@ -14,8 +14,9 @@
             android:name=".data.RiskApplication"
             android:roundIcon="@mipmap/ic_launcher_round"
             android:supportsRtl="true"
-            android:theme="@style/Theme.Material3.Dark"
+            android:theme="@style/Theme.Material3.Dark.NoActionBar"
             android:usesCleartextTraffic="true"
+
             >
 
 <!--        <service android:name="se2.alpha.riskapp.service.BackendService"/>-->
@@ -45,6 +46,11 @@
 
         <activity android:permission=""
                   android:name="se2.alpha.riskapp.activities.LobbyList"
+                  android:exported="true">
+        </activity>
+
+        <activity android:permission=""
+                  android:name="se2.alpha.riskapp.activities.Lobby"
                   android:exported="true">
         </activity>
 

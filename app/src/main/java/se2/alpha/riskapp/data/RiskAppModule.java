@@ -4,6 +4,7 @@ import android.content.Context;
 import dagger.Module;
 import dagger.Provides;
 import se2.alpha.riskapp.service.BackendService;
+import se2.alpha.riskapp.service.GameService;
 import se2.alpha.riskapp.service.SecurePreferencesService;
 
 import javax.inject.Singleton;
@@ -31,7 +32,13 @@ public class RiskAppModule {
 
     @Provides
     @Singleton
-    public BackendService provideBackendService(Context context, SecurePreferencesService securePreferences) {
-        return new BackendService(context, securePreferences);
+    public BackendService provideBackendService(Context context, SecurePreferencesService securePreferences, GameService gameService) {
+        return new BackendService(context, securePreferences, gameService);
+    }
+
+    @Provides
+    @Singleton
+    public GameService provideGameService(Context context){
+        return new GameService(context);
     }
 }

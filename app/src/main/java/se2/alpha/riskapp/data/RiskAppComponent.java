@@ -1,9 +1,6 @@
 package se2.alpha.riskapp.data;
 import dagger.Component;
-import se2.alpha.riskapp.activities.LobbyList;
-import se2.alpha.riskapp.activities.Login;
-import se2.alpha.riskapp.activities.MainMenu;
-import se2.alpha.riskapp.activities.Register;
+import se2.alpha.riskapp.activities.*;
 import se2.alpha.riskapp.service.BackendService;
 import se2.alpha.riskapp.service.SecurePreferencesService;
 
@@ -16,6 +13,8 @@ public interface RiskAppComponent {
     void inject(MainMenu mainMenu);
     void inject(LobbyList lobbyList);
     void inject(Register register);
+    void inject(Lobby lobby);
 
     void inject(BackendService backendService);
+
 }

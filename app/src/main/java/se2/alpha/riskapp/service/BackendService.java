@@ -5,8 +5,6 @@ import android.os.Handler;
 import android.os.Looper;
 import android.util.Log;
 import okhttp3.*;
-import okio.ByteString;
-import org.jetbrains.annotations.NotNull;
 import se2.alpha.riskapp.model.auth.JwtAuthenticationResponse;
 import se2.alpha.riskapp.model.auth.SignInRequest;
 import se2.alpha.riskapp.model.auth.SignUpRequest;
@@ -16,10 +14,8 @@ import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 import org.json.JSONException;
 import org.json.JSONObject;
-import java.io.BufferedReader;
+
 import java.io.IOException;
-import java.io.InputStreamReader;
-import java.net.HttpURLConnection;
 import java.util.List;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
@@ -38,12 +34,16 @@ public class BackendService {
     private static final String WSS_URL = BuildConfig.WSS_URL;
     private static final String ENCODING = "utf-8";
     private final SecurePreferencesService securePreferencesService;
+    private final GameService gameService;
+    private final Context context;
     private final OkHttpClient client = new OkHttpClient();
     private WebSocket webSocket;
 
     @Inject
-    public BackendService(Context context, SecurePreferencesService securePreferences) {
+    public BackendService(Context context, SecurePreferencesService securePreferences, GameService gameService) {
         this.securePreferencesService = securePreferences;
+        this.gameService = gameService;
+        this.context = context;
     }
 
     public String getSessionToken() {
@@ -161,7 +161,7 @@ public class BackendService {
                 .url(WSS_URL)
                 .addHeader("Authorization", "Bearer " + getSessionToken())
                 .build();
-        RiskWebsocket listener = new RiskWebsocket();
+        RiskWebsocket listener = new RiskWebsocket(context, gameService);
         webSocket = client.newWebSocket(request, listener);
     }
 
