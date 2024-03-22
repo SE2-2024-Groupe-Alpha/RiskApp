@@ -31,7 +31,7 @@ public class LobbyArrayAdapter extends ArrayAdapter<GameSession> {
 
         GameSession session = lobbys.get(position);
         lobbyNameTextView.setText(session.getName());
-        playersTextView.setText(session.getUsers() + "/6 Players"); // Assuming you have a way to get the max players
+        playersTextView.setText(session.getUsers() + "/6 Players");
 
         return rowView;
     }

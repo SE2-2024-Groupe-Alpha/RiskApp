@@ -16,4 +16,6 @@
     <string name="_0_6_players">0/6 Players</string>
     <string name="leave_lobby">Leave Lobby</string>
     <string name="ready">Ready</string>
+    <string name="player_name">player_name</string>
+    <string name="not_ready">not ready</string>
 </resources>
