@@ -20,6 +20,7 @@ import se2.alpha.riskapp.model.game.GameSession;
 import se2.alpha.riskapp.model.game.GameState;
 import se2.alpha.riskapp.model.websocket.JoinWebsocketMessage;
 import se2.alpha.riskapp.service.BackendService;
+import se2.alpha.riskapp.service.GameService;
 
 import javax.inject.Inject;
 import java.util.List;
@@ -33,6 +34,8 @@ public class LobbyList extends AppCompatActivity {
 
     @Inject
     BackendService backendService;
+    @Inject
+    GameService gameService;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -50,7 +53,7 @@ public class LobbyList extends AppCompatActivity {
             GameSession sessionToJoin = filteredLobbies.get(position);
             JoinWebsocketMessage joinWebsocketMessage = new JoinWebsocketMessage(sessionToJoin.getSessionId());
             backendService.sendMessage(joinWebsocketMessage);
-
+            gameService.setSessionId(sessionToJoin.getSessionId());
             Intent intent = new Intent(this, Lobby.class);
             startActivity(intent);
             finish();
