@@ -1,9 +1,7 @@
 package se2.alpha.riskapp.activities;
 
 import android.content.ComponentName;
-import android.content.Context;
 import android.content.Intent;
-import android.content.ServiceConnection;
 import android.os.Bundle;
 
 import android.os.IBinder;
@@ -15,80 +13,65 @@ import android.widget.Toast;
 import androidx.appcompat.app.AppCompatActivity;
 
 import se2.alpha.riskapp.R;
+import se2.alpha.riskapp.data.RiskApplication;
 import se2.alpha.riskapp.model.auth.JwtAuthenticationResponse;
 import se2.alpha.riskapp.model.auth.SignInRequest;
 import se2.alpha.riskapp.model.auth.ValidationRequest;
-
 import se2.alpha.riskapp.service.BackendService;
-
 import com.google.android.material.textfield.TextInputEditText;
 import org.json.JSONException;
-
+import javax.inject.Inject;
 
 public class Login extends AppCompatActivity {
     TextInputEditText usernameText;
     TextInputEditText passwordText;
     Button buttonLogin;
     Button buttonRegisterNow;
+
+    @Inject
     BackendService backendService;
-    boolean isBound = false;
 
-    private final ServiceConnection connection = new ServiceConnection() {
-        @Override
-        public void onServiceConnected(ComponentName className, IBinder service) {
-            BackendService.LocalBinder binder = (BackendService.LocalBinder) service;
-            backendService = binder.getService();
-            isBound = true;
-            buttonLogin.setEnabled(true);
+    public void isLoggedIn() {
+       if (backendService.getSessionToken() != null){
+            ValidationRequest validationRequest = new ValidationRequest(backendService.getSessionToken());
 
-            if (backendService.getSessionToken() != null){
-                ValidationRequest validationRequest = new ValidationRequest(backendService.getSessionToken());
-
-                try {
-                    backendService.makeValidationRequest(validationRequest, new BackendService.ValidationCallback() {
-                        @Override
-                        public void onSuccess(boolean response) {
-                            if (response){
-                                Toast.makeText(Login.this, "Welcome back!", Toast.LENGTH_SHORT).show();
-                                Intent intent = new Intent(Login.this, MainMenu.class);
-                                startActivity(intent);
-                                finish();
-                            } else {
-                                backendService.saveSessionToken(null);
-                                Toast.makeText(Login.this, "Please login again", Toast.LENGTH_SHORT).show();
-                            }
+            try {
+                backendService.makeValidationRequest(validationRequest, new BackendService.ValidationCallback() {
+                    @Override
+                    public void onSuccess(boolean response) {
+                        if (response){
+                            Toast.makeText(Login.this, "Welcome back!", Toast.LENGTH_SHORT).show();
+                            Intent intent = new Intent(Login.this, MainMenu.class);
+                            startActivity(intent);
+                            finish();
+                        } else {
+                            backendService.saveSessionToken(null);
+                            Toast.makeText(Login.this, "Please login again", Toast.LENGTH_SHORT).show();
                         }
+                    }
 
-                        @Override
-                        public void onError(String error) {
-                            Toast.makeText(Login.this, "Token validation failed: " + error, Toast.LENGTH_SHORT).show();
-                        }
-                    });
-                } catch (JSONException e) {
-                    throw new RuntimeException(e);
-                }
+                    @Override
+                    public void onError(String error) {
+                        Toast.makeText(Login.this, "Token validation failed: " + error, Toast.LENGTH_SHORT).show();
+                    }
+                });
+            } catch (JSONException e) {
+                throw new RuntimeException(e);
             }
         }
-
-        @Override
-        public void onServiceDisconnected(ComponentName arg0) {
-            isBound = false;
-        }
-    };
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        ((RiskApplication) getApplication()).getRiskAppComponent().inject(this);
+        isLoggedIn();
         setContentView(R.layout.login_activity);
 
         usernameText = findViewById(R.id.username);
         passwordText = findViewById(R.id.password);
         buttonLogin = findViewById(R.id.btn_login);
-        buttonLogin.setEnabled(false);
         buttonRegisterNow = findViewById(R.id.btn_register_now);
-
-        Intent connectBackend = new Intent(this, BackendService.class);
-        bindService(connectBackend, connection, Context.BIND_AUTO_CREATE);
 
         buttonLogin.setOnClickListener(view -> {
             String username;
@@ -150,15 +133,6 @@ public class Login extends AppCompatActivity {
         View currentFocusedView = getCurrentFocus();
         if (currentFocusedView != null) {
             inputMethodManager.hideSoftInputFromWindow(currentFocusedView.getWindowToken(), InputMethodManager.HIDE_NOT_ALWAYS);
-        }
-    }
-
-    @Override
-    protected void onDestroy() {
-        super.onDestroy();
-        if (isBound) {
-            unbindService(connection);
-            isBound = false;
         }
     }
 }

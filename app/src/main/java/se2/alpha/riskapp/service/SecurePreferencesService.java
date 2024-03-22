@@ -1,4 +1,4 @@
-package se2.alpha.riskapp.data;
+package se2.alpha.riskapp.service;
 
 import android.content.Context;
 import android.content.SharedPreferences;
@@ -10,13 +10,13 @@ import androidx.security.crypto.MasterKeys;
 import java.io.IOException;
 import java.security.GeneralSecurityException;
 
-public class SecurePreferences {
+public class SecurePreferencesService {
 
     private static final String FILE_NAME = "secure_prefs";
     private static final String KEY_SESSION_TOKEN = "KEY_SESSION_TOKEN";
     private SharedPreferences sharedPreferences;
 
-    public SecurePreferences(Context context) {
+    public SecurePreferencesService(Context context) {
         try {
             String masterKeyAlias = MasterKeys.getOrCreate(MasterKeys.AES256_GCM_SPEC);
 

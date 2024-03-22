@@ -15,47 +15,32 @@ import android.widget.Toast;
 import androidx.appcompat.app.AppCompatActivity;
 import se2.alpha.riskapp.R;
 import se2.alpha.riskapp.data.LobbyArrayAdapter;
+import se2.alpha.riskapp.data.RiskApplication;
 import se2.alpha.riskapp.model.game.GameSession;
 import se2.alpha.riskapp.model.game.GameState;
 import se2.alpha.riskapp.service.BackendService;
 
+import javax.inject.Inject;
 import java.util.List;
 import java.util.stream.Collectors;
 
 public class LobbyList extends AppCompatActivity {
     ListView lobbyList;
     ProgressBar progressBar;
+
+    @Inject
     BackendService backendService;
-
-
-    private boolean isBound = false;
-
-    private final ServiceConnection connection = new ServiceConnection() {
-        @Override
-        public void onServiceConnected(ComponentName name, IBinder service) {
-            BackendService.LocalBinder binder = (BackendService.LocalBinder) service;
-            backendService = binder.getService();
-            isBound = true;
-
-            makeLobbyRequest();
-        }
-
-        @Override
-        public void onServiceDisconnected(ComponentName name) {
-            isBound = false;
-        }
-    };
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        ((RiskApplication) getApplication()).getRiskAppComponent().inject(this);
         setContentView(R.layout.lobby_list_activity);
 
         lobbyList = findViewById(R.id.lobby_list);
         progressBar = findViewById(R.id.progressBar);
 
-        Intent connectBackend = new Intent(this, BackendService.class);
-        bindService(connectBackend, connection, Context.BIND_AUTO_CREATE);
+        makeLobbyRequest();
     }
 
     private void makeLobbyRequest() {
@@ -78,25 +63,14 @@ public class LobbyList extends AppCompatActivity {
                 public void onError(String error) {
                     runOnUiThread(() -> {
                         Toast.makeText(LobbyList.this, "Could not retrieve Lobbylist", Toast.LENGTH_SHORT).show();
-                        // Hide the ProgressBar on error as well
                         progressBar.setVisibility(View.GONE);
                     });
                 }
             });
         } else {
             Toast.makeText(this, "Service not bound", Toast.LENGTH_SHORT).show();
-            // Hide the ProgressBar if the service is not bound
+
             progressBar.setVisibility(View.GONE);
-        }
-    }
-
-
-    @Override
-    protected void onDestroy() {
-        super.onDestroy();
-        if (isBound) {
-            unbindService(connection);
-            isBound = false;
         }
     }
 }

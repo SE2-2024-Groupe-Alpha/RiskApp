@@ -1,6 +1,7 @@
 package se2.alpha.riskapp.service;
 
 import android.app.Service;
+import android.content.Context;
 import android.content.Intent;
 import android.os.Binder;
 import android.os.Handler;
@@ -8,7 +9,6 @@ import android.os.IBinder;
 import android.os.Looper;
 import android.util.Log;
 import androidx.annotation.Nullable;
-import se2.alpha.riskapp.data.SecurePreferences;
 import se2.alpha.riskapp.model.auth.JwtAuthenticationResponse;
 import se2.alpha.riskapp.model.auth.SignInRequest;
 import se2.alpha.riskapp.model.auth.SignUpRequest;
@@ -29,36 +29,41 @@ import java.util.concurrent.Executors;
 import java.util.concurrent.Future;
 import se2.alpha.riskapp.BuildConfig;
 
+import javax.inject.Inject;
 
-public class BackendService extends Service {
+
+public class BackendService {
 
     private ExecutorService executorService = Executors.newFixedThreadPool(4); // Customize the thread count as needed
     private Gson gson = new Gson();
     private static final String API_URL = BuildConfig.API_URL;
     private static final String ENCODING = "utf-8";
-    private SecurePreferences securePreferences;
-    private final IBinder binder = new LocalBinder();
+    private final SecurePreferencesService securePreferencesService;
+//    private final IBinder binder = new LocalBinder();
 
-    public class LocalBinder extends Binder {
-        public BackendService getService() {
-            // Return this instance of BackendService so clients can call public methods
-            return BackendService.this;
-        }
+    @Inject
+    public BackendService(Context context, SecurePreferencesService securePreferences) {
+        this.securePreferencesService = securePreferences;
     }
 
-    @Nullable
-    @Override
-    public IBinder onBind(Intent intent) {
-        securePreferences = new SecurePreferences(this);
-        return binder;
-    }
+//    public class LocalBinder extends Binder {
+//        public BackendService getService() {
+//            return BackendService.this;
+//        }
+//    }
+//
+//    @Nullable
+//    @Override
+//    public IBinder onBind(Intent intent) {
+//        return binder;
+//    }
 
     public String getSessionToken() {
-        return securePreferences.getSessionToken();
+        return securePreferencesService.getSessionToken();
     }
 
     public void saveSessionToken(String token) {
-        securePreferences.saveSessionToken(token);
+        securePreferencesService.saveSessionToken(token);
     }
 
     public interface NetworkCallback {

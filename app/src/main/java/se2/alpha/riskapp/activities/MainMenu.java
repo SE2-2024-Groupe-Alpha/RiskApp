@@ -7,15 +7,22 @@ import android.widget.Button;
 import android.widget.Toast;
 import androidx.appcompat.app.AppCompatActivity;
 import se2.alpha.riskapp.R;
-import se2.alpha.riskapp.data.SecurePreferences;
+import se2.alpha.riskapp.data.RiskApplication;
+import se2.alpha.riskapp.service.SecurePreferencesService;
+
+import javax.inject.Inject;
 
 public class MainMenu extends AppCompatActivity {
     Button buttonLogout;
     Button buttonLobbyList;
-    @Override
 
+    @Inject
+    SecurePreferencesService securePreferencesService;
+
+    @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        ((RiskApplication) getApplication()).getRiskAppComponent().inject(this);
         setContentView(R.layout.main_menu_activity);
 
         buttonLogout = findViewById(R.id.btn_logout);
@@ -24,7 +31,7 @@ public class MainMenu extends AppCompatActivity {
         buttonLogout.setOnClickListener(view -> {
             Toast.makeText(MainMenu.this, "Logout successful", Toast.LENGTH_SHORT).show();
 
-            new SecurePreferences(MainMenu.this).saveSessionToken(null);
+           securePreferencesService.saveSessionToken(null);
 
             Intent intent = new Intent(MainMenu.this, Login.class);
             startActivity(intent);
