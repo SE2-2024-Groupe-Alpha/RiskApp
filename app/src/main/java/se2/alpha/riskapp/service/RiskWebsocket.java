@@ -7,7 +7,6 @@ import okhttp3.Response;
 import okhttp3.WebSocket;
 import okhttp3.WebSocketListener;
 import okio.ByteString;
-import se2.alpha.riskapp.activities.Lobby;
 import se2.alpha.riskapp.model.websocket.GameWebsocketMessage;
 import se2.alpha.riskapp.model.websocket.IGameWebsocketMessage;
 import se2.alpha.riskapp.model.websocket.UserSyncWebsocketMessage;
@@ -38,7 +37,7 @@ public class RiskWebsocket extends WebSocketListener {
                 executorService.submit(() -> {
                         IGameWebsocketMessage gameWebsocketMessage = gson.fromJson(text, GameWebsocketMessage.class);
                         switch (gameWebsocketMessage.getAction()){
-                                case SYNC_USERS: handleSyncUsers(text);
+                                case USER_SYNC: handleSyncUsers(text);
                         }
                 });
 
@@ -64,6 +63,6 @@ public class RiskWebsocket extends WebSocketListener {
 
         public void handleSyncUsers(String text){
                 UserSyncWebsocketMessage userSyncWebsocketMessage = gson.fromJson(text, UserSyncWebsocketMessage.class);
-                gameService.updateUsers(userSyncWebsocketMessage.getUserNames());
+                gameService.updateUsers(userSyncWebsocketMessage.getUserStates());
         }
 }

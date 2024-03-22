@@ -3,12 +3,12 @@ package se2.alpha.riskapp.model.websocket;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 
-import java.util.List;
+import java.util.Map;
 
 @AllArgsConstructor
 @Getter
 public class UserSyncWebsocketMessage implements IGameWebsocketMessage {
     private final CustomWebsocketMessageType type = CustomWebsocketMessageType.GAME;
-    private final GameWebsocketMessageAction action = GameWebsocketMessageAction.SYNC_USERS;
-    private List<String> userNames;
+    private final GameWebsocketMessageAction action = GameWebsocketMessageAction.USER_SYNC;
+    private Map<String, Boolean> userStates;
 }

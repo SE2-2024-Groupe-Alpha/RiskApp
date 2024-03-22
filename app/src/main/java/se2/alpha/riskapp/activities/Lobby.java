@@ -45,12 +45,10 @@ public class Lobby extends AppCompatActivity {
         adapter = new ArrayAdapter<>(this, android.R.layout.simple_list_item_1, initialUserNames);
         playerList.setAdapter(adapter);
 
-
-
-        gameService.getUserNames().observe(this, newData -> {
+        gameService.getUserStates().observe(this, newData -> {
             progressBar.setVisibility(View.GONE);
             adapter.clear();
-            adapter.addAll(newData);
+            adapter.addAll(newData.keySet());
             adapter.notifyDataSetChanged();
         });
     }
