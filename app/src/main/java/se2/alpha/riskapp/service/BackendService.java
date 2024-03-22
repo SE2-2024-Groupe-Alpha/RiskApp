@@ -5,6 +5,7 @@ import android.os.Handler;
 import android.os.Looper;
 import android.util.Log;
 import okhttp3.*;
+import okio.ByteString;
 import org.jetbrains.annotations.NotNull;
 import se2.alpha.riskapp.model.auth.JwtAuthenticationResponse;
 import se2.alpha.riskapp.model.auth.SignInRequest;
@@ -24,18 +25,21 @@ import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
 import se2.alpha.riskapp.BuildConfig;
+import se2.alpha.riskapp.model.websocket.ICustomWebsocketMessage;
 
 import javax.inject.Inject;
 
 
 public class BackendService {
 
-    private ExecutorService executorService = Executors.newFixedThreadPool(4); // Customize the thread count as needed
-    private Gson gson = new Gson();
+    private final ExecutorService executorService = Executors.newFixedThreadPool(4);
+    private final Gson gson = new Gson();
     private static final String API_URL = BuildConfig.API_URL;
+    private static final String WSS_URL = BuildConfig.WSS_URL;
     private static final String ENCODING = "utf-8";
     private final SecurePreferencesService securePreferencesService;
-    private OkHttpClient client = new OkHttpClient();
+    private final OkHttpClient client = new OkHttpClient();
+    private WebSocket webSocket;
 
     @Inject
     public BackendService(Context context, SecurePreferencesService securePreferences) {
@@ -139,49 +143,42 @@ public class BackendService {
 
     private void executeRequest(Request request, NetworkCallback callback, NetworkCallback errorCallback) {
         executorService.submit(() -> {
-            client.newCall(request).enqueue(new Callback() {
-                @Override
-                public void onFailure(@NotNull Call call, @NotNull IOException e) {
-                    new Handler(Looper.getMainLooper()).post(() -> errorCallback.onResult(e.getMessage()));
+            try (Response response = client.newCall(request).execute()) {
+                if (response.isSuccessful() && response.body() != null) {
+                    String result = response.body().string();
+                    new Handler(Looper.getMainLooper()).post(() -> callback.onResult(result));
+                } else {
+                    throw new IOException("Unexpected code " + response);
                 }
-
-                @Override
-                public void onResponse(@NotNull Call call, @NotNull Response response) throws IOException {
-                    if (response.isSuccessful()) {
-                        new Handler(Looper.getMainLooper()).post(() -> {
-                            try {
-                                assert response.body() != null;
-                                callback.onResult(response.body().string());
-                            } catch (IOException e) {
-                                Log.e("OH", "OH NO");
-                            }
-                        });
-                    } else {
-                        new Handler(Looper.getMainLooper()).post(() -> errorCallback.onResult(response.message()));
-                    }
-                }
-            });
+            } catch (IOException e) {
+                new Handler(Looper.getMainLooper()).post(() -> errorCallback.onResult(e.getMessage()));
+            }
         });
     }
 
-    private void handleRequestError(HttpURLConnection urlConnection, NetworkCallback errorCallback ,Exception e){
-        StringBuilder errorResponse = new StringBuilder();
+    public void startWebSocket() {
+        Request request = new Request.Builder()
+                .url(WSS_URL)
+                .addHeader("Authorization", "Bearer " + getSessionToken())
+                .build();
+        RiskWebsocket listener = new RiskWebsocket();
+        webSocket = client.newWebSocket(request, listener);
+    }
 
-        if (urlConnection != null) {
-            try (BufferedReader br = new BufferedReader(new InputStreamReader(urlConnection.getErrorStream(), ENCODING))) {
-                String responseLine;
-                while ((responseLine = br.readLine()) != null) {
-                    errorResponse.append(responseLine.trim());
-                }
-            } catch (Exception ex) {
-                Log.e("Communication Error", ex.toString());
-                errorResponse = new StringBuilder("Error reading error stream");
+    public void sendMessage(ICustomWebsocketMessage message) {
+        executorService.submit(() -> {
+            if (webSocket != null) {
+                String msg = gson.toJson(message);
+                webSocket.send(msg);
             }
-        }
+        });
+    }
 
-        final String errorResult = errorResponse.toString();
-
-        new Handler(Looper.getMainLooper()).post(() -> errorCallback.onResult(errorResult));
-        Log.e("BackendService-Error", errorResult);
+    public void closeWebSocket() {
+        executorService.submit(() -> {
+            if (webSocket != null) {
+                webSocket.close(1000, "Closing Connection");
+            }
+        });
     }
 }

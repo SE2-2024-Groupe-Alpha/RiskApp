@@ -27,12 +27,14 @@ android {
 
             proguardFiles(getDefaultProguardFile("proguard-android-optimize.txt"), "proguard-rules.pro")
             buildConfigField("String", "API_URL", project.properties["API_URL"].toString())
+            buildConfigField("String", "WSS_URL", project.properties["WSS_URL"].toString())
         }
         debug {
             isDebuggable = true
             isMinifyEnabled = false
             proguardFiles(getDefaultProguardFile("proguard-android-optimize.txt"), "proguard-rules.pro")
             buildConfigField("String", "API_URL", project.properties["API_URL"].toString())
+            buildConfigField("String", "WSS_URL", project.properties["WSS_URL"].toString())
         }
     }
     compileOptions {

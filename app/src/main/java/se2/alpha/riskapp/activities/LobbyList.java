@@ -18,15 +18,18 @@ import se2.alpha.riskapp.data.LobbyArrayAdapter;
 import se2.alpha.riskapp.data.RiskApplication;
 import se2.alpha.riskapp.model.game.GameSession;
 import se2.alpha.riskapp.model.game.GameState;
+import se2.alpha.riskapp.model.websocket.JoinWebsocketMessage;
 import se2.alpha.riskapp.service.BackendService;
 
 import javax.inject.Inject;
 import java.util.List;
+import java.util.UUID;
 import java.util.stream.Collectors;
 
 public class LobbyList extends AppCompatActivity {
     ListView lobbyList;
     ProgressBar progressBar;
+    List<GameSession> filteredLobbies;
 
     @Inject
     BackendService backendService;
@@ -41,36 +44,51 @@ public class LobbyList extends AppCompatActivity {
         progressBar = findViewById(R.id.progressBar);
 
         makeLobbyRequest();
+
+
+        lobbyList.setOnItemClickListener((parent, view, position, id) -> {
+            GameSession sessionToJoin = filteredLobbies.get(position);
+            JoinWebsocketMessage joinWebsocketMessage = new JoinWebsocketMessage(sessionToJoin.getSessionId());
+            backendService.sendMessage(joinWebsocketMessage);
+
+
+        });
+    }
+
+    @Override
+    protected void onStart() {
+        backendService.startWebSocket();
+        super.onStart();
+        makeLobbyRequest();
+    }
+
+    @Override
+    public void onBackPressed() {
+        super.onBackPressed();
+        backendService.closeWebSocket();
     }
 
     private void makeLobbyRequest() {
-        if (backendService != null) {
-            backendService.makeLobbyRequest(new BackendService.LobbyCallback() {
-                @Override
-                public void onSuccess(List<GameSession> response) {
-                    List<GameSession> filteredLobbies = response.stream()
-                            .filter(gameSession -> gameSession.getState() == GameState.Lobby || gameSession.getState() == GameState.Setup)
-                            .collect(Collectors.toList());
+        backendService.makeLobbyRequest(new BackendService.LobbyCallback() {
+            @Override
+            public void onSuccess(List<GameSession> response) {
+                filteredLobbies = response.stream()
+                        .filter(gameSession -> gameSession.getState() == GameState.Lobby)
+                        .collect(Collectors.toList());
 
-                    runOnUiThread(() -> {
-                        LobbyArrayAdapter adapter = new LobbyArrayAdapter(LobbyList.this, filteredLobbies);
-                        lobbyList.setAdapter(adapter);
-                        progressBar.setVisibility(View.GONE);
-                    });
-                }
+                LobbyArrayAdapter adapter = new LobbyArrayAdapter(LobbyList.this, filteredLobbies);
+                lobbyList.setAdapter(adapter);
 
-                @Override
-                public void onError(String error) {
-                    runOnUiThread(() -> {
-                        Toast.makeText(LobbyList.this, "Could not retrieve Lobbylist", Toast.LENGTH_SHORT).show();
-                        progressBar.setVisibility(View.GONE);
-                    });
-                }
-            });
-        } else {
-            Toast.makeText(this, "Service not bound", Toast.LENGTH_SHORT).show();
+                runOnUiThread(() -> progressBar.setVisibility(View.GONE));
+            }
 
-            progressBar.setVisibility(View.GONE);
-        }
+            @Override
+            public void onError(String error) {
+                runOnUiThread(() -> {
+                    Toast.makeText(LobbyList.this, "Could not retrieve Lobbylist", Toast.LENGTH_SHORT).show();
+                    progressBar.setVisibility(View.GONE);
+                });
+            }
+        });
     }
 }

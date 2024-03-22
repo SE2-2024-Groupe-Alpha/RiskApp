@@ -52,10 +52,12 @@ public class Login extends AppCompatActivity {
 
                     @Override
                     public void onError(String error) {
+                        backendService.saveSessionToken(null);
                         Toast.makeText(Login.this, "Token validation failed: " + error, Toast.LENGTH_SHORT).show();
                     }
                 });
             } catch (JSONException e) {
+                backendService.saveSessionToken(null);
                 throw new RuntimeException(e);
             }
         }
@@ -109,7 +111,6 @@ public class Login extends AppCompatActivity {
 
                     @Override
                     public void onError(String error) {
-
                         Toast.makeText(Login.this, "Login failed", Toast.LENGTH_SHORT).show();
                     }
                 });
