@@ -32,26 +32,27 @@
             android:layout_weight="1">
     </ListView>
 
-    <LinearLayout android:layout_width="wrap_content"
+    <LinearLayout android:layout_width="fill_parent"
                   android:layout_height="wrap_content"
-                  android:layout_margin="20dp">
-        <Button
-                android:layout_margin="10dp"
-                android:textSize="15sp"
-                android:id="@+id/btn_leave_lobby"
-                android:textAllCaps="true"
-                android:text="@string/leave_lobby"
-                android:layout_width="150dp"
-                android:layout_height="60dp"/>
-
+                  android:layout_margin="20dp" android:orientation="vertical">
         <Button
                 android:layout_margin="10dp"
                 android:textSize="15sp"
                 android:id="@+id/btn_ready"
                 android:textAllCaps="true"
                 android:text="@string/ready"
-                android:layout_width="150dp"
-                android:layout_height="60dp"/>
+                android:layout_width="fill_parent"
+                android:layout_height="match_parent"/>
+
+        <Button
+                android:layout_margin="10dp"
+                android:textSize="15sp"
+                android:id="@+id/btn_leave_lobby"
+                android:textAllCaps="true"
+                android:text="@string/leave_lobby"
+                android:layout_width="fill_parent"
+                android:layout_height="match_parent"/>
+
     </LinearLayout>
 
 </LinearLayout>

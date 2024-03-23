@@ -55,6 +55,7 @@ public class LobbyList extends AppCompatActivity {
             backendService.sendMessage(joinWebsocketMessage);
             gameService.setSessionId(sessionToJoin.getSessionId());
             Intent intent = new Intent(this, Lobby.class);
+            Toast.makeText(LobbyList.this, "Joined Lobby", Toast.LENGTH_SHORT).show();
             startActivity(intent);
             finish();
         });

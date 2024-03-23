@@ -1,5 +1,6 @@
 package se2.alpha.riskapp.activities;
 
+import android.content.Intent;
 import android.os.Bundle;
 
 
@@ -12,6 +13,7 @@ import se2.alpha.riskapp.data.PlayerArrayAdapter;
 import se2.alpha.riskapp.data.RiskApplication;
 import se2.alpha.riskapp.model.game.UserState;
 import se2.alpha.riskapp.model.websocket.JoinWebsocketMessage;
+import se2.alpha.riskapp.model.websocket.UserLeaveWebsocketMessage;
 import se2.alpha.riskapp.model.websocket.UserReadyWebsocketMessage;
 import se2.alpha.riskapp.service.BackendService;
 import se2.alpha.riskapp.service.GameService;
@@ -27,7 +29,6 @@ public class Lobby extends AppCompatActivity {
     ProgressBar progressBar;
     Button buttonReady;
     Button buttonLeave;
-    private ArrayAdapter<String> adapter;
 
     Boolean isReady = false;
 
@@ -46,10 +47,12 @@ public class Lobby extends AppCompatActivity {
         playerList = findViewById(R.id.player_list);
         progressBar = findViewById(R.id.progressBar);
         buttonReady = findViewById(R.id.btn_ready);
+        buttonLeave = findViewById(R.id.btn_leave_lobby);
 
         progressBar.setVisibility(View.VISIBLE);
 
         buttonReady.setOnClickListener(this::playerReadyClick);
+        buttonLeave.setOnClickListener(this::playerLeaveLobby);
 
         PlayerArrayAdapter adapter = new PlayerArrayAdapter(Lobby.this, new ArrayList<>());
         playerList.setAdapter(adapter);
@@ -69,7 +72,30 @@ public class Lobby extends AppCompatActivity {
         });
     }
 
-    public void playerReadyClick(View l) {
+    @Override
+    public void onBackPressed() {
+        super.onBackPressed();
+        sendLeaveMessage();
+        Intent intent = new Intent(this, LobbyList.class);
+        Toast.makeText(Lobby.this, "Left the lobby", Toast.LENGTH_SHORT).show();
+        startActivity(intent);
+        finish();
+    }
+
+    private void playerLeaveLobby(View view) {
+        sendLeaveMessage();
+        Intent intent = new Intent(this, LobbyList.class);
+        Toast.makeText(Lobby.this, "Left the lobby", Toast.LENGTH_SHORT).show();
+        startActivity(intent);
+        finish();
+    }
+
+    private void sendLeaveMessage(){
+        UserLeaveWebsocketMessage userLeaveWebsocketMessage = new UserLeaveWebsocketMessage(gameService.getSessionId());
+        backendService.sendMessage(userLeaveWebsocketMessage);
+    }
+
+    public void playerReadyClick(View view) {
         if (isReady)
             buttonReady.setText("Ready");
         else
