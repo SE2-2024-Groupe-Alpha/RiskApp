@@ -9,6 +9,8 @@ import se2.alpha.riskapp.model.auth.JwtAuthenticationResponse;
 import se2.alpha.riskapp.model.auth.SignInRequest;
 import se2.alpha.riskapp.model.auth.SignUpRequest;
 import se2.alpha.riskapp.model.auth.ValidationRequest;
+import se2.alpha.riskapp.model.game.CreateLobbyRequest;
+import se2.alpha.riskapp.model.game.CreateLobbyResponse;
 import se2.alpha.riskapp.model.game.GameSession;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
@@ -118,6 +120,23 @@ public class BackendService {
 
         }, callback::onError);
     }
+
+    public interface CreateLobbyCallback {
+        void onSuccess(CreateLobbyResponse response);
+        void onError(String error);
+    }
+
+    public void createLobbyRequest(CreateLobbyRequest request, CreateLobbyCallback callback) throws JSONException {
+        String jsonString = gson.toJson(request);
+        JSONObject jsonObject = new JSONObject(jsonString);
+
+        makePostRequest(API_URL + "/game/lobby", jsonObject, result -> {
+            CreateLobbyResponse createLobbyResponse = gson.fromJson(result, CreateLobbyResponse.class);
+            callback.onSuccess(createLobbyResponse);
+        }, callback::onError);
+    }
+
+
 
     public void makePostRequest(String urlString, JSONObject postData, NetworkCallback callback, NetworkCallback errorCallback) {
         RequestBody body = RequestBody.create(postData.toString(), MediaType.get("application/json; charset=utf-8"));

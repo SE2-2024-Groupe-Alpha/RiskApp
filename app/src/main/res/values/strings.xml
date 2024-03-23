@@ -18,4 +18,5 @@
     <string name="ready">Ready</string>
     <string name="player_name">player_name</string>
     <string name="not_ready">not ready</string>
+    <string name="enter_lobby_title">Enter Lobby Title</string>
 </resources>
