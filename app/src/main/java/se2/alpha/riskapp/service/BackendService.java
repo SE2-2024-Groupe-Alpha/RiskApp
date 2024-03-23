@@ -33,6 +33,8 @@ public class BackendService {
     private static final String API_URL = BuildConfig.API_URL;
     private static final String WSS_URL = BuildConfig.WSS_URL;
     private static final String ENCODING = "utf-8";
+    private static final String Bearer = "Bearer ";
+    private static final String HeaderKeyAuthorization = "Authorization";
     private final SecurePreferencesService securePreferencesService;
     private final GameService gameService;
     private final Context context;
@@ -122,7 +124,7 @@ public class BackendService {
         Request.Builder requestBuilder = new Request.Builder().url(urlString).post(body);
 
         if (getSessionToken()!= null){
-            requestBuilder.addHeader("Authorization", "Bearer " + getSessionToken());
+            requestBuilder.addHeader(HeaderKeyAuthorization, Bearer + getSessionToken());
         }
 
         Request request = requestBuilder.build();
@@ -133,7 +135,7 @@ public class BackendService {
         Request.Builder requestBuilder = new Request.Builder().url(urlString);
 
         if (getSessionToken()!= null){
-            requestBuilder.addHeader("Authorization", "Bearer " + getSessionToken());
+            requestBuilder.addHeader(HeaderKeyAuthorization, Bearer + getSessionToken());
         }
 
         Request request = requestBuilder.build();
@@ -159,7 +161,7 @@ public class BackendService {
     public void startWebSocket() {
         Request request = new Request.Builder()
                 .url(WSS_URL)
-                .addHeader("Authorization", "Bearer " + getSessionToken())
+                .addHeader(HeaderKeyAuthorization, Bearer + getSessionToken())
                 .build();
         RiskWebsocket listener = new RiskWebsocket(context, gameService);
         webSocket = client.newWebSocket(request, listener);

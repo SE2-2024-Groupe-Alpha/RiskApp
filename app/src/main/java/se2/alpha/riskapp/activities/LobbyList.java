@@ -1,13 +1,9 @@
 package se2.alpha.riskapp.activities;
 
-import android.content.ComponentName;
-import android.content.Context;
 import android.content.Intent;
-import android.content.ServiceConnection;
 import android.os.Bundle;
 
 
-import android.os.IBinder;
 import android.view.View;
 import android.widget.ListView;
 import android.widget.ProgressBar;
@@ -24,11 +20,10 @@ import se2.alpha.riskapp.service.GameService;
 
 import javax.inject.Inject;
 import java.util.List;
-import java.util.UUID;
 import java.util.stream.Collectors;
 
 public class LobbyList extends AppCompatActivity {
-    ListView lobbyList;
+    ListView availableLobbies;
     ProgressBar progressBar;
     List<GameSession> filteredLobbies;
 
@@ -43,13 +38,13 @@ public class LobbyList extends AppCompatActivity {
         ((RiskApplication) getApplication()).getRiskAppComponent().inject(this);
         setContentView(R.layout.lobby_list_activity);
 
-        lobbyList = findViewById(R.id.lobby_list);
+        availableLobbies = findViewById(R.id.lobby_list);
         progressBar = findViewById(R.id.progressBar);
 
         makeLobbyRequest();
 
 
-        lobbyList.setOnItemClickListener((parent, view, position, id) -> {
+        availableLobbies.setOnItemClickListener((parent, view, position, id) -> {
             GameSession sessionToJoin = filteredLobbies.get(position);
             JoinWebsocketMessage joinWebsocketMessage = new JoinWebsocketMessage(sessionToJoin.getSessionId());
             backendService.sendMessage(joinWebsocketMessage);
@@ -83,7 +78,7 @@ public class LobbyList extends AppCompatActivity {
                         .collect(Collectors.toList());
 
                 LobbyArrayAdapter adapter = new LobbyArrayAdapter(LobbyList.this, filteredLobbies);
-                lobbyList.setAdapter(adapter);
+                availableLobbies.setAdapter(adapter);
 
                 runOnUiThread(() -> progressBar.setVisibility(View.GONE));
             }

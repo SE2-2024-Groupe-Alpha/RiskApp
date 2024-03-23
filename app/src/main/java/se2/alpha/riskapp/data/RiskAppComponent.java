@@ -2,7 +2,6 @@ package se2.alpha.riskapp.data;
 import dagger.Component;
 import se2.alpha.riskapp.activities.*;
 import se2.alpha.riskapp.service.BackendService;
-import se2.alpha.riskapp.service.SecurePreferencesService;
 
 import javax.inject.Singleton;
 

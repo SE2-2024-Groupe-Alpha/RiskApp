@@ -6,6 +6,7 @@ import android.os.Bundle;
 
 import android.os.IBinder;
 import android.text.TextUtils;
+import android.util.Log;
 import android.view.View;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
@@ -116,7 +117,8 @@ public class Login extends AppCompatActivity {
                 });
 
             } catch (JSONException e) {
-                throw new RuntimeException(e);
+                Log.e("LOGIN", e.getMessage());
+                Toast.makeText(Login.this, "Login failed catastrophic", Toast.LENGTH_SHORT).show();
             }
 
         });
