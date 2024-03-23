@@ -3,6 +3,11 @@ package se2.alpha.riskapp.model.game;
 import java.util.UUID;
 
 public class GameSession {
+    private UUID sessionId;
+    private String name;
+    private Integer users;
+    private GameState state;
+
     public UUID getSessionId() {
         return sessionId;
     }
@@ -19,11 +24,5 @@ public class GameSession {
         return state;
     }
 
-    private UUID sessionId;
 
-    private String name;
-
-    private Integer users;
-
-    private GameState state;
 }
