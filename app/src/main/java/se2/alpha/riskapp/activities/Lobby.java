@@ -29,7 +29,7 @@ public class Lobby extends AppCompatActivity {
     ProgressBar progressBar;
     Button buttonReady;
     Button buttonLeave;
-    Boolean isReady = false;
+    boolean isReady = false;
     @Inject
     BackendService backendService;
     @Inject
