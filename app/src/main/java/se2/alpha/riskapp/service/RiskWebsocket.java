@@ -3,14 +3,17 @@ package se2.alpha.riskapp.service;
 import android.content.Context;
 import android.util.Log;
 import com.google.gson.Gson;
+import lombok.var;
 import okhttp3.Response;
 import okhttp3.WebSocket;
 import okhttp3.WebSocketListener;
 import okio.ByteString;
 import se2.alpha.riskapp.model.websocket.GameWebsocketMessage;
+import se2.alpha.riskapp.model.websocket.GameWebsocketMessageAction;
 import se2.alpha.riskapp.model.websocket.IGameWebsocketMessage;
 import se2.alpha.riskapp.model.websocket.UserSyncWebsocketMessage;
 
+import java.util.Objects;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
@@ -36,15 +39,10 @@ public class RiskWebsocket extends WebSocketListener {
             // Handle text messages
                 executorService.submit(() -> {
                         IGameWebsocketMessage gameWebsocketMessage = gson.fromJson(text, GameWebsocketMessage.class);
-                        switch (gameWebsocketMessage.getAction()){
-                            case JOIN:
-                                break;
-                            case USER_SYNC: handleSyncUsers(text);
-                            case USER_READY:
-                                break;
-                            case USER_LEAVE:
-                                break;
-                        }
+                        var action = Objects.requireNonNull(gameWebsocketMessage.getAction());
+                    if (action == GameWebsocketMessageAction.USER_SYNC) {
+                        handleSyncUsers(text);
+                    }
                 });
 
                 Log.d("THE SOCKET IS TALKING", text);

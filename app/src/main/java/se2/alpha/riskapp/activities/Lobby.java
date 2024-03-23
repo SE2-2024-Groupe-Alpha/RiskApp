@@ -29,19 +29,9 @@ public class Lobby extends AppCompatActivity {
     ProgressBar progressBar;
     Button buttonReady;
     Button buttonLeave;
-
     Boolean isReady = false;
-
-//    private final BackendService backendService;
-
-//    @Inject
-//    public Lobby(BackendService backendService){
-//        this.backendService = backendService;
-//    }
-
     @Inject
     BackendService backendService;
-
     @Inject
     GameService gameService;
 
@@ -105,10 +95,10 @@ public class Lobby extends AppCompatActivity {
     public void playerReadyClick(View view) {
         isReady = !isReady;
 
-        if (!isReady)
-            buttonReady.setText("Ready");
-        else
+        if (isReady)
             buttonReady.setText("Not Ready");
+        else
+            buttonReady.setText("Ready");
 
         UserReadyWebsocketMessage rdyMsg = new UserReadyWebsocketMessage(gameService.getSessionId(), isReady);
         backendService.sendMessage(rdyMsg);

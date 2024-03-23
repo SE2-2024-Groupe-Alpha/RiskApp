@@ -59,7 +59,7 @@ public class Login extends AppCompatActivity {
                 });
             } catch (JSONException e) {
                 backendService.saveSessionToken(null);
-                throw new RuntimeException(e);
+                Toast.makeText(Login.this, "Token validation request error", Toast.LENGTH_SHORT).show();
             }
         }
     }
