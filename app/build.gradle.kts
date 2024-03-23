@@ -3,11 +3,11 @@ plugins {
 }
 
 android {
-    namespace = "com.example.riskapp"
+    namespace = "se2.alpha.riskapp"
     compileSdk = 34
 
     defaultConfig {
-        applicationId = "com.example.riskapp"
+        applicationId = "se2.alpha.riskapp"
         minSdk = 31
         targetSdk = 34
         versionCode = 1
@@ -27,12 +27,14 @@ android {
 
             proguardFiles(getDefaultProguardFile("proguard-android-optimize.txt"), "proguard-rules.pro")
             buildConfigField("String", "API_URL", project.properties["API_URL"].toString())
+            buildConfigField("String", "WSS_URL", project.properties["WSS_URL"].toString())
         }
         debug {
             isDebuggable = true
             isMinifyEnabled = false
             proguardFiles(getDefaultProguardFile("proguard-android-optimize.txt"), "proguard-rules.pro")
             buildConfigField("String", "API_URL", project.properties["API_URL"].toString())
+            buildConfigField("String", "WSS_URL", project.properties["WSS_URL"].toString())
         }
     }
     compileOptions {
@@ -47,8 +49,13 @@ dependencies {
     implementation("com.google.android.material:material:1.9.0")
     implementation("androidx.constraintlayout:constraintlayout:2.1.4")
     implementation("androidx.security:security-crypto:1.0.0")
+    annotationProcessor("org.projectlombok:lombok:1.18.30")
+    compileOnly("org.projectlombok:lombok:1.18.30")
     testImplementation("junit:junit:4.13.2")
     androidTestImplementation("androidx.test.ext:junit:1.1.5")
     androidTestImplementation("androidx.test.espresso:espresso-core:3.5.1")
+    implementation("com.google.dagger:dagger:2.51")
+    annotationProcessor("com.google.dagger:dagger-compiler:2.51")
+    implementation("com.squareup.okhttp3:okhttp:4.12.0")
 
 }

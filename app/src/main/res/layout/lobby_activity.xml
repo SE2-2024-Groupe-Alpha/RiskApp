@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+        xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:tools="http://schemas.android.com/tools"
+        android:layout_width="match_parent"
+        android:layout_height="fill_parent"
+        android:maxHeight="90dp"
+        android:gravity="center"
+        tools:context=".activities.LobbyList"
+        android:padding="15dp"
+        android:orientation="vertical">
+
+    <TextView
+            android:text="Game starting soon"
+            android:textSize="25sp"
+            android:textStyle="bold"
+            android:gravity="center"
+            android:layout_marginBottom="20sp"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"/>
+
+    <ProgressBar
+            android:id="@+id/progressBar"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:visibility="gone"/>
+
+    <ListView
+            android:id="@+id/player_list"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="1">
+    </ListView>
+
+    <LinearLayout android:layout_width="fill_parent"
+                  android:layout_height="wrap_content"
+                  android:layout_margin="20dp" android:orientation="vertical">
+        <Button
+                android:layout_margin="10dp"
+                android:textSize="15sp"
+                android:id="@+id/btn_ready"
+                android:textAllCaps="true"
+                android:text="@string/ready"
+                android:layout_width="fill_parent"
+                android:layout_height="match_parent"/>
+
+        <Button
+                android:layout_margin="10dp"
+                android:textSize="15sp"
+                android:id="@+id/btn_leave_lobby"
+                android:textAllCaps="true"
+                android:text="@string/leave_lobby"
+                android:layout_width="fill_parent"
+                android:layout_height="match_parent"/>
+
+    </LinearLayout>
+
+</LinearLayout>
