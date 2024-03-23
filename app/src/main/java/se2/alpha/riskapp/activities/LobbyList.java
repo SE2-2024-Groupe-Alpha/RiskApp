@@ -74,7 +74,7 @@ public class LobbyList extends AppCompatActivity {
             @Override
             public void onSuccess(List<GameSession> response) {
                 filteredLobbies = response.stream()
-                        .filter(gameSession -> gameSession.getState() == GameState.Lobby && gameSession.getUsers() < 6)
+                        .filter(gameSession -> gameSession.getState() == GameState.LOBBY && gameSession.getUsers() < 6)
                         .collect(Collectors.toList());
 
                 LobbyArrayAdapter adapter = new LobbyArrayAdapter(LobbyList.this, filteredLobbies);

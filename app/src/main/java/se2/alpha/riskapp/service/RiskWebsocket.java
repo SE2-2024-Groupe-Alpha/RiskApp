@@ -37,7 +37,13 @@ public class RiskWebsocket extends WebSocketListener {
                 executorService.submit(() -> {
                         IGameWebsocketMessage gameWebsocketMessage = gson.fromJson(text, GameWebsocketMessage.class);
                         switch (gameWebsocketMessage.getAction()){
-                                case USER_SYNC: handleSyncUsers(text);
+                            case JOIN:
+                                break;
+                            case USER_SYNC: handleSyncUsers(text);
+                            case USER_READY:
+                                break;
+                            case USER_LEAVE:
+                                break;
                         }
                 });
 
