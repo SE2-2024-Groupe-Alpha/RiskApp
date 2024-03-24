@@ -34,9 +34,6 @@ public class LobbyService {
     }
 
     public void joinLobby(UUID sessionID){
-        if (backendService.getWebSocket() == null){
-            backendService.startWebSocket();
-        }
         JoinWebsocketMessage joinWebsocketMessage = new JoinWebsocketMessage(sessionID);
         backendService.sendMessage(joinWebsocketMessage);
         gameService.setSessionId(sessionID);

@@ -189,6 +189,10 @@ public class BackendService {
     }
 
     public void sendMessage(ICustomWebsocketMessage message) {
+        if (webSocket == null){
+            startWebSocket();
+        }
+
         executorService.submit(() -> {
             if (webSocket != null) {
                 String msg = gson.toJson(message);
@@ -201,6 +205,7 @@ public class BackendService {
         executorService.submit(() -> {
             if (webSocket != null) {
                 webSocket.close(1000, "Closing Connection");
+                webSocket = null;
             }
         });
     }

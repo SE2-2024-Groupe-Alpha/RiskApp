@@ -50,15 +50,14 @@ public class LobbyList extends AppCompatActivity {
 
     @Override
     protected void onStart() {
-        backendService.startWebSocket();
-        super.onStart();
         getLobbies();
+        super.onStart();
     }
 
     @Override
     public void onBackPressed() {
-        super.onBackPressed();
-        backendService.closeWebSocket();
+        Intent intent = new Intent(this, MainMenu.class);
+        startActivity(intent);
     }
 
     private void getLobbies() {

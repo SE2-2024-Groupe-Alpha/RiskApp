@@ -12,9 +12,6 @@ import se2.alpha.riskapp.data.LobbyArrayAdapter;
 import se2.alpha.riskapp.data.PlayerArrayAdapter;
 import se2.alpha.riskapp.data.RiskApplication;
 import se2.alpha.riskapp.model.game.UserState;
-import se2.alpha.riskapp.model.websocket.JoinWebsocketMessage;
-import se2.alpha.riskapp.model.websocket.UserLeaveWebsocketMessage;
-import se2.alpha.riskapp.model.websocket.UserReadyWebsocketMessage;
 import se2.alpha.riskapp.service.BackendService;
 import se2.alpha.riskapp.service.GameService;
 import se2.alpha.riskapp.service.LobbyService;
@@ -79,6 +76,7 @@ public class Lobby extends AppCompatActivity {
         Intent intent = new Intent(this, LobbyList.class);
         Toast.makeText(Lobby.this, "Left the lobby", Toast.LENGTH_SHORT).show();
         startActivity(intent);
+        backendService.closeWebSocket();
         finish();
     }
 
@@ -87,6 +85,7 @@ public class Lobby extends AppCompatActivity {
         Intent intent = new Intent(this, LobbyList.class);
         Toast.makeText(Lobby.this, "Left the lobby", Toast.LENGTH_SHORT).show();
         startActivity(intent);
+        backendService.closeWebSocket();
         finish();
     }
 
