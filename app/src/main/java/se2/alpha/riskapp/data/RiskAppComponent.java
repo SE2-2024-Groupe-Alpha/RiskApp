@@ -14,6 +14,8 @@ public interface RiskAppComponent {
     void inject(Register register);
     void inject(Lobby lobby);
 
+    void inject(Game game);
+
     void inject(BackendService backendService);
 
 }
