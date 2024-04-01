@@ -12,11 +12,9 @@ import se2.alpha.riskapp.data.LobbyArrayAdapter;
 import se2.alpha.riskapp.data.PlayerArrayAdapter;
 import se2.alpha.riskapp.data.RiskApplication;
 import se2.alpha.riskapp.model.game.UserState;
-import se2.alpha.riskapp.model.websocket.JoinWebsocketMessage;
-import se2.alpha.riskapp.model.websocket.UserLeaveWebsocketMessage;
-import se2.alpha.riskapp.model.websocket.UserReadyWebsocketMessage;
 import se2.alpha.riskapp.service.BackendService;
 import se2.alpha.riskapp.service.GameService;
+import se2.alpha.riskapp.service.LobbyService;
 
 import javax.inject.Inject;
 import java.util.ArrayList;
@@ -34,6 +32,8 @@ public class Lobby extends AppCompatActivity {
     BackendService backendService;
     @Inject
     GameService gameService;
+    @Inject
+    LobbyService lobbyService;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -72,35 +72,32 @@ public class Lobby extends AppCompatActivity {
     @Override
     public void onBackPressed() {
         super.onBackPressed();
-        sendLeaveMessage();
+        lobbyService.leaveLobby();
         Intent intent = new Intent(this, LobbyList.class);
         Toast.makeText(Lobby.this, "Left the lobby", Toast.LENGTH_SHORT).show();
         startActivity(intent);
+        backendService.closeWebSocket();
         finish();
     }
 
     private void playerLeaveLobby(View view) {
-        sendLeaveMessage();
+        lobbyService.leaveLobby();
         Intent intent = new Intent(this, LobbyList.class);
         Toast.makeText(Lobby.this, "Left the lobby", Toast.LENGTH_SHORT).show();
         startActivity(intent);
+        backendService.closeWebSocket();
         finish();
-    }
-
-    private void sendLeaveMessage(){
-        UserLeaveWebsocketMessage userLeaveWebsocketMessage = new UserLeaveWebsocketMessage(gameService.getSessionId());
-        backendService.sendMessage(userLeaveWebsocketMessage);
     }
 
     public void playerReadyClick(View view) {
         isReady = !isReady;
 
-        if (isReady)
+        if (isReady) {
             buttonReady.setText("Not Ready");
-        else
+        } else{
             buttonReady.setText("Ready");
+        }
 
-        UserReadyWebsocketMessage rdyMsg = new UserReadyWebsocketMessage(gameService.getSessionId(), isReady);
-        backendService.sendMessage(rdyMsg);
+        lobbyService.updatePlayerStatus(isReady);
     }
 }

@@ -4,6 +4,7 @@ import android.content.Context;
 import android.os.Handler;
 import android.os.Looper;
 import android.util.Log;
+import lombok.Getter;
 import okhttp3.*;
 import se2.alpha.riskapp.model.auth.JwtAuthenticationResponse;
 import se2.alpha.riskapp.model.auth.SignInRequest;
@@ -41,6 +42,7 @@ public class BackendService {
     private final GameService gameService;
     private final Context context;
     private final OkHttpClient client = new OkHttpClient();
+    @Getter
     private WebSocket webSocket;
 
     @Inject
@@ -187,6 +189,10 @@ public class BackendService {
     }
 
     public void sendMessage(ICustomWebsocketMessage message) {
+        if (webSocket == null){
+            startWebSocket();
+        }
+
         executorService.submit(() -> {
             if (webSocket != null) {
                 String msg = gson.toJson(message);
@@ -199,6 +205,7 @@ public class BackendService {
         executorService.submit(() -> {
             if (webSocket != null) {
                 webSocket.close(1000, "Closing Connection");
+                webSocket = null;
             }
         });
     }

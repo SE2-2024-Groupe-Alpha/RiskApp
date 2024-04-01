@@ -10,14 +10,9 @@ import android.widget.EditText;
 import android.widget.Toast;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
-import org.json.JSONException;
 import se2.alpha.riskapp.R;
 import se2.alpha.riskapp.data.RiskApplication;
-import se2.alpha.riskapp.model.game.CreateLobbyRequest;
-import se2.alpha.riskapp.model.game.CreateLobbyResponse;
-import se2.alpha.riskapp.model.websocket.JoinWebsocketMessage;
-import se2.alpha.riskapp.service.BackendService;
-import se2.alpha.riskapp.service.GameService;
+import se2.alpha.riskapp.service.LobbyService;
 import se2.alpha.riskapp.service.SecurePreferencesService;
 
 import javax.inject.Inject;
@@ -26,13 +21,10 @@ public class MainMenu extends AppCompatActivity {
     Button buttonLogout;
     Button buttonLobbyList;
     Button buttonCreateLobby;
-
     @Inject
     SecurePreferencesService securePreferencesService;
     @Inject
-    BackendService backendService;
-    @Inject
-    GameService gameService;
+    LobbyService lobbyService;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -46,7 +38,6 @@ public class MainMenu extends AppCompatActivity {
 
         buttonLogout.setOnClickListener(view -> {
             Toast.makeText(MainMenu.this, "Logout successful", Toast.LENGTH_SHORT).show();
-
            securePreferencesService.saveSessionToken(null);
 
             Intent intent = new Intent(MainMenu.this, Login.class);
@@ -72,8 +63,17 @@ public class MainMenu extends AppCompatActivity {
                     String lobbyTitle = editTextLobbyTitle.getText().toString().trim();
 
                     if (!lobbyTitle.isEmpty()) {
-                        createLobby(lobbyTitle);
-                    } else {
+                        lobbyService.createLobby(lobbyTitle, success -> {
+                            if (success){
+                                Intent intent = new Intent(MainMenu.this, Lobby.class);
+                                Toast.makeText(MainMenu.this, "Lobby " + lobbyTitle + " created", Toast.LENGTH_SHORT).show();
+                                startActivity(intent);
+                                finish();
+                            }else {
+                                Toast.makeText(MainMenu.this, "Lobby creation failed", Toast.LENGTH_SHORT).show();
+                            }
+                        });
+                    }else {
                         Toast.makeText(MainMenu.this, "Lobby title cannot be empty", Toast.LENGTH_SHORT).show();
                     }
                 })
@@ -81,32 +81,5 @@ public class MainMenu extends AppCompatActivity {
 
         AlertDialog alertDialog = builder.create();
         alertDialog.show();
-    }
-
-    private void createLobby(String lobbyTitle) {
-        CreateLobbyRequest createLobbyRequest = new CreateLobbyRequest(lobbyTitle);
-        try {
-            backendService.createLobbyRequest(createLobbyRequest, new BackendService.CreateLobbyCallback() {
-                @Override
-                public void onSuccess(CreateLobbyResponse response) {
-                    JoinWebsocketMessage joinWebsocketMessage = new JoinWebsocketMessage(response.getGameSessionId());
-                    backendService.startWebSocket();
-                    backendService.sendMessage(joinWebsocketMessage);
-                    gameService.setSessionId(response.getGameSessionId());
-                    Intent intent = new Intent(MainMenu.this, Lobby.class);
-
-                    Toast.makeText(MainMenu.this, "Lobby " + lobbyTitle + " created", Toast.LENGTH_SHORT).show();
-                    startActivity(intent);
-                    finish();
-                }
-
-                @Override
-                public void onError(String error) {
-                    Toast.makeText(MainMenu.this, "Was unable to create Lobby", Toast.LENGTH_SHORT).show();
-                }
-            });
-        } catch (JSONException e) {
-            Toast.makeText(MainMenu.this, "Was unable to create Lobby", Toast.LENGTH_SHORT).show();
-        }
     }
 }

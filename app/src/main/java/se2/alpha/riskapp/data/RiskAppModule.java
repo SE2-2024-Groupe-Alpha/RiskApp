@@ -5,6 +5,7 @@ import dagger.Module;
 import dagger.Provides;
 import se2.alpha.riskapp.service.BackendService;
 import se2.alpha.riskapp.service.GameService;
+import se2.alpha.riskapp.service.LobbyService;
 import se2.alpha.riskapp.service.SecurePreferencesService;
 
 import javax.inject.Singleton;
@@ -40,5 +41,11 @@ public class RiskAppModule {
     @Singleton
     public GameService provideGameService(Context context){
         return new GameService(context);
+    }
+
+    @Provides
+    @Singleton
+    public LobbyService provideLobbyService(Context context, GameService gameService, BackendService backendService){
+        return new LobbyService(context, gameService, backendService);
     }
 }
