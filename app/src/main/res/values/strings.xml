@@ -2,6 +2,7 @@
     <string name="app_name">RiskApp</string>
     <string name="title">Welcome to the risky RISK</string>
     <string name="create_lobby">Create Lobby</string>
+    <string name="join_by_game">Join by Game</string>
     <string name="join_lobby">Join Lobby</string>
     <string name="login">Login</string>
     <string name="username">username</string>
