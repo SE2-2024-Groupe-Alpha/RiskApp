@@ -39,7 +39,7 @@ public class RiskWebsocket extends WebSocketListener {
             // Handle text messages
                 executorService.submit(() -> {
                         IGameWebsocketMessage gameWebsocketMessage = gson.fromJson(text, GameWebsocketMessage.class);
-                        var action = Objects.requireNonNull(gameWebsocketMessage.getAction());
+                        GameWebsocketMessageAction action = Objects.requireNonNull(gameWebsocketMessage.getAction());
                     if (action == GameWebsocketMessageAction.USER_SYNC) {
                         handleSyncUsers(text);
                     }

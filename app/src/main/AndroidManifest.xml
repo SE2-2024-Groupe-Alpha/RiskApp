@@ -38,10 +38,9 @@
                 android:exported="true">
         </activity>
 
-        <activity
-                android:permission=""
-                android:name="se2.alpha.riskapp.activities.MainMenu"
-                android:exported="true">
+        <activity android:permission=""
+                  android:name="se2.alpha.riskapp.activities.MainMenu"
+                  android:exported="true">
         </activity>
 
         <activity android:permission=""
@@ -54,7 +53,10 @@
                   android:exported="true">
         </activity>
 
-
+        <activity android:permission=""
+                  android:name="se2.alpha.riskapp.activities.Game"
+                  android:exported="true">
+        </activity>
 
     </application>
 

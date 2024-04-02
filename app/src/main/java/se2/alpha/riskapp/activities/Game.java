@@ -22,12 +22,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
-public class Lobby extends AppCompatActivity {
-    ListView playerList;
-    ProgressBar progressBar;
-    Button buttonReady;
-    Button buttonLeave;
-    boolean isReady = false;
+public class Game extends AppCompatActivity {
     @Inject
     BackendService backendService;
     @Inject
@@ -39,65 +34,6 @@ public class Lobby extends AppCompatActivity {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         ((RiskApplication) getApplication()).getRiskAppComponent().inject(this);
-        setContentView(R.layout.lobby_activity);
-
-        playerList = findViewById(R.id.player_list);
-        progressBar = findViewById(R.id.progressBar);
-        buttonReady = findViewById(R.id.btn_ready);
-        buttonLeave = findViewById(R.id.btn_leave_lobby);
-
-        progressBar.setVisibility(View.VISIBLE);
-
-        buttonReady.setOnClickListener(this::playerReadyClick);
-        buttonLeave.setOnClickListener(this::playerLeaveLobby);
-
-        PlayerArrayAdapter adapter = new PlayerArrayAdapter(Lobby.this, new ArrayList<>());
-        playerList.setAdapter(adapter);
-
-        gameService.getUserStates().observe(this, newData -> {
-            progressBar.setVisibility(View.GONE);
-            List<UserState> userStateList = new ArrayList<>();
-
-            for (Map.Entry<String, Boolean> entry : newData.entrySet()) {
-                UserState userState = new UserState(entry.getKey(), entry.getValue());
-                userStateList.add(userState);
-            }
-
-            adapter.clear();
-            adapter.addAll(userStateList);
-            adapter.notifyDataSetChanged();
-        });
-    }
-
-    @Override
-    public void onBackPressed() {
-        super.onBackPressed();
-        lobbyService.leaveLobby();
-        Intent intent = new Intent(this, LobbyList.class);
-        Toast.makeText(Lobby.this, "Left the lobby", Toast.LENGTH_SHORT).show();
-        startActivity(intent);
-        backendService.closeWebSocket();
-        finish();
-    }
-
-    private void playerLeaveLobby(View view) {
-        lobbyService.leaveLobby();
-        Intent intent = new Intent(this, LobbyList.class);
-        Toast.makeText(Lobby.this, "Left the lobby", Toast.LENGTH_SHORT).show();
-        startActivity(intent);
-        backendService.closeWebSocket();
-        finish();
-    }
-
-    public void playerReadyClick(View view) {
-        isReady = !isReady;
-
-        if (isReady) {
-            buttonReady.setText("Not Ready");
-        } else{
-            buttonReady.setText("Ready");
-        }
-
-        lobbyService.updatePlayerStatus(isReady);
+        setContentView(R.layout.game_activity);
     }
 }
