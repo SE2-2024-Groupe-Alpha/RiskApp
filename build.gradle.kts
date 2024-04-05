@@ -10,5 +10,6 @@ sonarqube {
         property("sonar.projectKey", "SE2-2024-Group-Alpha_RiskApp")
         property("sonar.organization", "se2-2024-group-alpha")
         property("sonar.host.url", "https://sonarcloud.io")
+        property("sonar.gradle.skipCompile", "true")
     }
 }

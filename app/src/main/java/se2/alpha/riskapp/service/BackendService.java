@@ -164,7 +164,7 @@ public class BackendService {
         executeRequest(request, callback, errorCallback);
     }
 
-    private void executeRequest(Request request, NetworkCallback callback, NetworkCallback errorCallback) {
+    public void executeRequest(Request request, NetworkCallback callback, NetworkCallback errorCallback) {
         executorService.submit(() -> {
             try (Response response = client.newCall(request).execute()) {
                 if (response.isSuccessful() && response.body() != null) {
