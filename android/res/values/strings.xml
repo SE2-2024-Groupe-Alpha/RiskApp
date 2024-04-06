@@ -1,0 +1,23 @@
+<resources>
+    <string name="app_name">RiskApp</string>
+    <string name="title">Welcome to the risky RISK</string>
+    <string name="create_lobby">Create Lobby</string>
+    <string name="join_by_id">Join by ID</string>
+    <string name="join_lobby">Join Lobby</string>
+    <string name="login">Login</string>
+    <string name="username">username</string>
+    <string name="password">password</string>
+    <string name="register">Register</string>
+    <string name="register_info">Dont have an Account yet?</string>
+    <string name="register_now">Register now</string>
+    <string name="lobby_identifier">Lobby Identifier</string>
+    <string name="logout">Logout</string>
+    <string name="choose_a_lobby">Choose a Lobby</string>
+    <string name="lobby_name">Lobby Name</string>
+    <string name="_0_6_players">0/6 Players</string>
+    <string name="leave_lobby">Leave</string>
+    <string name="ready">Ready</string>
+    <string name="player_name">player_name</string>
+    <string name="not_ready">not ready</string>
+    <string name="enter_lobby_title">Enter Lobby Title</string>
+</resources>
