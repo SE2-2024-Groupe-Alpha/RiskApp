@@ -6,9 +6,12 @@ import com.badlogic.gdx.InputProcessor;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.math.Vector3;
 import com.badlogic.gdx.utils.ScreenUtils;
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.input.GestureDetector;
+import com.badlogic.gdx.input.GestureDetector.GestureAdapter;
 
 
 public class RiskGame extends ApplicationAdapter {
@@ -35,34 +38,9 @@ public class RiskGame extends ApplicationAdapter {
 		camera = new OrthographicCamera(screenWidth, screenHeight);
 		camera.setToOrtho(false);
 
-		Gdx.input.setInputProcessor(getInputProcessor());
-	}
+		GestureHandler gestureHandler = new GestureHandler(camera, background);
 
-	private InputProcessor getInputProcessor() {
-		return new InputAdapter() {
-			@Override
-			public boolean touchDragged(int screenX, int screenY, int pointer) {
-				Vector3 newTouch = new Vector3(screenX, screenY, 0);
-				camera.unproject(newTouch);
-				Vector3 delta = newTouch.cpy().sub(touchStart);
-				camera.position.sub(delta.x, delta.y, 0);
-				touchStart.set(newTouch);
-				return true;
-			}
-
-			@Override
-			public boolean touchDown(int screenX, int screenY, int pointer, int button) {
-				camera.unproject(touchStart.set(screenX, screenY, 0));
-				return true;
-			}
-
-			@Override
-			public boolean scrolled(float amountX, float amountY) {
-				camera.zoom += (float) (amountY * 0.1);
-				camera.zoom = Math.max(0.1f, camera.zoom); // Avoid inverting the camera with too much zoom out
-				return true;
-			}
-		};
+		Gdx.input.setInputProcessor(new GestureDetector(gestureHandler));
 	}
 
 	@Override
