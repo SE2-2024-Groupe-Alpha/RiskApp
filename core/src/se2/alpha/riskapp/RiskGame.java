@@ -20,9 +20,9 @@ public class RiskGame extends ApplicationAdapter {
 	int screenHeight;
 	int screenWidth;
 	float screenScaleFactor;
+	GestureHandler gestureHandler;
 
 	OrthographicCamera camera;
-	Vector3 touchStart = new Vector3();
 
 	@Override
 	public void create () {
@@ -38,7 +38,7 @@ public class RiskGame extends ApplicationAdapter {
 		camera = new OrthographicCamera(screenWidth, screenHeight);
 		camera.setToOrtho(false);
 
-		GestureHandler gestureHandler = new GestureHandler(camera, background);
+		gestureHandler = new GestureHandler(camera, background, screenScaleFactor);
 
 		Gdx.input.setInputProcessor(new GestureDetector(gestureHandler));
 	}
