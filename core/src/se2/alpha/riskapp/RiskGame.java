@@ -16,7 +16,10 @@ import com.badlogic.gdx.input.GestureDetector.GestureAdapter;
 
 public class RiskGame extends ApplicationAdapter {
 	SpriteBatch batch;
-	Texture background;
+	Texture background, waterTexture;
+
+	float waterSpeedX = 0.1f, waterSpeedY = 0.05f, waterOffsetX = 0, waterOffsetY = 0;
+
 	int screenHeight;
 	int screenWidth;
 	float screenScaleFactor;
@@ -28,6 +31,9 @@ public class RiskGame extends ApplicationAdapter {
 	public void create () {
 		batch = new SpriteBatch();
 		background = new Texture("map.png");
+		waterTexture = new Texture("woah.png");
+		waterTexture.setWrap(Texture.TextureWrap.Repeat, Texture.TextureWrap.Repeat);
+
 
 		screenScaleFactor = (float) Gdx.graphics.getHeight() / background.getHeight();
 
@@ -49,7 +55,18 @@ public class RiskGame extends ApplicationAdapter {
 		camera.update();
 		batch.setProjectionMatrix(camera.combined);
 
+		waterOffsetX += waterSpeedX * Gdx.graphics.getDeltaTime();
+		waterOffsetY += waterSpeedY * Gdx.graphics.getDeltaTime();
+
+		float bgWidthScaled = background.getWidth() * screenScaleFactor;
+		float bgHeightScaled = Gdx.graphics.getHeight();
+
 		batch.begin();
+		batch.draw(waterTexture, 0, 0, bgWidthScaled, bgHeightScaled,
+				waterOffsetX, waterOffsetY,
+                (float) ((bgWidthScaled / waterTexture.getWidth() + waterOffsetX)*1.5),
+                (float) ((bgHeightScaled / waterTexture.getHeight() + waterOffsetY)*1.5));
+
 		batch.draw(background, 0, 0, background.getWidth() * screenScaleFactor, Gdx.graphics.getHeight());
 		batch.end();
 	}
