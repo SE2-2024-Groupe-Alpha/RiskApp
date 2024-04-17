@@ -16,7 +16,7 @@ import com.badlogic.gdx.input.GestureDetector.GestureAdapter;
 
 public class RiskGame extends ApplicationAdapter {
 	SpriteBatch batch;
-	Texture background, waterTexture;
+	Texture background, waterTexture, artillery, infantry, cavalry;
 
 	float waterSpeedX = 0.1f, waterSpeedY = 0.05f, waterOffsetX = 0, waterOffsetY = 0;
 
@@ -31,6 +31,9 @@ public class RiskGame extends ApplicationAdapter {
 	public void create () {
 		batch = new SpriteBatch();
 		background = new Texture("map.png");
+		artillery = new Texture("artillery.png");
+		infantry = new Texture("infantry.png");
+		cavalry = new Texture("cavalry.png");
 		waterTexture = new Texture("woah.png");
 		waterTexture.setWrap(Texture.TextureWrap.Repeat, Texture.TextureWrap.Repeat);
 
@@ -68,6 +71,9 @@ public class RiskGame extends ApplicationAdapter {
                 (float) ((bgHeightScaled / waterTexture.getHeight() + waterOffsetY)*1.5));
 
 		batch.draw(background, 0, 0, background.getWidth() * screenScaleFactor, Gdx.graphics.getHeight());
+		batch.draw(artillery, 0, 0, background.getWidth() * screenScaleFactor / 20, Gdx.graphics.getHeight() / 20);
+		batch.draw(cavalry, 250, 0, background.getWidth() * screenScaleFactor / 20, Gdx.graphics.getHeight() / 20);
+		batch.draw(infantry, 500, 0, background.getWidth() * screenScaleFactor / 20, Gdx.graphics.getHeight() / 20);
 		batch.end();
 	}
 
