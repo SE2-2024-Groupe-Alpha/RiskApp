@@ -51,7 +51,7 @@ public class Login extends AppCompatActivity {
                     @Override
                     public void onError(String error) {
                         backendService.saveSessionToken(null);
-                        Toast.makeText(Login.this, "Token validation failed: " + error, Toast.LENGTH_SHORT).show();
+                        Toast.makeText(Login.this, "Token validation failed, please login again", Toast.LENGTH_LONG).show();
                     }
                 });
             } catch (JSONException e) {
@@ -112,7 +112,6 @@ public class Login extends AppCompatActivity {
                         Toast.makeText(Login.this, "Login failed", Toast.LENGTH_SHORT).show();
                     }
                 });
-
             } catch (JSONException e) {
                 Log.e("LOGIN", e.getMessage());
                 Toast.makeText(Login.this, "Login failed catastrophic", Toast.LENGTH_SHORT).show();
