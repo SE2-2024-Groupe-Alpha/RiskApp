@@ -6,6 +6,7 @@ import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.input.GestureDetector.GestureAdapter;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.math.Vector3;
+import se2.alpha.riskapp.ui.GameMap;
 
 public class GestureHandler extends GestureAdapter {
     private OrthographicCamera camera;
@@ -14,10 +15,21 @@ public class GestureHandler extends GestureAdapter {
     private Texture background;
     private float screenScaleFactor;
 
-    public GestureHandler(OrthographicCamera camera, Texture background, float screenScaleFactor) {
+    private GameMap gameMap;
+
+    public GestureHandler(OrthographicCamera camera, Texture background, float screenScaleFactor, GameMap gameMap) {
         this.camera = camera;
         this.background = background;
         this.screenScaleFactor = screenScaleFactor;
+        this.gameMap = gameMap;
+    }
+
+    @Override
+    public boolean tap(float x, float y, int count, int button) {
+        Vector3 worldCoordinates = camera.unproject(new Vector3(x, y, 0));
+        GameUnit unit = new GameUnit(GameUnitType.ARTILLERY, new Vector2(worldCoordinates.x, worldCoordinates.y));
+        gameMap.addUnit(unit);
+        return true;
     }
 
     @Override

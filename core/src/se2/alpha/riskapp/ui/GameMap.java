@@ -5,7 +5,9 @@ import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.input.GestureDetector;
+import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.Disposable;
+import se2.alpha.riskapp.GameUnit;
 import se2.alpha.riskapp.GestureHandler;
 
 public class GameMap implements Disposable {
@@ -17,6 +19,7 @@ public class GameMap implements Disposable {
     Texture background, waterTexture;
     float screenScaleFactor;
     GestureHandler gestureHandler;
+    private Array<GameUnit> units;
 
     public GameMap(int screenHeight, int screenWidth) {
         this.screenHeight = screenHeight;
@@ -29,8 +32,9 @@ public class GameMap implements Disposable {
         waterTexture = new Texture("woah.png");
         waterTexture.setWrap(Texture.TextureWrap.Repeat, Texture.TextureWrap.Repeat);
         screenScaleFactor = (float) Gdx.graphics.getHeight() / background.getHeight();
-        gestureHandler = new GestureHandler(camera, background, screenScaleFactor);
+        gestureHandler = new GestureHandler(camera, background, screenScaleFactor, this);
         Gdx.input.setInputProcessor(new GestureDetector(gestureHandler));
+        units = new Array<>();
     }
 
     public void draw() {
@@ -43,12 +47,24 @@ public class GameMap implements Disposable {
         batch.begin();
         batch.draw(waterTexture, 0, 0, bgWidthScaled, bgHeightScaled, waterOffsetX, waterOffsetY, (float) ((bgWidthScaled / waterTexture.getWidth() + waterOffsetX)*1.5), (float) ((bgHeightScaled / waterTexture.getHeight() + waterOffsetY)*1.5));
         batch.draw(background, 0, 0, background.getWidth() * screenScaleFactor, Gdx.graphics.getHeight());
+
+        for (GameUnit unit : units) {
+            unit.draw(batch, camera.zoom);
+        }
+
         batch.end();
+    }
+
+    public void addUnit(GameUnit unit) {
+        units.add(unit);
     }
 
     @Override
     public void dispose() {
         batch.dispose();
         background.dispose();
+        for (GameUnit unit : units) {
+            unit.dispose();
+        }
     }
 }
