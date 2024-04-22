@@ -7,6 +7,7 @@ public class GameSession {
     private String name;
     private Integer users;
     private GameState state;
+    private boolean isPrivate;
 
     public UUID getSessionId() {
         return sessionId;
@@ -25,4 +26,11 @@ public class GameSession {
     }
 
 
+    public boolean isPrivate() {
+        return isPrivate;
+    }
+
+    public void setPrivate(boolean aPrivate) {
+        isPrivate = aPrivate;
+    }
 }
