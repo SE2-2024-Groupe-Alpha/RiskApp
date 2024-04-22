@@ -2,10 +2,15 @@ package se2.alpha.riskapp.activities;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.view.LayoutInflater;
 import android.view.View;
+import android.widget.Button;
+import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.ProgressBar;
 import android.widget.Toast;
+
+import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import se2.alpha.riskapp.R;
 import se2.alpha.riskapp.data.LobbyArrayAdapter;
@@ -21,6 +26,7 @@ public class LobbyList extends AppCompatActivity {
     ListView availableLobbies;
     ProgressBar progressBar;
     List<GameSession> filteredLobbies;
+    Button joinByIdButton;
     @Inject
     BackendService backendService;
     @Inject
@@ -33,6 +39,7 @@ public class LobbyList extends AppCompatActivity {
         setContentView(R.layout.lobby_list_activity);
         availableLobbies = findViewById(R.id.lobby_list);
         progressBar = findViewById(R.id.progressBar);
+        joinByIdButton = findViewById(R.id.btn_join_by_id);
 
         getLobbies();
 
@@ -43,6 +50,7 @@ public class LobbyList extends AppCompatActivity {
             startActivity(intent);
             finish();
         });
+        joinByIdButton.setOnClickListener(view -> createJoinByIdDialog());
     }
 
     @Override
@@ -74,5 +82,27 @@ public class LobbyList extends AppCompatActivity {
                 runOnUiThread(() -> progressBar.setVisibility(View.GONE));
             }
         });
+    }
+
+    private void createJoinByIdDialog(){
+        LayoutInflater inflater = this.getLayoutInflater();
+        View dialogView = inflater.inflate(R.layout.dialog_join_by_id, null);
+        EditText editTextLobbyTitle = dialogView.findViewById(R.id.dialogue_join_by_id_text);
+
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        builder.setView(dialogView)
+                .setPositiveButton("Confirm", (dialog, id) -> {
+                    String lobbyId = editTextLobbyTitle.getText().toString().trim();
+
+                    if (!lobbyId.isEmpty()) {
+                        Toast.makeText(LobbyList.this, "TODO ON BACKEND", Toast.LENGTH_SHORT).show();
+                    }else {
+                        Toast.makeText(LobbyList.this, "Please enter an Id", Toast.LENGTH_SHORT).show();
+                    }
+                })
+                .setNegativeButton("Cancel", (dialog, id) -> {});
+
+        AlertDialog alertDialog = builder.create();
+        alertDialog.show();
     }
 }
