@@ -16,21 +16,31 @@ public class RiskCard implements Disposable {
     private final Vector2 position;
     private float scale = 0.5f;
     private String country;
+    private RiskCardType type;
 
-    public RiskCard(GameUnitType type, Vector2 position, String country) {
+    public RiskCard(RiskCardType type, Vector2 position, String country) {
         this.texture = new Texture("riskcard.png");
         this.position = position;
         this.country = country;
-        if (type == GameUnitType.ARTILLERY) {
+        this.type = type;
+        if (type == RiskCardType.ARTILLERY) {
             this.unit = new Texture("artillery.png");
-        } else if(type == GameUnitType.CAVALRY) {
+        } else if(type == RiskCardType.CAVALRY) {
             this.unit =new Texture("cavalry.png");
-        } else if(type == GameUnitType.INFANTRY) {
+        } else if(type == RiskCardType.INFANTRY) {
             this.unit = new Texture("infantry.png");
         }
     }
 
     public void draw(SpriteBatch batch, float zoom) {
+        if(this.type == RiskCardType.JOKER)
+            drawJokerRiskCard(batch, zoom);
+        else
+            drawBasicRiskCard(batch, zoom);
+    }
+
+    private void drawBasicRiskCard(SpriteBatch batch, float zoom)
+    {
         float width = texture.getWidth() * scale * zoom;
         float height = texture.getHeight() * scale * zoom;
 
@@ -41,6 +51,21 @@ public class RiskCard implements Disposable {
         batch.draw(texture, position.x, position.y, width, height);
         batch.draw(unit, position.x + width / 5, position.y + height / 10 * 2, width / 5 * 3, height / 5);
         font.draw(batch, glyphLayout, position.x + width / 5, position.y + height / 10 * 7);
+    }
+
+    private void drawJokerRiskCard(SpriteBatch batch, float zoom)
+    {
+        float width = texture.getWidth() * scale * zoom;
+        float height = texture.getHeight() * scale * zoom;
+        Texture artillery = new Texture("artillery.png");
+        Texture cavalry = new Texture("cavalry.png");
+        Texture infantry = new Texture("infantry.png");
+
+
+        batch.draw(texture, position.x, position.y, width, height);
+        batch.draw(artillery, position.x + width / 5, position.y + height / 10 * 1, width / 5 * 3, height / 5);
+        batch.draw(cavalry, position.x + width / 5, position.y + height / 10 * 4, width / 5 * 3, height / 5);
+        batch.draw(infantry, position.x + width / 5, position.y + height / 10 * 7, width / 5 * 3, height / 5);
     }
 
     @Override
