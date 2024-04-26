@@ -29,6 +29,8 @@ public class OverlayShowAllRiskCards {
     private int idxCards = 0;
     private GestureHandlerShowAllRiskCards riskCardGestureHandler;
     private InputMultiplexer multiplexer;
+    private final float relativeButtonWidth = 0.1f;
+    private final float relativeButtonHeight = 0.1f;
 
     public OverlayShowAllRiskCards(Stage stage, InputMultiplexer multiplexer, OrthographicCamera camera) {
         this.stage = stage;
@@ -101,7 +103,7 @@ public class OverlayShowAllRiskCards {
         styleButtonLeft.imageUp = new TextureRegionDrawable(new TextureRegion(new Texture(Gdx.files.internal("button_left.png"))));
 
         buttonLeft = new ImageButton(styleButtonLeft);
-        buttonLeft.setSize(Gdx.graphics.getWidth() / 10f, Gdx.graphics.getHeight() / 2f);
+        buttonLeft.setSize(Gdx.graphics.getWidth() * relativeButtonWidth, Gdx.graphics.getHeight() * relativeButtonHeight);
         buttonLeft.setPosition(0, Gdx.graphics.getHeight() / 2f - buttonLeft.getHeight() / 2f);
         buttonLeft.setVisible(false);
         buttonLeft.addListener(new ClickListener() {
@@ -118,7 +120,7 @@ public class OverlayShowAllRiskCards {
         styleButtonRight.imageUp = new TextureRegionDrawable(new TextureRegion(new Texture(Gdx.files.internal("button_right.jpg"))));
 
         buttonRight = new ImageButton(styleButtonRight);
-        buttonRight.setSize(Gdx.graphics.getWidth() / 10f, Gdx.graphics.getHeight() / 2f);
+        buttonRight.setSize(Gdx.graphics.getWidth() * relativeButtonWidth, Gdx.graphics.getHeight() * relativeButtonHeight);
         buttonRight.setPosition(Gdx.graphics.getWidth() - buttonRight.getWidth(), Gdx.graphics.getHeight() / 2f - buttonRight.getHeight() / 2f);
         buttonRight.setVisible(false);
         buttonRight.addListener(new ClickListener() {
