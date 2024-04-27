@@ -1,12 +1,14 @@
 package se2.alpha.riskapp;
 
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.input.GestureDetector.GestureAdapter;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.math.Vector3;
 import se2.alpha.riskapp.ui.GameMap;
+import se2.alpha.riskapp.ui.PixelReader;
 
 public class GestureHandler extends GestureAdapter {
     private OrthographicCamera camera;
@@ -14,7 +16,7 @@ public class GestureHandler extends GestureAdapter {
     private float initialScale = 1f;
     private Texture background;
     private float screenScaleFactor;
-
+    PixelReader pixelReader;
     private GameMap gameMap;
 
     public GestureHandler(OrthographicCamera camera, Texture background, float screenScaleFactor, GameMap gameMap) {
@@ -22,13 +24,22 @@ public class GestureHandler extends GestureAdapter {
         this.background = background;
         this.screenScaleFactor = screenScaleFactor;
         this.gameMap = gameMap;
+        this.pixelReader = new PixelReader(screenScaleFactor);
     }
 
     @Override
     public boolean tap(float x, float y, int count, int button) {
+        System.out.println("Clicked at " + x + ", " + y);
+
         Vector3 worldCoordinates = camera.unproject(new Vector3(x, y, 0));
-        GameUnit unit = new GameUnit(GameUnitType.ARTILLERY, new Vector2(worldCoordinates.x, worldCoordinates.y));
-        gameMap.addUnit(unit);
+        int pixelY = (int)(worldCoordinates.y / screenScaleFactor);
+        int flippedY = gameMap.background.getHeight() + (pixelY) * (-gameMap.background.getHeight()) / (gameMap.background.getHeight());
+        Color color = this.pixelReader.getPixelColor((int)(worldCoordinates.x / screenScaleFactor), flippedY);
+        System.out.println(this.pixelReader.getTerritory(color));
+
+//        Vector3 worldCoordinates = camera.unproject(new Vector3(x, y, 0));
+//        GameUnit unit = new GameUnit(GameUnitType.ARTILLERY, new Vector2(worldCoordinates.x, worldCoordinates.y));
+//        gameMap.addUnit(unit);
         return true;
     }
 
