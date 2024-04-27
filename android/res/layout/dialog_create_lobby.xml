@@ -6,9 +6,17 @@
               android:padding="16dp">
 
     <EditText
-            android:id="@+id/et_lobby_title"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:hint="@string/enter_lobby_title" />
+        android:id="@+id/et_lobby_title"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="@string/enter_lobby_title"
+        android:minHeight="48dp" />
+
+    <Switch
+        android:id="@+id/dialogue_create_lobby_switch"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:minHeight="48dp"
+        android:text="@string/is_private" />
 
 </LinearLayout>

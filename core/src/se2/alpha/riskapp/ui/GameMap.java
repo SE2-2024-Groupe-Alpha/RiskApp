@@ -16,7 +16,7 @@ public class GameMap implements Disposable {
     float waterSpeedX = 0.1f, waterSpeedY = 0.05f, waterOffsetX = 0, waterOffsetY = 0;
     int screenHeight;
     int screenWidth;
-    Texture background, waterTexture;
+    public Texture background, waterTexture;
     float screenScaleFactor;
     GestureHandler gestureHandler;
     private Array<GameUnit> units;
@@ -28,7 +28,7 @@ public class GameMap implements Disposable {
         this.camera = new OrthographicCamera(screenWidth, screenHeight);
         this.camera.setToOrtho(false);
 
-        background = new Texture("map.png");
+        background = new Texture("riskMap.png");
         waterTexture = new Texture("woah.png");
         waterTexture.setWrap(Texture.TextureWrap.Repeat, Texture.TextureWrap.Repeat);
         screenScaleFactor = (float) Gdx.graphics.getHeight() / background.getHeight();
@@ -42,7 +42,7 @@ public class GameMap implements Disposable {
         batch.setProjectionMatrix(camera.combined);
         waterOffsetX += waterSpeedX * Gdx.graphics.getDeltaTime();
         waterOffsetY += waterSpeedY * Gdx.graphics.getDeltaTime();
-        float bgWidthScaled = background.getWidth() * screenScaleFactor;
+        float bgWidthScaled = background.getWidth() * screenScaleFactor * 4;
         float bgHeightScaled = Gdx.graphics.getHeight();
         batch.begin();
         batch.draw(waterTexture, 0, 0, bgWidthScaled, bgHeightScaled, waterOffsetX, waterOffsetY, (float) ((bgWidthScaled / waterTexture.getWidth() + waterOffsetX)*1.5), (float) ((bgHeightScaled / waterTexture.getHeight() + waterOffsetY)*1.5));
