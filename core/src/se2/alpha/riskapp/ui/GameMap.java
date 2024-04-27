@@ -28,7 +28,7 @@ public class GameMap implements Disposable {
         this.camera = new OrthographicCamera(screenWidth, screenHeight);
         this.camera.setToOrtho(false);
 
-        background = new Texture("map.png");
+        background = new Texture("riskMap.png");
         waterTexture = new Texture("woah.png");
         waterTexture.setWrap(Texture.TextureWrap.Repeat, Texture.TextureWrap.Repeat);
         screenScaleFactor = (float) Gdx.graphics.getHeight() / background.getHeight();
