@@ -7,6 +7,8 @@ import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.input.GestureDetector.GestureAdapter;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.math.Vector3;
+import se2.alpha.riskapp.events.TerritoryClickedEvent;
+import se2.alpha.riskapp.logic.EventBus;
 import se2.alpha.riskapp.ui.GameMap;
 import se2.alpha.riskapp.ui.PixelReader;
 
@@ -37,6 +39,8 @@ public class GestureHandler extends GestureAdapter {
         Color color = this.pixelReader.getPixelColor((int)(worldCoordinates.x / screenScaleFactor), flippedY);
         System.out.println(this.pixelReader.getTerritory(color));
 
+        TerritoryClickedEvent territoryClickedEvent = new TerritoryClickedEvent(this.pixelReader.getTerritory(color));
+        EventBus.invoke(territoryClickedEvent);
 //        Vector3 worldCoordinates = camera.unproject(new Vector3(x, y, 0));
 //        GameUnit unit = new GameUnit(GameUnitType.ARTILLERY, new Vector2(worldCoordinates.x, worldCoordinates.y));
 //        gameMap.addUnit(unit);

@@ -25,6 +25,7 @@ public class Login extends AppCompatActivity {
     TextInputEditText passwordText;
     Button buttonLogin;
     Button buttonRegisterNow;
+    boolean apiHealthy = false;
 
     @Inject
     BackendService backendService;
@@ -67,6 +68,7 @@ public class Login extends AppCompatActivity {
         ((RiskApplication) getApplication()).getRiskAppComponent().inject(this);
         isLoggedIn();
         setContentView(R.layout.login_activity);
+
 
         usernameText = findViewById(R.id.username);
         passwordText = findViewById(R.id.password);

@@ -7,6 +7,8 @@ import com.badlogic.gdx.graphics.g2d.GlyphLayout;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.utils.Disposable;
+import se2.alpha.riskapp.events.TerritoryClickedEvent;
+import se2.alpha.riskapp.logic.EventBus;
 
 public class TopBar implements Disposable {
     SpriteBatch uiBatch;
@@ -16,6 +18,7 @@ public class TopBar implements Disposable {
     GlyphLayout layout;
     int screenHeight;
     int screenWidth;
+    String topBarText = "Setup";
 
     public TopBar(int screenHeight, int screenWidth) {
         this.screenHeight = screenHeight;
@@ -27,6 +30,10 @@ public class TopBar implements Disposable {
         this.font = new BitmapFont();
         this.font.getData().setScale(4.0f);
         this.layout = new GlyphLayout();
+        EventBus.registerCallback(TerritoryClickedEvent.class, event -> {
+            TerritoryClickedEvent territoryClickedEvent = (TerritoryClickedEvent) event;
+            topBarText = territoryClickedEvent.getName();
+        });
     }
 
     public void draw() {
@@ -39,7 +46,7 @@ public class TopBar implements Disposable {
         uiBatch.setProjectionMatrix(uiCamera.combined);
         uiBatch.begin();
         font.setColor(Color.WHITE);
-        layout.setText(font, "Setup");
+        layout.setText(font, topBarText);
         float textWidth = layout.width;
         float textX = (screenWidth - textWidth) / 2;
         float textY = (float) (screenHeight * 0.975 + layout.height / 2);
