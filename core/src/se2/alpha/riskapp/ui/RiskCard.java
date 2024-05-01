@@ -16,16 +16,12 @@ import se2.alpha.riskapp.RiskCardType;
 public class RiskCard implements Disposable {
     private Texture texture;
     private Texture unit;
-    private final Vector2 position;
     private float scale = 0.5f;
     private String country;
     private RiskCardType type;
-    private final float relativeTroopWidth = 0.6f;
-    private final float relativeCardBeginWidth = 0.2f;
 
-    public RiskCard(RiskCardType type, Vector2 position, String country) {
+    public RiskCard(RiskCardType type, String country) {
         this.texture = new Texture("riskcard.png");
-        this.position = position;
         this.country = country;
         this.type = type;
         if (type == RiskCardType.ARTILLERY) {
@@ -53,6 +49,8 @@ public class RiskCard implements Disposable {
         final float relativeTroopBeginWidth = 0.2f;
         final float relativeTroopHeight = 0.4f;
         final float relativeFontHeight = 0.7f;
+        final float relativeTroopWidth = 0.6f;
+        final float relativeCardBeginWidth = 0.2f;
         float screenWidth = Gdx.graphics.getWidth() * zoom;
         float screenHeight = Gdx.graphics.getHeight() * zoom;
         float cardWidth = screenWidth * relativeCardWidth;
@@ -71,17 +69,25 @@ public class RiskCard implements Disposable {
 
     private void drawJokerRiskCard(SpriteBatch batch, float zoom, OrthographicCamera camera)
     {
-        float width = texture.getWidth() * scale * zoom;
-        float height = texture.getHeight() * scale * zoom;
+        final float relativeCardWidth = 0.8f;
+        final float relativeCardHeight = 0.8f;
         final float relativeTroopHeight = 0.2f;
+        final float relativeTroopWidth = 0.4f;
+        final float relativeCardBeginWidth = 0.3f;
+        float screenWidth = Gdx.graphics.getWidth() * zoom;
+        float screenHeight = Gdx.graphics.getHeight() * zoom;
+        float cardWidth = screenWidth * relativeCardWidth;
+        float cardHeight = screenHeight * relativeCardHeight;
+        float cardX = (screenWidth - cardWidth) / 2 - screenWidth / 2 + camera.position.x;
+        float cardY = (screenHeight - cardHeight) / 2 - screenHeight / 2 + camera.position.y;
         Texture artillery = new Texture("artillery.png");
         Texture cavalry = new Texture("cavalry.png");
         Texture infantry = new Texture("infantry.png");
 
-        batch.draw(texture, position.x, position.y, width, height);
-        batch.draw(artillery, position.x + width * relativeCardBeginWidth, position.y + height * 0.1f, width * relativeTroopWidth, height * relativeTroopHeight);
-        batch.draw(cavalry, position.x + width * relativeCardBeginWidth, position.y + height * 0.4f, width * relativeTroopWidth, height * relativeTroopHeight);
-        batch.draw(infantry, position.x + width * relativeCardBeginWidth, position.y + height * 0.7f, width * relativeTroopWidth, height * relativeTroopHeight);
+        batch.draw(texture, cardX, cardY, cardWidth, cardHeight);
+        batch.draw(artillery, cardX + cardWidth * relativeCardBeginWidth, cardY + cardHeight * 0.1f, cardWidth * relativeTroopWidth, cardHeight * relativeTroopHeight);
+        batch.draw(cavalry, cardX + cardWidth * relativeCardBeginWidth, cardY + cardHeight * 0.4f, cardWidth * relativeTroopWidth, cardHeight * relativeTroopHeight);
+        batch.draw(infantry, cardX + cardWidth * relativeCardBeginWidth, cardY + cardHeight * 0.7f, cardWidth * relativeTroopWidth, cardHeight * relativeTroopHeight);
     }
 
     @Override

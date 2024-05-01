@@ -15,6 +15,7 @@ import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 
 import java.util.ArrayList;
+import java.util.List;
 
 import se2.alpha.riskapp.GestureHandlerShowAllRiskCards;
 import se2.alpha.riskapp.RiskCardType;
@@ -37,12 +38,6 @@ public class OverlayShowAllRiskCards {
         this.camera = camera;
         this.multiplexer = multiplexer;
 
-        riskCards = new ArrayList<RiskCard>();
-        riskCards.add(new RiskCard(RiskCardType.INFANTRY, new Vector2(50, 50), "Germany"));
-        riskCards.add(new RiskCard(RiskCardType.CAVALRY, new Vector2(50, 50), "Argentina"));
-        riskCards.add(new RiskCard(RiskCardType.ARTILLERY, new Vector2(50, 50), "Democratic Republic of Congo"));
-        riskCard = riskCards.get(idxCards);
-
         createButtonLeft();
         createButtonRight();
 
@@ -64,14 +59,20 @@ public class OverlayShowAllRiskCards {
         }
     }
 
-    public void show() {
-        visible = true;
-        buttonLeft.setVisible(true);
-        buttonRight.setVisible(true);
-        InputMultiplexer riskCardMultiplexer = new InputMultiplexer();
-        riskCardMultiplexer.addProcessor(stage);
-        riskCardMultiplexer.addProcessor(new GestureDetector(riskCardGestureHandler));
-        Gdx.input.setInputProcessor(riskCardMultiplexer);
+    public void show(ArrayList<RiskCard> riskCards) {
+        if(!riskCards.isEmpty()) {
+            this.riskCards = riskCards;
+            visible = true;
+            buttonLeft.setVisible(true);
+            buttonRight.setVisible(true);
+            InputMultiplexer riskCardMultiplexer = new InputMultiplexer();
+            riskCardMultiplexer.addProcessor(stage);
+            riskCardMultiplexer.addProcessor(new GestureDetector(riskCardGestureHandler));
+            Gdx.input.setInputProcessor(riskCardMultiplexer);
+            riskCard = riskCards.get(0);
+        }
+        else
+            hide();
     }
 
     public void hide() {
