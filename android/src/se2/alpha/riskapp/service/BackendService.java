@@ -18,6 +18,7 @@ import se2.alpha.riskapp.model.auth.ValidationRequest;
 import se2.alpha.riskapp.model.game.CreateLobbyRequest;
 import se2.alpha.riskapp.model.game.CreateLobbyResponse;
 import se2.alpha.riskapp.model.game.GameSession;
+import se2.alpha.riskapp.model.dol.RiskCard;
 import se2.alpha.riskapp.model.websocket.ICustomWebsocketMessage;
 
 import javax.inject.Inject;
@@ -136,7 +137,33 @@ public class BackendService {
         }, callback::onError);
     }
 
+    public interface GetNewRiskCardCallback {
+        void onSuccess(RiskCard response);
+        void onError(String error);
+    }
 
+    public void getNewRiskCardRequest(GetNewRiskCardCallback callback) {
+        makeGetRequest(API_URL + "/game/riskcard", result -> {
+            Log.e("Data", result);
+            RiskCard riskCard = gson.fromJson(result, new TypeToken<RiskCard>(){}.getType());
+            callback.onSuccess(riskCard);
+
+        }, callback::onError);
+    }
+
+    public interface GetAllRiskCardsByPlayerCallback {
+        void onSuccess(List<RiskCard> response);
+        void onError(String error);
+    }
+
+    public void getAllRiskCardsByPlayerRequest(String id, GetAllRiskCardsByPlayerCallback callback) {
+        makeGetRequest(API_URL + "/game/riskcard/player/" + id, result -> {
+            Log.e("Data", result);
+            List<RiskCard> riskCard = gson.fromJson(result, new TypeToken<List<RiskCard>>(){}.getType());
+            callback.onSuccess(riskCard);
+
+        }, callback::onError);
+    }
 
     public void makePostRequest(String urlString, JSONObject postData, NetworkCallback callback, NetworkCallback errorCallback) {
         RequestBody body = RequestBody.create(postData.toString(), MediaType.get("application/json; charset=utf-8"));
