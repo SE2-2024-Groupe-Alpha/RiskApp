@@ -29,7 +29,6 @@ public class OverlayShowNewRiskCard {
         this.camera = camera;
         this.multiplexer = multiplexer;
 
-        riskCard = new RiskCard(RiskCardType.ARTILLERY, new Vector2(50, 50), "Democratic Republic of Congo");
         visible = false;
         gestureHandlerShowNewRiskCard = new GestureHandlerShowNewRiskCard(this);
     }
@@ -44,7 +43,8 @@ public class OverlayShowNewRiskCard {
         }
     }
 
-    public void show() {
+    public void show(RiskCard riskCard) {
+        this.riskCard = riskCard;
         visible = true;
         InputMultiplexer riskCardMultiplexer = new InputMultiplexer();
         riskCardMultiplexer.addProcessor(stage);

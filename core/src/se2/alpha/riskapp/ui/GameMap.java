@@ -23,13 +23,12 @@ public class GameMap implements Disposable {
     float waterSpeedX = 0.1f, waterSpeedY = 0.05f, waterOffsetX = 0, waterOffsetY = 0;
     int screenHeight;
     int screenWidth;
-    Texture background, waterTexture;
+    public Texture background, waterTexture;
     float screenScaleFactor;
     GestureHandler gestureHandler;
     private Array<GameUnit> units;
     Stage stage;
     InputMultiplexer multiplexer;
-    TextButton buttonShowNewRiskCard, buttonShowAllRiskCards;
     OverlayShowNewRiskCard overlayShowNewRiskCard;
     OverlayShowAllRiskCards overlayShowAllRiskCards;
 
@@ -63,7 +62,7 @@ public class GameMap implements Disposable {
         batch.setProjectionMatrix(camera.combined);
         waterOffsetX += waterSpeedX * Gdx.graphics.getDeltaTime();
         waterOffsetY += waterSpeedY * Gdx.graphics.getDeltaTime();
-        float bgWidthScaled = background.getWidth() * screenScaleFactor;
+        float bgWidthScaled = background.getWidth() * screenScaleFactor * 4;
         float bgHeightScaled = Gdx.graphics.getHeight();
         batch.begin();
         batch.draw(waterTexture, 0, 0, bgWidthScaled, bgHeightScaled, waterOffsetX, waterOffsetY, (float) ((bgWidthScaled / waterTexture.getWidth() + waterOffsetX)*1.5), (float) ((bgHeightScaled / waterTexture.getHeight() + waterOffsetY)*1.5));
@@ -72,36 +71,6 @@ public class GameMap implements Disposable {
         for (GameUnit unit : units) {
             unit.draw(batch, camera.zoom);
         }
-
-        buttonShowNewRiskCard = new TextButton("Show New Risk Card", Styles.TextButtonStyle());
-        buttonShowNewRiskCard.setPosition(600, 20);
-        buttonShowNewRiskCard.addListener(new ClickListener() {
-            @Override
-            public void clicked(InputEvent event, float x, float y) {
-                overlayShowNewRiskCard.show();
-                buttonShowNewRiskCard.setVisible(false);
-                buttonShowAllRiskCards.setVisible(false);
-            }
-        });
-
-        buttonShowAllRiskCards = new TextButton("Show all Risk Cards", Styles.TextButtonStyle());
-        buttonShowAllRiskCards.setPosition(600, 400);
-        buttonShowAllRiskCards.addListener(new ClickListener() {
-            @Override
-            public void clicked(InputEvent event, float x, float y) {
-                overlayShowAllRiskCards.show();
-                buttonShowAllRiskCards.setVisible(false);
-                buttonShowNewRiskCard.setVisible(false);
-            }
-        });
-
-        stage.addActor(buttonShowNewRiskCard);
-        stage.addActor(buttonShowAllRiskCards);
-        overlayShowAllRiskCards.render(batch);
-        overlayShowNewRiskCard.render(batch);
-        stage.act();
-        stage.draw();
-
 
         batch.end();
     }

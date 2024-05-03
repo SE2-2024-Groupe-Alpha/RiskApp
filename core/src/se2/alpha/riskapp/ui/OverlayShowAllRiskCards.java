@@ -29,17 +29,13 @@ public class OverlayShowAllRiskCards {
     private int idxCards = 0;
     private GestureHandlerShowAllRiskCards riskCardGestureHandler;
     private InputMultiplexer multiplexer;
+    private final float relativeButtonWidth = 0.1f;
+    private final float relativeButtonHeight = 0.1f;
 
     public OverlayShowAllRiskCards(Stage stage, InputMultiplexer multiplexer, OrthographicCamera camera) {
         this.stage = stage;
         this.camera = camera;
         this.multiplexer = multiplexer;
-
-        riskCards = new ArrayList<RiskCard>();
-        riskCards.add(new RiskCard(RiskCardType.INFANTRY, new Vector2(50, 50), "Germany"));
-        riskCards.add(new RiskCard(RiskCardType.CAVALRY, new Vector2(50, 50), "Argentina"));
-        riskCards.add(new RiskCard(RiskCardType.ARTILLERY, new Vector2(50, 50), "Democratic Republic of Congo"));
-        riskCard = riskCards.get(idxCards);
 
         createButtonLeft();
         createButtonRight();
@@ -62,14 +58,20 @@ public class OverlayShowAllRiskCards {
         }
     }
 
-    public void show() {
-        visible = true;
-        buttonLeft.setVisible(true);
-        buttonRight.setVisible(true);
-        InputMultiplexer riskCardMultiplexer = new InputMultiplexer();
-        riskCardMultiplexer.addProcessor(stage);
-        riskCardMultiplexer.addProcessor(new GestureDetector(riskCardGestureHandler));
-        Gdx.input.setInputProcessor(riskCardMultiplexer);
+    public void show(ArrayList<RiskCard> riskCards) {
+        if(!riskCards.isEmpty()) {
+            this.riskCards = riskCards;
+            visible = true;
+            buttonLeft.setVisible(true);
+            buttonRight.setVisible(true);
+            InputMultiplexer riskCardMultiplexer = new InputMultiplexer();
+            riskCardMultiplexer.addProcessor(stage);
+            riskCardMultiplexer.addProcessor(new GestureDetector(riskCardGestureHandler));
+            Gdx.input.setInputProcessor(riskCardMultiplexer);
+            riskCard = riskCards.get(0);
+        }
+        else
+            hide();
     }
 
     public void hide() {
@@ -101,7 +103,7 @@ public class OverlayShowAllRiskCards {
         styleButtonLeft.imageUp = new TextureRegionDrawable(new TextureRegion(new Texture(Gdx.files.internal("button_left.png"))));
 
         buttonLeft = new ImageButton(styleButtonLeft);
-        buttonLeft.setSize(Gdx.graphics.getWidth() / 10f, Gdx.graphics.getHeight() / 2f);
+        buttonLeft.setSize(Gdx.graphics.getWidth() * relativeButtonWidth, Gdx.graphics.getHeight() * relativeButtonHeight);
         buttonLeft.setPosition(0, Gdx.graphics.getHeight() / 2f - buttonLeft.getHeight() / 2f);
         buttonLeft.setVisible(false);
         buttonLeft.addListener(new ClickListener() {
@@ -118,7 +120,7 @@ public class OverlayShowAllRiskCards {
         styleButtonRight.imageUp = new TextureRegionDrawable(new TextureRegion(new Texture(Gdx.files.internal("button_right.jpg"))));
 
         buttonRight = new ImageButton(styleButtonRight);
-        buttonRight.setSize(Gdx.graphics.getWidth() / 10f, Gdx.graphics.getHeight() / 2f);
+        buttonRight.setSize(Gdx.graphics.getWidth() * relativeButtonWidth, Gdx.graphics.getHeight() * relativeButtonHeight);
         buttonRight.setPosition(Gdx.graphics.getWidth() - buttonRight.getWidth(), Gdx.graphics.getHeight() / 2f - buttonRight.getHeight() / 2f);
         buttonRight.setVisible(false);
         buttonRight.addListener(new ClickListener() {
