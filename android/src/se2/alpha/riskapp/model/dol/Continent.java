@@ -1,4 +1,4 @@
-package se2.alpha.riskapp.model.logic;
+package se2.alpha.riskapp.model.dol;
 
 import java.util.ArrayList;
 

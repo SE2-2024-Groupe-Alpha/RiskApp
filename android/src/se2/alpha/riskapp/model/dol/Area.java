@@ -1,4 +1,4 @@
-package se2.alpha.riskapp.model.logic;
+package se2.alpha.riskapp.model.dol;
 
 public abstract class Area {
     protected String name;
