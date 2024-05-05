@@ -18,7 +18,8 @@ public class TopBar implements Disposable {
     GlyphLayout layout;
     int screenHeight;
     int screenWidth;
-    String topBarText = "Setup";
+    String topBarText;
+    private static final String DEFAULT_TOP_BAR_TEXT = "Setup";
 
     public TopBar(int screenHeight, int screenWidth) {
         this.screenHeight = screenHeight;
@@ -30,6 +31,7 @@ public class TopBar implements Disposable {
         this.font = new BitmapFont();
         this.font.getData().setScale(4.0f);
         this.layout = new GlyphLayout();
+        this.topBarText = DEFAULT_TOP_BAR_TEXT;
         EventBus.registerCallback(TerritoryClickedEvent.class, event -> {
             TerritoryClickedEvent territoryClickedEvent = (TerritoryClickedEvent) event;
             topBarText = territoryClickedEvent.getName();
@@ -40,20 +42,23 @@ public class TopBar implements Disposable {
         shapeRenderer.setProjectionMatrix(uiCamera.combined);
         shapeRenderer.begin(ShapeRenderer.ShapeType.Filled);
         shapeRenderer.setColor(Color.GRAY);
-        shapeRenderer.rect(0, (float) (screenHeight * 0.95), screenWidth, (float) (screenHeight * 0.95));
+        shapeRenderer.rect(0, (float) (screenHeight * 0.95), screenWidth, (float) (screenHeight * 0.05));
         shapeRenderer.end();
 
         uiBatch.setProjectionMatrix(uiCamera.combined);
         uiBatch.begin();
         font.setColor(Color.WHITE);
-        layout.setText(font, topBarText);
+        String textToDraw = (topBarText != null) ? topBarText : DEFAULT_TOP_BAR_TEXT;
+        layout.setText(font, textToDraw);
         float textWidth = layout.width;
         float textX = (screenWidth - textWidth) / 2;
         float textY = (float) (screenHeight * 0.975 + layout.height / 2);
         font.draw(uiBatch, layout, textX, textY);
         uiBatch.end();
     }
-
+    public void setTopBarText(String text) {
+        this.topBarText = (text != null) ? text : DEFAULT_TOP_BAR_TEXT;
+    }
     @Override
     public void dispose () {
         uiBatch.dispose();
