@@ -44,6 +44,9 @@ public class GestureHandler extends GestureAdapter {
 //        Vector3 worldCoordinates = camera.unproject(new Vector3(x, y, 0));
 //        GameUnit unit = new GameUnit(GameUnitType.ARTILLERY, new Vector2(worldCoordinates.x, worldCoordinates.y));
 //        gameMap.addUnit(unit);
+
+        gameMap.onCountryClickedApplyTextureMask(pixelReader.getTextureMaskByColor(color));
+
         return true;
     }
 

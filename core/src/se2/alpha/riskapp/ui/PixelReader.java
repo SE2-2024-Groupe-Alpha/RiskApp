@@ -6,16 +6,19 @@ import com.badlogic.gdx.graphics.Texture;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Set;
 
 public class PixelReader {
 
     Texture pixelMap;
     float screenScaleFactor;
     Map<String, String> colorsToTerritories = new HashMap<>();
+    Map<Color, Texture> colorsToTextures = new HashMap<>();
 
     public PixelReader(float screenScaleFactor) {
         this.pixelMap = new Texture("riskMapColored.png");
         this.screenScaleFactor = screenScaleFactor;
+
         colorsToTerritories.put("FF6347", "Alaska");
         colorsToTerritories.put("4682B4", "Northwest Territory");
         colorsToTerritories.put("D8BFD8", "Greenland");
@@ -58,6 +61,11 @@ public class PixelReader {
         colorsToTerritories.put("228B22", "Western Australia");
         colorsToTerritories.put("ADFF2F", "Eastern Australia");
         colorsToTerritories.put("F0E68C", "Middle East");
+
+        for (String key : colorsToTerritories.keySet()) {
+            Color color = Color.valueOf(key);
+            colorsToTextures.put(color, createTextureMaskByColor(color));
+        }
     }
 
     public Color getPixelColor(int x, int y) {
@@ -79,5 +87,37 @@ public class PixelReader {
     public String getTerritory(Color color) {
         String colorKey = color.toString().substring(0, 6).toUpperCase();
         return this.colorsToTerritories.get(colorKey);
+    }
+
+    // CPU heavy function, to improve performance we will probably need to use libgdx shaders instead.
+    private Texture createTextureMaskByColor(Color color) {
+
+        if (!pixelMap.getTextureData().isPrepared()) {
+            pixelMap.getTextureData().prepare();
+        }
+        Pixmap mapPixmap = pixelMap.getTextureData().consumePixmap();
+        Pixmap resultPixmap = new Pixmap(mapPixmap.getWidth(), mapPixmap.getHeight(), mapPixmap.getFormat());
+
+        for (int y = 0; y < mapPixmap.getHeight(); y++) {
+            for (int x = 0; x < mapPixmap.getWidth(); x++) {
+                int mapColor = mapPixmap.getPixel(x, y);
+                int maskColor = Color.rgba8888(color);
+                int overlayColor = Color.rgba8888(Color.BLACK);
+
+                if (mapColor == maskColor) {
+                    resultPixmap.drawPixel(x, y, overlayColor);
+                }
+            }
+        }
+
+        Texture resultTexture = new Texture(resultPixmap);
+        mapPixmap.dispose();
+        resultPixmap.dispose();
+
+        return resultTexture;
+    }
+
+    public Texture getTextureMaskByColor(Color color) {
+        return colorsToTextures.get(color);
     }
 }

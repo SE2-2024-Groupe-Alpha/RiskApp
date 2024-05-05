@@ -6,10 +6,7 @@ import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.input.GestureDetector;
-import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.Stage;
-import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
-import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.Disposable;
 import com.badlogic.gdx.utils.viewport.ScreenViewport;
@@ -23,7 +20,7 @@ public class GameMap implements Disposable {
     float waterSpeedX = 0.1f, waterSpeedY = 0.05f, waterOffsetX = 0, waterOffsetY = 0;
     int screenHeight;
     int screenWidth;
-    public Texture background, waterTexture;
+    public Texture background, backgroundCountryMask, waterTexture;
     float screenScaleFactor;
     GestureHandler gestureHandler;
     private Array<GameUnit> units;
@@ -68,6 +65,12 @@ public class GameMap implements Disposable {
         batch.draw(waterTexture, 0, 0, bgWidthScaled, bgHeightScaled, waterOffsetX, waterOffsetY, (float) ((bgWidthScaled / waterTexture.getWidth() + waterOffsetX)*1.5), (float) ((bgHeightScaled / waterTexture.getHeight() + waterOffsetY)*1.5));
         batch.draw(background, 0, 0, background.getWidth() * screenScaleFactor, Gdx.graphics.getHeight());
 
+        batch.setColor(1, 1, 1, 0.5f); // Set 50% opacity
+        if (backgroundCountryMask != null) {
+            batch.draw(backgroundCountryMask, 0, 0, background.getWidth() * screenScaleFactor, Gdx.graphics.getHeight());
+        }
+        batch.setColor(1, 1, 1, 1); // Reset the color to full opacity
+
         for (GameUnit unit : units) {
             unit.draw(batch, camera.zoom);
         }
@@ -77,6 +80,10 @@ public class GameMap implements Disposable {
 
     public void addUnit(GameUnit unit) {
         units.add(unit);
+    }
+
+    public void onCountryClickedApplyTextureMask(Texture textureMask) {
+        backgroundCountryMask = textureMask;
     }
 
     @Override
