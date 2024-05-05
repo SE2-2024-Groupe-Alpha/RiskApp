@@ -51,7 +51,7 @@ public class Territories {
     private static final TerritoryNode EasternAustralia = new TerritoryNode("Eastern Australia");
     private static final TerritoryNode MiddleEast = new TerritoryNode("Middle East");
 
-    private static final Map<String, TerritoryNode> colorsToTerritories = new HashMap<>();
+    public static final Map<String, TerritoryNode> colorsToTerritories = new HashMap<>();
 
     static {
         Alaska.addAdjTerritory(
