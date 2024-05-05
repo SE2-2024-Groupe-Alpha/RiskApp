@@ -3,6 +3,8 @@ package se2.alpha.riskapp.ui;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.Pixmap;
 import com.badlogic.gdx.graphics.Texture;
+import se2.alpha.riskapp.utils.Territories;
+import se2.alpha.riskapp.utils.TerritoryNode;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -86,7 +88,9 @@ public class PixelReader {
 
     public String getTerritory(Color color) {
         String colorKey = color.toString().substring(0, 6).toUpperCase();
-        return this.colorsToTerritories.get(colorKey);
+        TerritoryNode territoryNode = Territories.getTerritoryByColor(colorKey);
+        System.out.println(territoryNode.getAdjTerritories());
+        return territoryNode.name;
     }
 
     // CPU heavy function, to improve performance we will probably need to use libgdx shaders instead.
