@@ -1,5 +1,6 @@
 package se2.alpha.riskapp.ui;
 
+import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
@@ -51,6 +52,8 @@ public class TopBar implements Disposable {
         float textX = (screenWidth - textWidth) / 2;
         float textY = (float) (screenHeight * 0.975 + layout.height / 2);
         font.draw(uiBatch, layout, textX, textY);
+
+        font.draw(uiBatch, "FPS: " + Gdx.graphics.getFramesPerSecond(), 5,textY);
         uiBatch.end();
     }
 
