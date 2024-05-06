@@ -29,27 +29,38 @@ public class PixelReader {
     }
 
     public Color getPixelColor(int x, int y) {
-        if (!this.pixelMap.getTextureData().isPrepared()) {
-            this.pixelMap.getTextureData().prepare();
+
+            if (!this.pixelMap.getTextureData().isPrepared()) {
+                this.pixelMap.getTextureData().prepare();
+            }
+
+            Pixmap pixmap = this.pixelMap.getTextureData().consumePixmap();
+            int pixelValue = pixmap.getPixel(x, y);
+
+            Color color = new Color();
+            Color.rgba8888ToColor(color, pixelValue);
+
+            pixmap.dispose();
+
+            System.out.println("Extracted color at coordinates (" + x + ", " + y + "): " + color);
+
+            return color;
         }
 
-        Pixmap pixmap = this.pixelMap.getTextureData().consumePixmap();
-        int pixelValue = pixmap.getPixel(x, y);
-
-        Color color = new Color();
-        Color.rgba8888ToColor(color, pixelValue);
-
-        pixmap.dispose();
-
-        return color;
-    }
-
     public String getTerritory(Color color) {
-        String colorKey = color.toString().substring(0, 6).toUpperCase();
-        TerritoryNode territoryNode = Territories.getTerritoryByColor(colorKey);
-        System.out.println(territoryNode.getAdjTerritories());
-        return territoryNode.name;
-    }
+
+            String colorKey = color.toString().substring(0, 6).toUpperCase();
+            TerritoryNode territoryNode = Territories.getTerritoryByColor(colorKey);
+
+            if (territoryNode == null) {
+                System.out.println("Territory node not found for color: " + colorKey);
+                return "Unknown Territory";
+            }
+
+            System.out.println(territoryNode.getAdjTerritories());
+            return territoryNode.name;
+        }
+
 
     // CPU heavy function, to improve performance we will probably need to use libgdx shaders instead.
     private Texture createTextureMaskByColor(Color color) {
