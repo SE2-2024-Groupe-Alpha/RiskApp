@@ -1,12 +1,16 @@
 package se2.alpha.riskapp.ui;
 
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.InputMultiplexer;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.input.GestureDetector;
+import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.Disposable;
+import com.badlogic.gdx.utils.viewport.ScreenViewport;
+
 import se2.alpha.riskapp.GameUnit;
 import se2.alpha.riskapp.GestureHandler;
 
@@ -16,10 +20,14 @@ public class GameMap implements Disposable {
     float waterSpeedX = 0.1f, waterSpeedY = 0.05f, waterOffsetX = 0, waterOffsetY = 0;
     int screenHeight;
     int screenWidth;
-    public Texture background, waterTexture;
+    public Texture background, backgroundCountryMask, waterTexture;
     float screenScaleFactor;
     GestureHandler gestureHandler;
     private Array<GameUnit> units;
+    Stage stage;
+    InputMultiplexer multiplexer;
+    OverlayShowNewRiskCard overlayShowNewRiskCard;
+    OverlayShowAllRiskCards overlayShowAllRiskCards;
 
     public GameMap(int screenHeight, int screenWidth) {
         this.screenHeight = screenHeight;
@@ -33,8 +41,17 @@ public class GameMap implements Disposable {
         waterTexture.setWrap(Texture.TextureWrap.Repeat, Texture.TextureWrap.Repeat);
         screenScaleFactor = (float) Gdx.graphics.getHeight() / background.getHeight();
         gestureHandler = new GestureHandler(camera, background, screenScaleFactor, this);
-        Gdx.input.setInputProcessor(new GestureDetector(gestureHandler));
         units = new Array<>();
+
+        multiplexer = new InputMultiplexer();
+        multiplexer.addProcessor(new GestureDetector(gestureHandler));
+
+        stage = new Stage(new ScreenViewport());
+        multiplexer.addProcessor(stage);
+        Gdx.input.setInputProcessor(multiplexer);
+
+        this.overlayShowNewRiskCard = new OverlayShowNewRiskCard(stage, multiplexer, camera);
+        this.overlayShowAllRiskCards = new OverlayShowAllRiskCards(stage, multiplexer, camera);
     }
 
     public void draw() {
@@ -48,6 +65,12 @@ public class GameMap implements Disposable {
         batch.draw(waterTexture, 0, 0, bgWidthScaled, bgHeightScaled, waterOffsetX, waterOffsetY, (float) ((bgWidthScaled / waterTexture.getWidth() + waterOffsetX)*1.5), (float) ((bgHeightScaled / waterTexture.getHeight() + waterOffsetY)*1.5));
         batch.draw(background, 0, 0, background.getWidth() * screenScaleFactor, Gdx.graphics.getHeight());
 
+        batch.setColor(1, 1, 1, 0.5f); // Set 50% opacity
+        if (backgroundCountryMask != null) {
+            batch.draw(backgroundCountryMask, 0, 0, background.getWidth() * screenScaleFactor, Gdx.graphics.getHeight());
+        }
+        batch.setColor(1, 1, 1, 1); // Reset the color to full opacity
+
         for (GameUnit unit : units) {
             unit.draw(batch, camera.zoom);
         }
@@ -59,6 +82,10 @@ public class GameMap implements Disposable {
         units.add(unit);
     }
 
+    public void onCountryClickedApplyTextureMask(Texture textureMask) {
+        backgroundCountryMask = textureMask;
+    }
+
     @Override
     public void dispose() {
         batch.dispose();
@@ -66,5 +93,6 @@ public class GameMap implements Disposable {
         for (GameUnit unit : units) {
             unit.dispose();
         }
+        stage.dispose();
     }
 }
