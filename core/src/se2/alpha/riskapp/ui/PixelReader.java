@@ -8,23 +8,25 @@ import com.badlogic.gdx.graphics.Texture;
 import se2.alpha.riskapp.utils.Territories;
 import se2.alpha.riskapp.utils.TerritoryNode;
 
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
-import java.util.Set;
 
 public class PixelReader {
 
     Texture pixelMap;
     float screenScaleFactor;
-    Map<Color, Texture> colorsToTextures = new HashMap<>();
+    Map<TerritoryNode, Texture> colorsToTextures = new HashMap<>();
 
     public PixelReader(float screenScaleFactor) {
         this.pixelMap = new Texture("riskMapColored.png");
         this.screenScaleFactor = screenScaleFactor;
 
         for (String key : colorsToTerritories.keySet()) {
+            TerritoryNode territoryNode = Territories.getTerritoryByColor(key);
             Color color = Color.valueOf(key);
-            colorsToTextures.put(color, createTextureMaskByColor(color));
+            colorsToTextures.put(territoryNode, createTextureMaskByColor(color));
         }
     }
 
@@ -45,20 +47,6 @@ public class PixelReader {
             System.out.println("Extracted color at coordinates (" + x + ", " + y + "): " + color);
 
             return color;
-        }
-
-    public String getTerritory(Color color) {
-
-            String colorKey = color.toString().substring(0, 6).toUpperCase();
-            TerritoryNode territoryNode = Territories.getTerritoryByColor(colorKey);
-
-            if (territoryNode == null) {
-                System.out.println("Territory node not found for color: " + colorKey);
-                return "Unknown Territory";
-            }
-
-            System.out.println(territoryNode.getAdjTerritories());
-            return territoryNode.name;
         }
 
 
@@ -90,7 +78,17 @@ public class PixelReader {
         return resultTexture;
     }
 
-    public Texture getTextureMaskByColor(Color color) {
-        return colorsToTextures.get(color);
+    public Texture getTextureMaskForTerritory(TerritoryNode territoryNode) {
+        return colorsToTextures.get(territoryNode);
+    }
+
+    public List<Texture> getTextureMasksForTerritories(List<TerritoryNode> territoryNodes) {
+        ArrayList<Texture> texturesList = new ArrayList<>(territoryNodes.size());
+
+        for (TerritoryNode territory : territoryNodes) {
+            texturesList.add(getTextureMaskForTerritory(territory));
+        }
+
+        return texturesList;
     }
 }
