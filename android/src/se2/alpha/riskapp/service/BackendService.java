@@ -59,6 +59,18 @@ public class BackendService {
         securePreferencesService.saveSessionToken(token);
     }
 
+    public interface ReachabilityCallback {
+        void onReachabilityChecked(boolean isReachable);
+    }
+
+    // Asynchronous backend reachability check
+    public void checkBackendReachability(ReachabilityCallback callback) {
+        executorService.submit(() -> {
+            boolean reachable = NetworkUtils.isBackendReachable("http://se2-demo.aau.at:53209/api/v1", 5000);
+
+            new Handler(Looper.getMainLooper()).post(() -> callback.onReachabilityChecked(reachable));
+        });
+    }
     public interface NetworkCallback {
         void onResult(String result);
     }
