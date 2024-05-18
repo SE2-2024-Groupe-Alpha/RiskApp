@@ -1,13 +1,21 @@
 package se2.alpha.riskapp.service;
 
 import android.content.Context;
+import android.graphics.Color;
+
 import androidx.lifecycle.MutableLiveData;
 import lombok.Getter;
 import lombok.Setter;
+import se2.alpha.riskapp.model.dol.Player;
+import se2.alpha.riskapp.model.websocket.CreateGameWebsocketMessage;
+import se2.alpha.riskapp.model.websocket.JoinWebsocketMessage;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.UUID;
+
+import javax.inject.Inject;
 
 
 public class GameService {

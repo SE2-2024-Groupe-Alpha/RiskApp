@@ -13,6 +13,7 @@ import se2.alpha.riskapp.data.PlayerArrayAdapter;
 import se2.alpha.riskapp.data.RiskApplication;
 import se2.alpha.riskapp.model.game.UserState;
 import se2.alpha.riskapp.service.BackendService;
+import se2.alpha.riskapp.service.GameLogicService;
 import se2.alpha.riskapp.service.GameService;
 import se2.alpha.riskapp.service.LobbyService;
 
@@ -33,6 +34,8 @@ public class Lobby extends AppCompatActivity {
     GameService gameService;
     @Inject
     LobbyService lobbyService;
+    @Inject
+    GameLogicService gameLogicService;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -98,6 +101,7 @@ public class Lobby extends AppCompatActivity {
         }
 
         lobbyService.updatePlayerStatus(isReady);
+        gameLogicService.createGame();
 
         Intent intent = new Intent(this, Game.class);
         startActivity(intent);

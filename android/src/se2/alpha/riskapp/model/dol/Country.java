@@ -2,16 +2,18 @@ package se2.alpha.riskapp.model.dol;
 
 import java.util.ArrayList;
 
+import lombok.Getter;
+
+@Getter
 public class Country extends Area{
     private ArrayList<Country> attackableCountries;
     private Continent continent;
-    private ArrayList<Troop> army;
+    private int numberOfTroops;
 
     public Country(String name, Player owner, Continent continent) {
         super(name, owner);
         this.continent = continent;
-        this.continent.addCountry(this);
-        army = new ArrayList<Troop>();
+        numberOfTroops = 0;
         attackableCountries = new ArrayList<Country>();
     }
 
@@ -19,23 +21,22 @@ public class Country extends Area{
         super();
     }
 
-    public ArrayList<Country> getAttackableCountries() {
-        return attackableCountries;
-    }
-
     public void setAttackableCountries(ArrayList<Country> attackableCountries) {
         this.attackableCountries = attackableCountries;
     }
 
-    public void addArmy(Troop t)
+    public void addArmy(int newTroops)
     {
-        army.add(t);
-        t.setLocation(this);
+        numberOfTroops += newTroops;
     }
 
-    public void removeArmy(Troop t)
+    public void removeArmy(int removedTroops)
     {
-        army.remove(t);
-        t.setLocation(null);
+        numberOfTroops -= removedTroops;
+    }
+
+    public void addAttackableCountry(Country country)
+    {
+        attackableCountries.add(country);
     }
 }
