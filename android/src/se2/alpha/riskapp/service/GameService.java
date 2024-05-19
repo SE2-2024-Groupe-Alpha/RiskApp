@@ -25,6 +25,9 @@ public class GameService {
 
     @Getter
     private final MutableLiveData<Map<String, Boolean>> userStates = new MutableLiveData<>(new HashMap<>());
+    @Getter
+    @Setter
+    private MutableLiveData<Boolean> gameStarted = new MutableLiveData<>();
 
     public GameService(Context context) {
     }

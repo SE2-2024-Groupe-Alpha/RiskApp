@@ -1,10 +1,8 @@
-package se2.alpha.riskappbackend.model.websocket;
-
-import java.util.Map;
+package se2.alpha.riskapp.model.websocket;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
-import se2.alpha.riskappbackend.model.db.Player;
+import se2.alpha.riskapp.model.dol.Player;
 
 @AllArgsConstructor
 @Getter

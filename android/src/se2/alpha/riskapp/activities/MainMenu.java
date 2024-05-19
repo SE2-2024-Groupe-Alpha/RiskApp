@@ -65,6 +65,9 @@ public class MainMenu extends AppCompatActivity {
                         lobbyService.createLobby(lobbyTitle, success -> {
                             if (success){
                                 Intent intent = new Intent(MainMenu.this, Lobby.class);
+                                Bundle bundle = new Bundle();
+                                bundle.putBoolean("host", true);
+                                intent.putExtras(bundle);
                                 Toast.makeText(MainMenu.this, "Lobby " + lobbyTitle + " created", Toast.LENGTH_SHORT).show();
                                 startActivity(intent);
                                 finish();

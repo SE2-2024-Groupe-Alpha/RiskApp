@@ -8,6 +8,8 @@ import android.widget.ListView;
 import android.widget.ProgressBar;
 import android.widget.Toast;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.lifecycle.Observer;
+
 import se2.alpha.riskapp.R;
 import se2.alpha.riskapp.data.PlayerArrayAdapter;
 import se2.alpha.riskapp.data.RiskApplication;
@@ -27,6 +29,7 @@ public class Lobby extends AppCompatActivity {
     ProgressBar progressBar;
     Button buttonReady;
     Button buttonLeave;
+    Button buttonCreateGame;
     boolean isReady = false;
     @Inject
     BackendService backendService;
@@ -41,17 +44,22 @@ public class Lobby extends AppCompatActivity {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         ((RiskApplication) getApplication()).getRiskAppComponent().inject(this);
+        Bundle bundle = getIntent().getExtras();
         setContentView(R.layout.lobby_activity);
+
+        System.out.println("lobby started");
 
         playerList = findViewById(R.id.player_list);
         progressBar = findViewById(R.id.progressBar);
         buttonReady = findViewById(R.id.btn_ready);
         buttonLeave = findViewById(R.id.btn_leave_lobby);
+        buttonCreateGame = findViewById(R.id.btn_create_game);
 
         progressBar.setVisibility(View.VISIBLE);
 
         buttonReady.setOnClickListener(this::playerReadyClick);
         buttonLeave.setOnClickListener(this::playerLeaveLobby);
+        buttonCreateGame.setOnClickListener(this::createGameClick);
 
         PlayerArrayAdapter adapter = new PlayerArrayAdapter(Lobby.this, new ArrayList<>());
         playerList.setAdapter(adapter);
@@ -69,6 +77,21 @@ public class Lobby extends AppCompatActivity {
             adapter.addAll(userStateList);
             adapter.notifyDataSetChanged();
         });
+
+        gameService.getGameStarted().observe(this, new Observer<Boolean>() {
+            @Override
+            public void onChanged(Boolean gameStarted) {
+                System.out.println("game started changed - " + gameStarted);
+                if(Boolean.TRUE.equals(gameStarted))
+                {
+                    Intent intent = new Intent(Lobby.this, Game.class);
+                    startActivity(intent);
+                }
+            }
+        });
+
+        if(!(bundle != null && bundle.getBoolean("host")))
+            buttonCreateGame.setVisibility(View.INVISIBLE);
     }
 
     @Override
@@ -101,9 +124,9 @@ public class Lobby extends AppCompatActivity {
         }
 
         lobbyService.updatePlayerStatus(isReady);
-        gameLogicService.createGame();
+    }
 
-        Intent intent = new Intent(this, Game.class);
-        startActivity(intent);
+    public void createGameClick(View view) {
+        gameLogicService.createGame();
     }
 }
