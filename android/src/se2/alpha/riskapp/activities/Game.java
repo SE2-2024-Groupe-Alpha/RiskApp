@@ -29,22 +29,6 @@ public class Game extends AndroidApplication {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         AndroidApplicationConfiguration config = new AndroidApplicationConfiguration();
-//        ((RiskApplication) getApplication()).getRiskAppComponent().inject(this);
-//        backendService.checkBackendReachability(isReachable -> {
-//            if (!isReachable) {
-//                showToast("Backend is unreachable");
-//                Log.d(TAG, "Backend is unreachable");
-//
-//            }else {
-//                showToast("Backend is reachable!");
-//                Log.d(TAG, "Backend is reachable!");
-//            }
-//
-//
-//
-//        });
-//        initialize(new RiskGame(), config);
-//    }
 
         try {
             ((RiskApplication) getApplication()).getRiskAppComponent().inject(this);
