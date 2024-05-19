@@ -1,10 +1,12 @@
 package se2.alpha.riskapp.events;
 
+import se2.alpha.riskapp.utils.TerritoryNode;
+
 public class TerritoryClickedEvent {
     String name;
 
-    public TerritoryClickedEvent(String name){
-        this.name = name;
+    public TerritoryClickedEvent(TerritoryNode territoryNode){
+        this.name = territoryNode.name;
     }
 
     public String getName() {

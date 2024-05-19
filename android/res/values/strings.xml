@@ -22,4 +22,5 @@
     <string name="enter_lobby_title">Enter Lobby Title</string>
     <string name="enter_lobby_id">Enter Lobby Id</string>
     <string name="is_private">Is Private</string>
+    <string name="start_game">Start Game</string>
 </resources>

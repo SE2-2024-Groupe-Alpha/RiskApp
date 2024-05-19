@@ -11,6 +11,8 @@ import se2.alpha.riskapp.events.TerritoryClickedEvent;
 import se2.alpha.riskapp.logic.EventBus;
 import se2.alpha.riskapp.ui.GameMap;
 import se2.alpha.riskapp.ui.PixelReader;
+import se2.alpha.riskapp.utils.Territories;
+import se2.alpha.riskapp.utils.TerritoryNode;
 
 public class GestureHandler extends GestureAdapter {
     private OrthographicCamera camera;
@@ -37,15 +39,21 @@ public class GestureHandler extends GestureAdapter {
         int pixelY = (int)(worldCoordinates.y / screenScaleFactor);
         int flippedY = gameMap.background.getHeight() + (pixelY) * (-gameMap.background.getHeight()) / (gameMap.background.getHeight());
         Color color = this.pixelReader.getPixelColor((int)(worldCoordinates.x / screenScaleFactor), flippedY);
-        System.out.println(this.pixelReader.getTerritory(color));
 
-        TerritoryClickedEvent territoryClickedEvent = new TerritoryClickedEvent(this.pixelReader.getTerritory(color));
+        TerritoryNode selectedTerritory = Territories.getTerritoryByColor(color);
+        System.out.println(selectedTerritory);
+
+        TerritoryClickedEvent territoryClickedEvent = new TerritoryClickedEvent(selectedTerritory);
         EventBus.invoke(territoryClickedEvent);
 //        Vector3 worldCoordinates = camera.unproject(new Vector3(x, y, 0));
 //        GameUnit unit = new GameUnit(GameUnitType.ARTILLERY, new Vector2(worldCoordinates.x, worldCoordinates.y));
 //        gameMap.addUnit(unit);
 
-        gameMap.onCountryClickedApplyTextureMask(pixelReader.getTextureMaskByColor(color));
+
+        gameMap.onCountryClickedApplyTextureMask(pixelReader.getTextureMaskForTerritory(selectedTerritory));
+
+        gameMap.onCountryClickedApplyTextureMaskToNeighbouringCountries(
+                pixelReader.getTextureMasksForTerritories(selectedTerritory.getAdjTerritories()));
 
         return true;
     }

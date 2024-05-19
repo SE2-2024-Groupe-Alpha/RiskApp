@@ -11,6 +11,8 @@ import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.Disposable;
 import com.badlogic.gdx.utils.viewport.ScreenViewport;
 
+import java.util.List;
+
 import se2.alpha.riskapp.GameUnit;
 import se2.alpha.riskapp.GestureHandler;
 
@@ -21,6 +23,7 @@ public class GameMap implements Disposable {
     int screenHeight;
     int screenWidth;
     public Texture background, backgroundCountryMask, waterTexture;
+    public List<Texture> neighbouringCountriesMasks;
     float screenScaleFactor;
     GestureHandler gestureHandler;
     private Array<GameUnit> units;
@@ -69,6 +72,13 @@ public class GameMap implements Disposable {
         if (backgroundCountryMask != null) {
             batch.draw(backgroundCountryMask, 0, 0, background.getWidth() * screenScaleFactor, Gdx.graphics.getHeight());
         }
+
+        batch.setColor(1, 1, 1, 0.7f); // Set 70% opacity
+        if (neighbouringCountriesMasks != null) {
+            for (Texture mask : neighbouringCountriesMasks) {
+                batch.draw(mask, 0, 0, background.getWidth() * screenScaleFactor, Gdx.graphics.getHeight());
+            }
+        }
         batch.setColor(1, 1, 1, 1); // Reset the color to full opacity
 
         for (GameUnit unit : units) {
@@ -84,6 +94,10 @@ public class GameMap implements Disposable {
 
     public void onCountryClickedApplyTextureMask(Texture textureMask) {
         backgroundCountryMask = textureMask;
+    }
+
+    public void onCountryClickedApplyTextureMaskToNeighbouringCountries(List<Texture> textureMasks) {
+        neighbouringCountriesMasks = textureMasks;
     }
 
     @Override

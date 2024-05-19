@@ -1,6 +1,6 @@
 package se2.alpha.riskapp.utils;
 
-import lombok.Setter;
+import com.badlogic.gdx.graphics.Color;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -465,9 +465,21 @@ public class Territories {
         colorsToTerritories.put("F0E68C", MiddleEast);
     }
 
-
     public static TerritoryNode getTerritoryByColor(String colorKey) {
         return colorsToTerritories.get(colorKey);
     }
 
+    public static TerritoryNode getTerritoryByColor(Color color) {
+
+        String colorKey = color.toString().substring(0, 6).toUpperCase();
+        TerritoryNode territoryNode = Territories.getTerritoryByColor(colorKey);
+
+        if (territoryNode == null) {
+            System.out.println("Territory node not found for color: " + colorKey);
+            return null;
+        }
+
+        System.out.println(territoryNode.getAdjTerritories());
+        return territoryNode;
+    }
 }
