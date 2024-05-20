@@ -10,6 +10,7 @@ import javax.inject.Inject;
 
 import se2.alpha.riskapp.model.dol.Player;
 import se2.alpha.riskapp.model.websocket.CreateGameWebsocketMessage;
+import se2.alpha.riskapp.model.websocket.EndTurnWebsocketMessage;
 
 public class GameLogicService {
     @Inject
@@ -26,6 +27,11 @@ public class GameLogicService {
     public void createGame(){
         CreateGameWebsocketMessage createGameWebsocketMessage = new CreateGameWebsocketMessage(gameService.getSessionId(), getPlayers());
         backendService.sendMessage(createGameWebsocketMessage);
+    }
+
+    public void endTurn(){
+        EndTurnWebsocketMessage endTurnWebsocketMessage = new EndTurnWebsocketMessage(gameService.getSessionId());
+        backendService.sendMessage(endTurnWebsocketMessage);
     }
 
     private ArrayList<Player> getPlayers()

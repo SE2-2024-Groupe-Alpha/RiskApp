@@ -15,6 +15,7 @@ import se2.alpha.riskapp.model.websocket.GameStartedWebsocketMessage;
 import se2.alpha.riskapp.model.websocket.GameWebsocketMessage;
 import se2.alpha.riskapp.model.websocket.GameWebsocketMessageAction;
 import se2.alpha.riskapp.model.websocket.IGameWebsocketMessage;
+import se2.alpha.riskapp.model.websocket.NewTurnWebsocketMessage;
 import se2.alpha.riskapp.model.websocket.UserSyncWebsocketMessage;
 
 import java.util.Objects;
@@ -50,6 +51,9 @@ public class RiskWebsocket extends WebSocketListener {
                     else if (action == GameWebsocketMessageAction.GAME_STARTED) {
                             handleGameStarted(text);
                     }
+                    else if (action == GameWebsocketMessageAction.NEW_TURN) {
+                        handleNewTurn(text);
+                    }
                 });
 
                 Log.d("THE SOCKET IS TALKING", text);
@@ -81,4 +85,8 @@ public class RiskWebsocket extends WebSocketListener {
             GameStartedWebsocketMessage gameStartedWebsocketMessage = gson.fromJson(text, GameStartedWebsocketMessage.class);
             gameService.getGameStarted().postValue(true);
         }
+
+    public void handleNewTurn(String text){
+        NewTurnWebsocketMessage newTurnWebsocketMessage = gson.fromJson(text, NewTurnWebsocketMessage.class);
+    }
 }
