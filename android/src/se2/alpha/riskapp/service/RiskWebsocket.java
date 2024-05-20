@@ -11,6 +11,7 @@ import okhttp3.WebSocket;
 import okhttp3.WebSocketListener;
 import okio.ByteString;
 import se2.alpha.riskapp.activities.Game;
+import se2.alpha.riskapp.model.websocket.CountryChangedWebsocketMessage;
 import se2.alpha.riskapp.model.websocket.GameStartedWebsocketMessage;
 import se2.alpha.riskapp.model.websocket.GameWebsocketMessage;
 import se2.alpha.riskapp.model.websocket.GameWebsocketMessageAction;
@@ -54,6 +55,9 @@ public class RiskWebsocket extends WebSocketListener {
                     else if (action == GameWebsocketMessageAction.NEW_TURN) {
                         handleNewTurn(text);
                     }
+                    else if (action == GameWebsocketMessageAction.COUNTRY_CHANGED) {
+                        handleCountryChanged(text);
+                    }
                 });
 
                 Log.d("THE SOCKET IS TALKING", text);
@@ -88,5 +92,10 @@ public class RiskWebsocket extends WebSocketListener {
 
     public void handleNewTurn(String text){
         NewTurnWebsocketMessage newTurnWebsocketMessage = gson.fromJson(text, NewTurnWebsocketMessage.class);
+    }
+
+    public void handleCountryChanged(String text){
+        CountryChangedWebsocketMessage countryChangedWebsocketMessage = gson.fromJson(text, CountryChangedWebsocketMessage.class);
+        System.out.println("country changed - " + countryChangedWebsocketMessage.getCountryName() + " " + countryChangedWebsocketMessage.getOwnerId() + " " + countryChangedWebsocketMessage.getNumberOfTroops());
     }
 }

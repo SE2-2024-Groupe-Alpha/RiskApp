@@ -8,6 +8,7 @@ public class GameSession {
     private Integer users;
     private GameState state;
     private boolean isPrivate;
+    private String activePlayerId;
 
     public UUID getSessionId() {
         return sessionId;

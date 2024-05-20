@@ -8,5 +8,7 @@ public enum GameWebsocketMessageAction {
     CREATE_GAME,
     GAME_STARTED,
     END_TURN,
-    NEW_TURN
+    NEW_TURN,
+    SEIZE_COUNTRY,
+    COUNTRY_CHANGED
 }
