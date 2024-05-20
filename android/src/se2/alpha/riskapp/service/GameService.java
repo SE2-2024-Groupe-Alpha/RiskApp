@@ -18,21 +18,28 @@ import java.util.UUID;
 import javax.inject.Inject;
 
 
+@Getter
 public class GameService {
-    @Getter
     @Setter
     private UUID sessionId = null;
 
-    @Getter
     private final MutableLiveData<Map<String, Boolean>> userStates = new MutableLiveData<>(new HashMap<>());
-    @Getter
-    @Setter
     private MutableLiveData<Boolean> gameStarted = new MutableLiveData<>();
+    private MutableLiveData<ArrayList<Player>> players = new MutableLiveData<>();
+    private MutableLiveData<Player> activePlayer = new MutableLiveData<>();
 
     public GameService(Context context) {
     }
 
     public void updateUsers(Map<String, Boolean> newUserStates){
         userStates.postValue(newUserStates);
+    }
+
+    public void updatePlayers(ArrayList<Player> newPlayers){
+        players.postValue(newPlayers);
+    }
+
+    public void setActivePlayer(Player newActivePlayer){
+        activePlayer.postValue(newActivePlayer);
     }
 }

@@ -88,10 +88,13 @@ public class RiskWebsocket extends WebSocketListener {
         public void handleGameStarted(String text){
             GameStartedWebsocketMessage gameStartedWebsocketMessage = gson.fromJson(text, GameStartedWebsocketMessage.class);
             gameService.getGameStarted().postValue(true);
+            gameService.updatePlayers(gameStartedWebsocketMessage.getPlayers());
+            gameService.setActivePlayer(gameStartedWebsocketMessage.getActivePlayer());
         }
 
     public void handleNewTurn(String text){
         NewTurnWebsocketMessage newTurnWebsocketMessage = gson.fromJson(text, NewTurnWebsocketMessage.class);
+        gameService.setActivePlayer(newTurnWebsocketMessage.getActivePlayer());
     }
 
     public void handleCountryChanged(String text){
