@@ -12,6 +12,7 @@ import se2.alpha.riskapp.model.dol.Player;
 import se2.alpha.riskapp.model.websocket.CreateGameWebsocketMessage;
 import se2.alpha.riskapp.model.websocket.EndTurnWebsocketMessage;
 import se2.alpha.riskapp.model.websocket.SeizeCountryWebsocketMessage;
+import se2.alpha.riskapp.model.websocket.StrengthenCountryWebsocketMessage;
 
 public class GameLogicService {
     @Inject
@@ -38,6 +39,11 @@ public class GameLogicService {
     public void seizeCountry(String playerId, String countryName, int numberOfTroops){
         SeizeCountryWebsocketMessage seizeCountryWebsocketMessage = new SeizeCountryWebsocketMessage(gameService.getSessionId(), playerId, countryName, numberOfTroops);
         backendService.sendMessage(seizeCountryWebsocketMessage);
+    }
+
+    public void strengthenCountry(String playerId, String countryName, int numberOfTroops){
+        StrengthenCountryWebsocketMessage strengthenCountryWebsocketMessage = new StrengthenCountryWebsocketMessage(gameService.getSessionId(), playerId, countryName, numberOfTroops);
+        backendService.sendMessage(strengthenCountryWebsocketMessage);
     }
 
     private ArrayList<Player> getPlayers()

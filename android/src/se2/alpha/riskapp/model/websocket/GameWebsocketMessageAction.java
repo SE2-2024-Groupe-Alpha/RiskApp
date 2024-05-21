@@ -10,5 +10,6 @@ public enum GameWebsocketMessageAction {
     END_TURN,
     NEW_TURN,
     SEIZE_COUNTRY,
+    STRENGTHEN_COUNTRY,
     COUNTRY_CHANGED
 }
