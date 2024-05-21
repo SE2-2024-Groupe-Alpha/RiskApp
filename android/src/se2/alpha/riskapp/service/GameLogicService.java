@@ -11,6 +11,7 @@ import javax.inject.Inject;
 import se2.alpha.riskapp.model.dol.Player;
 import se2.alpha.riskapp.model.websocket.CreateGameWebsocketMessage;
 import se2.alpha.riskapp.model.websocket.EndTurnWebsocketMessage;
+import se2.alpha.riskapp.model.websocket.MoveTroopsWebsocketMessage;
 import se2.alpha.riskapp.model.websocket.SeizeCountryWebsocketMessage;
 import se2.alpha.riskapp.model.websocket.StrengthenCountryWebsocketMessage;
 
@@ -44,6 +45,13 @@ public class GameLogicService {
     public void strengthenCountry(String playerId, String countryName, int numberOfTroops){
         StrengthenCountryWebsocketMessage strengthenCountryWebsocketMessage = new StrengthenCountryWebsocketMessage(gameService.getSessionId(), playerId, countryName, numberOfTroops);
         backendService.sendMessage(strengthenCountryWebsocketMessage);
+    }
+
+    public void moveTroops(String playerId, String moveFromCountryName, String moveToCountryName, int numberOfTroops){
+        MoveTroopsWebsocketMessage moveTroopsWebsocketMessage = new MoveTroopsWebsocketMessage(gameService.getSessionId(), playerId, moveFromCountryName, moveToCountryName, numberOfTroops);
+        System.out.println("after creating move troops message");
+        backendService.sendMessage(moveTroopsWebsocketMessage);
+        System.out.println("after sending move troops message");
     }
 
     private ArrayList<Player> getPlayers()
