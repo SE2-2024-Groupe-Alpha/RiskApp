@@ -12,5 +12,6 @@ public enum GameWebsocketMessageAction {
     SEIZE_COUNTRY,
     STRENGTHEN_COUNTRY,
     MOVE_TROOPS,
+    ATTACK,
     COUNTRY_CHANGED
 }
