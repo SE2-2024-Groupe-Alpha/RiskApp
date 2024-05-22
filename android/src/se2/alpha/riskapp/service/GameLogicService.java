@@ -61,8 +61,30 @@ public class GameLogicService {
     private ArrayList<Player> getPlayers()
     {
         ArrayList<Player> players = new ArrayList<Player>();
+        int playerCount = 0;
         for(String player: gameService.getUserStates().getValue().keySet())
-            players.add(new Player(UUID.randomUUID().toString(), player, Color.RED));
+        {
+            players.add(new Player(UUID.randomUUID().toString(), player, getPlayerColor(++playerCount)));
+        }
         return players;
+    }
+    private int getPlayerColor(int playerCount)
+    {
+        switch(playerCount)
+        {
+            case 1:
+                return Color.RED;
+            case 2:
+                return Color.BLUE;
+            case 3:
+                return Color.YELLOW;
+            case 4:
+                return Color.GREEN;
+            case 5:
+                return Color.MAGENTA;
+            case 6:
+                return Color.CYAN;
+        }
+        return 0;
     }
 }
