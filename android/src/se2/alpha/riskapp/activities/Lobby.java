@@ -13,11 +13,14 @@ import androidx.lifecycle.Observer;
 import se2.alpha.riskapp.R;
 import se2.alpha.riskapp.data.PlayerArrayAdapter;
 import se2.alpha.riskapp.data.RiskApplication;
+import se2.alpha.riskapp.model.dol.Player;
+import se2.alpha.riskapp.model.dol.RiskCard;
 import se2.alpha.riskapp.model.game.UserState;
 import se2.alpha.riskapp.service.BackendService;
 import se2.alpha.riskapp.service.GameLogicService;
 import se2.alpha.riskapp.service.GameService;
 import se2.alpha.riskapp.service.LobbyService;
+import se2.alpha.riskapp.service.RiskCardService;
 
 import javax.inject.Inject;
 import java.util.ArrayList;
@@ -40,6 +43,9 @@ public class Lobby extends AppCompatActivity {
     @Inject
     GameLogicService gameLogicService;
 
+    @Inject
+    RiskCardService riskCardService;
+
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -47,13 +53,12 @@ public class Lobby extends AppCompatActivity {
         Bundle bundle = getIntent().getExtras();
         setContentView(R.layout.lobby_activity);
 
-        System.out.println("lobby started");
-
         playerList = findViewById(R.id.player_list);
         progressBar = findViewById(R.id.progressBar);
         buttonReady = findViewById(R.id.btn_ready);
         buttonLeave = findViewById(R.id.btn_leave_lobby);
         buttonCreateGame = findViewById(R.id.btn_create_game);
+        buttonCreateGame.setEnabled(false);
 
         progressBar.setVisibility(View.VISIBLE);
 
@@ -73,6 +78,10 @@ public class Lobby extends AppCompatActivity {
                 userStateList.add(userState);
             }
 
+            if(userStateList.size() >= 3)
+                buttonCreateGame.setEnabled(true);
+            else
+                buttonCreateGame.setEnabled(false);
             adapter.clear();
             adapter.addAll(userStateList);
             adapter.notifyDataSetChanged();
@@ -81,7 +90,6 @@ public class Lobby extends AppCompatActivity {
         gameService.getGameStarted().observe(this, new Observer<Boolean>() {
             @Override
             public void onChanged(Boolean gameStarted) {
-                System.out.println("game started changed - " + gameStarted);
                 if(Boolean.TRUE.equals(gameStarted))
                 {
                     Intent intent = new Intent(Lobby.this, Game.class);
