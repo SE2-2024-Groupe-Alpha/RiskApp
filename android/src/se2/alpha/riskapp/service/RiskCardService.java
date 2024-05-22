@@ -52,4 +52,40 @@ public class RiskCardService {
             }
         });
     }
+
+    public interface CanPlayerTradeRiskCardsCallback {
+        void onResult(boolean canTrade);
+        void onError(String error);
+    }
+    public void canPlayerTradeRiskCards(String id, CanPlayerTradeRiskCardsCallback canPlayerTradeRiskCardsCallback){
+        backendService.getCanPlayerTradeRiskCardsRequest(id, new BackendService.CanPlayerTradeRiskCardsCallback() {
+            @Override
+            public void onSuccess(boolean response) {
+                canPlayerTradeRiskCardsCallback.onResult(response);
+            }
+
+            @Override
+            public void onError(String error) {
+                canPlayerTradeRiskCardsCallback.onError(error);
+            }
+        });
+    }
+
+    public interface PlayerTradeRiskCardsCallback {
+        void onResult();
+        void onError(String error);
+    }
+    public void playerTradeRiskCards(String id, PlayerTradeRiskCardsCallback canPlayerTradeRiskCardsCallback){
+        backendService.getPlayerTradeRiskCardsRequest(id, new BackendService.PlayerTradeRiskCardsCallback() {
+            @Override
+            public void onSuccess() {
+                canPlayerTradeRiskCardsCallback.onResult();
+            }
+
+            @Override
+            public void onError(String error) {
+                canPlayerTradeRiskCardsCallback.onError(error);
+            }
+        });
+    }
 }

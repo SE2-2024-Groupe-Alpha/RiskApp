@@ -177,6 +177,33 @@ public class BackendService {
         }, callback::onError);
     }
 
+    public interface CanPlayerTradeRiskCardsCallback {
+        void onSuccess(boolean canTrade);
+        void onError(String error);
+    }
+
+    public void getCanPlayerTradeRiskCardsRequest(String id, CanPlayerTradeRiskCardsCallback callback) {
+        makeGetRequest(API_URL + "/game" + "/" + gameService.getSessionId() + "/player/" + id + "/riskcards/tradable", result -> {
+            Log.e("Data", result);
+            boolean canTrade = gson.fromJson(result, boolean.class);
+            callback.onSuccess(canTrade);
+
+        }, callback::onError);
+    }
+
+    public interface PlayerTradeRiskCardsCallback {
+        void onSuccess();
+        void onError(String error);
+    }
+
+    public void getPlayerTradeRiskCardsRequest(String id, PlayerTradeRiskCardsCallback callback) {
+        makeGetRequest(API_URL + "/game" + "/" + gameService.getSessionId() + "/player/" + id + "/riskcards/trade", result -> {
+            Log.e("Data", result);
+            callback.onSuccess();
+
+        }, callback::onError);
+    }
+
     public void makePostRequest(String urlString, JSONObject postData, NetworkCallback callback, NetworkCallback errorCallback) {
         RequestBody body = RequestBody.create(postData.toString(), MediaType.get("application/json; charset=utf-8"));
         Request.Builder requestBuilder = new Request.Builder().url(urlString).post(body);
