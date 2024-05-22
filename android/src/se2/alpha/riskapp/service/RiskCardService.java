@@ -21,8 +21,8 @@ public class RiskCardService {
         void onResult(RiskCard riskCard);
         void onError(String error);
     }
-    public void getNewRiskCard(GetNewRiskCardCallback getNewRiskCardCallback){
-            backendService.getNewRiskCardRequest(new BackendService.GetNewRiskCardCallback() {
+    public void getNewRiskCard(String id, GetNewRiskCardCallback getNewRiskCardCallback){
+            backendService.getNewRiskCardRequest(id, new BackendService.GetNewRiskCardCallback() {
                 @Override
                 public void onSuccess(RiskCard response) {
                     getNewRiskCardCallback.onResult(response);

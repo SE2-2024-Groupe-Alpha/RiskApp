@@ -154,8 +154,8 @@ public class BackendService {
         void onError(String error);
     }
 
-    public void getNewRiskCardRequest(GetNewRiskCardCallback callback) {
-        makeGetRequest(API_URL + "/game/riskcard", result -> {
+    public void getNewRiskCardRequest(String id, GetNewRiskCardCallback callback) {
+        makeGetRequest(API_URL + "/game" + "/" + gameService.getSessionId() + "/player/" + id + "/riskcard", result -> {
             Log.e("Data", result);
             RiskCard riskCard = gson.fromJson(result, new TypeToken<RiskCard>(){}.getType());
             callback.onSuccess(riskCard);
@@ -169,7 +169,7 @@ public class BackendService {
     }
 
     public void getAllRiskCardsByPlayerRequest(String id, GetAllRiskCardsByPlayerCallback callback) {
-        makeGetRequest(API_URL + "/game/riskcard/player/" + id, result -> {
+        makeGetRequest(API_URL + "/game" + "/" + gameService.getSessionId() + "/player/" + id + "/riskcards", result -> {
             Log.e("Data", result);
             List<RiskCard> riskCard = gson.fromJson(result, new TypeToken<List<RiskCard>>(){}.getType());
             callback.onSuccess(riskCard);
