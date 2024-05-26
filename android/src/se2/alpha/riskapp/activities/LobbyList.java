@@ -27,6 +27,7 @@ public class LobbyList extends AppCompatActivity {
     ProgressBar progressBar;
     List<GameSession> filteredLobbies;
     Button joinByIdButton;
+    Button buttonCreateLobby;
     @Inject
     BackendService backendService;
     @Inject
@@ -40,6 +41,7 @@ public class LobbyList extends AppCompatActivity {
         availableLobbies = findViewById(R.id.lobby_list);
         progressBar = findViewById(R.id.progressBar);
         joinByIdButton = findViewById(R.id.btn_join_by_id);
+        buttonCreateLobby = findViewById(R.id.btn_create_lobby);
 
         getLobbies();
 
@@ -51,6 +53,7 @@ public class LobbyList extends AppCompatActivity {
             finish();
         });
         joinByIdButton.setOnClickListener(view -> createJoinByIdDialog());
+        buttonCreateLobby.setOnClickListener(view -> createLobbyDialog());
     }
 
     @Override
@@ -82,6 +85,40 @@ public class LobbyList extends AppCompatActivity {
                 runOnUiThread(() -> progressBar.setVisibility(View.GONE));
             }
         });
+    }
+
+    private void createLobbyDialog() {
+        LayoutInflater inflater = this.getLayoutInflater();
+        View dialogView = inflater.inflate(R.layout.dialog_create_lobby, null);
+        EditText editTextLobbyTitle = dialogView.findViewById(R.id.et_lobby_title);
+
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        builder.setView(dialogView)
+                .setPositiveButton("Confirm", (dialog, id) -> {
+                    String lobbyTitle = editTextLobbyTitle.getText().toString().trim();
+
+                    if (!lobbyTitle.isEmpty()) {
+                        lobbyService.createLobby(lobbyTitle, success -> {
+                            if (success){
+                                Intent intent = new Intent(LobbyList.this, Lobby.class);
+                                Bundle bundle = new Bundle();
+                                bundle.putBoolean("host", true);
+                                intent.putExtras(bundle);
+                                Toast.makeText(LobbyList.this, "Lobby " + lobbyTitle + " created", Toast.LENGTH_SHORT).show();
+                                startActivity(intent);
+                                finish();
+                            }else {
+                                Toast.makeText(LobbyList.this, "Lobby creation failed", Toast.LENGTH_SHORT).show();
+                            }
+                        });
+                    }else {
+                        Toast.makeText(LobbyList.this, "Lobby title cannot be empty", Toast.LENGTH_SHORT).show();
+                    }
+                })
+                .setNegativeButton("Cancel", (dialog, id) -> {});
+
+        AlertDialog alertDialog = builder.create();
+        alertDialog.show();
     }
 
     private void createJoinByIdDialog(){
