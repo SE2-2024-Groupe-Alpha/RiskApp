@@ -19,16 +19,38 @@ import se2.alpha.riskapp.model.auth.ValidationRequest;
 import se2.alpha.riskapp.service.BackendService;
 
 import javax.inject.Inject;
+import java.util.concurrent.Executors;
+import java.util.concurrent.ScheduledExecutorService;
+import java.util.concurrent.TimeUnit;
 
 public class Login extends AppCompatActivity {
     TextInputEditText usernameText;
     TextInputEditText passwordText;
     Button buttonLogin;
     Button buttonRegisterNow;
-    boolean apiHealthy = false;
 
     @Inject
     BackendService backendService;
+
+    private ScheduledExecutorService scheduler;
+
+    public void isApiHealthy() {
+        backendService.checkApiHealth(new BackendService.HealthCheckCallback() {
+            @Override
+            public void onHealthy() {
+                buttonLogin.setEnabled(true);
+                buttonRegisterNow.setEnabled(true);
+                scheduler.shutdown();
+                Toast.makeText(Login.this, "Backend reached!", Toast.LENGTH_LONG).show();
+                isLoggedIn();
+            }
+
+            @Override
+            public void onError(String error) {
+                Toast.makeText(Login.this, "Server currently unreachable!", Toast.LENGTH_LONG).show();
+            }
+        });
+    }
 
     public void isLoggedIn() {
        if (backendService.getSessionToken() != null){
@@ -66,14 +88,19 @@ public class Login extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         ((RiskApplication) getApplication()).getRiskAppComponent().inject(this);
-        isLoggedIn();
-        setContentView(R.layout.login_activity);
 
+        setContentView(R.layout.login_activity);
 
         usernameText = findViewById(R.id.username);
         passwordText = findViewById(R.id.password);
         buttonLogin = findViewById(R.id.btn_login);
         buttonRegisterNow = findViewById(R.id.btn_register_now);
+
+        buttonLogin.setEnabled(false);
+        buttonRegisterNow.setEnabled(false);
+
+        scheduler = Executors.newSingleThreadScheduledExecutor();
+        scheduler.scheduleWithFixedDelay(this::isApiHealthy, 0, 5, TimeUnit.SECONDS);
 
         buttonLogin.setOnClickListener(view -> {
             String username;

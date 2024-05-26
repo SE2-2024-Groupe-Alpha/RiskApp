@@ -63,6 +63,22 @@ public class BackendService {
         void onReachabilityChecked(boolean isReachable);
     }
 
+    public interface HealthCheckCallback {
+        void onHealthy();
+        void onError(String error);
+    }
+
+    public void checkApiHealth(HealthCheckCallback callback) {
+        String healthCheckUrl = API_URL + "/health";
+        makeGetRequest(healthCheckUrl, result -> {
+            if ("Api healthy!".equals(result)) {
+                callback.onHealthy();
+            } else {
+                callback.onError("API is not healthy: Unexpected response");
+            }
+        }, callback::onError);
+    }
+
     // Asynchronous backend reachability check
     public void checkBackendReachability(ReachabilityCallback callback) {
         executorService.submit(() -> {
