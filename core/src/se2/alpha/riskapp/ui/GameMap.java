@@ -100,6 +100,11 @@ public class GameMap implements Disposable {
         neighbouringCountriesMasks = textureMasks;
     }
 
+    public void clearCountryTextureMasks() {
+        backgroundCountryMask = null;
+        neighbouringCountriesMasks = null;
+    }
+
     @Override
     public void dispose() {
         batch.dispose();
