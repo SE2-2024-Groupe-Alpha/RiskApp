@@ -44,7 +44,10 @@ public class LobbyList extends AppCompatActivity {
         buttonCreateLobby = findViewById(R.id.btn_create_lobby);
 
         getLobbies();
+        setupUIElements();
+    }
 
+    private void setupUIElements(){
         availableLobbies.setOnItemClickListener((parent, view, position, id) -> {
             GameSession sessionToJoin = filteredLobbies.get(position);
             lobbyService.joinLobby(sessionToJoin.getSessionId());
@@ -52,6 +55,7 @@ public class LobbyList extends AppCompatActivity {
             startActivity(intent);
             finish();
         });
+
         joinByIdButton.setOnClickListener(view -> createJoinByIdDialog());
         buttonCreateLobby.setOnClickListener(view -> createLobbyDialog());
     }
