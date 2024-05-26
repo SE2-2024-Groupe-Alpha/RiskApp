@@ -102,57 +102,62 @@ public class Login extends AppCompatActivity {
         scheduler = Executors.newSingleThreadScheduledExecutor();
         scheduler.scheduleWithFixedDelay(this::isApiHealthy, 0, 5, TimeUnit.SECONDS);
 
-        buttonLogin.setOnClickListener(view -> {
-            String username;
-            String password;
+        setupButtons();
+    }
 
-            username = String.valueOf(usernameText.getText());
-            password = String.valueOf(passwordText.getText());
+    private void setupButtons(){
+        buttonLogin.setOnClickListener(view -> attemptLogin());
+        buttonRegisterNow.setOnClickListener(view -> startRegistrationActivity());
+    }
 
-            if (TextUtils.isEmpty(username)){
-                Toast.makeText(Login.this, "Enter username", Toast.LENGTH_SHORT).show();
-                return;
-            }
+    private void attemptLogin() {
+        String username;
+        String password;
 
-            if (TextUtils.isEmpty(password)){
-                Toast.makeText(Login.this, "Enter password", Toast.LENGTH_SHORT).show();
-                return;
-            }
+        username = String.valueOf(usernameText.getText());
+        password = String.valueOf(passwordText.getText());
 
-            hideKeyboard();
+        if (TextUtils.isEmpty(username)){
+            Toast.makeText(Login.this, "Enter username", Toast.LENGTH_SHORT).show();
+            return;
+        }
 
-            SignInRequest signInRequest = new SignInRequest(username, password);
+        if (TextUtils.isEmpty(password)){
+            Toast.makeText(Login.this, "Enter password", Toast.LENGTH_SHORT).show();
+            return;
+        }
 
-            try {
-                backendService.makeSignInRequest(signInRequest, new BackendService.SignInCallback() {
-                    @Override
-                    public void onSuccess(JwtAuthenticationResponse response) {
-                        Toast.makeText(Login.this, "Login successful", Toast.LENGTH_SHORT).show();
+        hideKeyboard();
 
-                        backendService.saveSessionToken(response.getToken());
+        SignInRequest signInRequest = new SignInRequest(username, password);
 
-                        Intent intent = new Intent(Login.this, MainMenu.class);
-                        startActivity(intent);
-                        finish();
-                    }
+        try {
+            backendService.makeSignInRequest(signInRequest, new BackendService.SignInCallback() {
+                @Override
+                public void onSuccess(JwtAuthenticationResponse response) {
+                    Toast.makeText(Login.this, "Login successful", Toast.LENGTH_SHORT).show();
 
-                    @Override
-                    public void onError(String error) {
-                        Toast.makeText(Login.this, "Login failed", Toast.LENGTH_SHORT).show();
-                    }
-                });
-            } catch (JSONException e) {
-                Log.e("LOGIN", e.getMessage());
-                Toast.makeText(Login.this, "Login failed catastrophic", Toast.LENGTH_SHORT).show();
-            }
+                    backendService.saveSessionToken(response.getToken());
 
-        });
+                    Intent intent = new Intent(Login.this, MainMenu.class);
+                    startActivity(intent);
+                    finish();
+                }
 
+                @Override
+                public void onError(String error) {
+                    Toast.makeText(Login.this, "Login failed", Toast.LENGTH_SHORT).show();
+                }
+            });
+        } catch (JSONException e) {
+            Log.e("LOGIN", e.getMessage());
+            Toast.makeText(Login.this, "Login failed catastrophic", Toast.LENGTH_SHORT).show();
+        }
+    }
 
-        buttonRegisterNow.setOnClickListener(view -> {
-            Intent intent = new Intent(Login.this, Register.class);
-            startActivity(intent);
-        });
+    private void startRegistrationActivity() {
+        Intent intent = new Intent(Login.this, Register.class);
+        startActivity(intent);
     }
 
     private void hideKeyboard() {
