@@ -13,5 +13,7 @@ public enum GameWebsocketMessageAction {
     STRENGTHEN_COUNTRY,
     MOVE_TROOPS,
     ATTACK,
-    COUNTRY_CHANGED
+    COUNTRY_CHANGED,
+    PLAYER_ELIMINATED,
+    PLAYER_WON
 }

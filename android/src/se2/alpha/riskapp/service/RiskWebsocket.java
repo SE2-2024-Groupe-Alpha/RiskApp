@@ -17,6 +17,8 @@ import se2.alpha.riskapp.model.websocket.GameWebsocketMessage;
 import se2.alpha.riskapp.model.websocket.GameWebsocketMessageAction;
 import se2.alpha.riskapp.model.websocket.IGameWebsocketMessage;
 import se2.alpha.riskapp.model.websocket.NewTurnWebsocketMessage;
+import se2.alpha.riskapp.model.websocket.PlayerEliminatedWebsocketMessage;
+import se2.alpha.riskapp.model.websocket.PlayerWonWebsocketMessage;
 import se2.alpha.riskapp.model.websocket.UserSyncWebsocketMessage;
 
 import java.util.Objects;
@@ -57,6 +59,12 @@ public class RiskWebsocket extends WebSocketListener {
                     }
                     else if (action == GameWebsocketMessageAction.COUNTRY_CHANGED) {
                         handleCountryChanged(text);
+                    }
+                    else if (action == GameWebsocketMessageAction.PLAYER_ELIMINATED) {
+                        handlePlayerEliminated(text);
+                    }
+                    else if (action == GameWebsocketMessageAction.PLAYER_WON) {
+                        handlePlayerWon(text);
                     }
                 });
 
@@ -100,5 +108,13 @@ public class RiskWebsocket extends WebSocketListener {
     public void handleCountryChanged(String text){
         CountryChangedWebsocketMessage countryChangedWebsocketMessage = gson.fromJson(text, CountryChangedWebsocketMessage.class);
         System.out.println("country changed - " + countryChangedWebsocketMessage.getCountryName() + " " + countryChangedWebsocketMessage.getOwnerId() + " " + countryChangedWebsocketMessage.getNumberOfTroops());
+    }
+
+    public void handlePlayerEliminated(String text){
+        PlayerEliminatedWebsocketMessage playerEliminatedWebsocketMessage = gson.fromJson(text, PlayerEliminatedWebsocketMessage.class);
+    }
+
+    public void handlePlayerWon(String text){
+        PlayerWonWebsocketMessage playerWonWebsocketMessage = gson.fromJson(text, PlayerWonWebsocketMessage.class);
     }
 }
