@@ -1,4 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <color name="ic_background_color">#FFFFFFFF</color>
+    <color name="button_background">#4CAF50</color>
+    <color name="button_text">#FFFFFF</color>
 </resources>

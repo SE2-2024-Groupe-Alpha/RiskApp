@@ -3,6 +3,7 @@ package se2.alpha.riskapp;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.OrthographicCamera;
+import com.badlogic.gdx.graphics.Pixmap;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.input.GestureDetector.GestureAdapter;
 import com.badlogic.gdx.math.Vector2;
@@ -43,17 +44,16 @@ public class GestureHandler extends GestureAdapter {
         TerritoryNode selectedTerritory = Territories.getTerritoryByColor(color);
         System.out.println(selectedTerritory);
 
-        TerritoryClickedEvent territoryClickedEvent = new TerritoryClickedEvent(selectedTerritory);
-        EventBus.invoke(territoryClickedEvent);
-//        Vector3 worldCoordinates = camera.unproject(new Vector3(x, y, 0));
-//        GameUnit unit = new GameUnit(GameUnitType.ARTILLERY, new Vector2(worldCoordinates.x, worldCoordinates.y));
-//        gameMap.addUnit(unit);
+        if (selectedTerritory != null) {
+            TerritoryClickedEvent territoryClickedEvent = new TerritoryClickedEvent(selectedTerritory);
+            EventBus.invoke(territoryClickedEvent);
+            gameMap.onCountryClickedApplyTextureMask(pixelReader.getTextureMaskForTerritory(selectedTerritory));
 
-
-        gameMap.onCountryClickedApplyTextureMask(pixelReader.getTextureMaskForTerritory(selectedTerritory));
-
-        gameMap.onCountryClickedApplyTextureMaskToNeighbouringCountries(
-                pixelReader.getTextureMasksForTerritories(selectedTerritory.getAdjTerritories()));
+            gameMap.onCountryClickedApplyTextureMaskToNeighbouringCountries(
+                    pixelReader.getTextureMasksForTerritories(selectedTerritory.getAdjTerritories()));
+        } else {
+            gameMap.clearCountryTextureMasks();
+        }
 
         return true;
     }
