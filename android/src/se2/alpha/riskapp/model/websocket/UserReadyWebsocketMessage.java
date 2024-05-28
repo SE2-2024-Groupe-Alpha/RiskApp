@@ -1,18 +1,23 @@
 package se2.alpha.riskapp.model.websocket;
 
-import lombok.Getter;
-
 import java.util.UUID;
+
+import lombok.Getter;
 
 @Getter
 public class UserReadyWebsocketMessage implements IGameWebsocketMessage {
-    private final CustomWebsocketMessageType type = CustomWebsocketMessageType.GAME;
-    GameWebsocketMessageAction action = GameWebsocketMessageAction.USER_READY;
-    private final UUID gameSessionId;
-    private final Boolean isReady;
+    private static final CustomWebsocketMessageType type = CustomWebsocketMessageType.GAME;
+    private static final GameWebsocketMessageAction action = GameWebsocketMessageAction.JOIN;
+    private UUID gameSessionId;
+    private Boolean isReady;
 
-    public UserReadyWebsocketMessage(UUID gameSessionId, Boolean isReady) {
-        this.gameSessionId = gameSessionId;
-        this.isReady = isReady;
+    @Override
+    public CustomWebsocketMessageType getType() {
+        return type;
+    }
+
+    @Override
+    public GameWebsocketMessageAction getAction() {
+        return action;
     }
 }
