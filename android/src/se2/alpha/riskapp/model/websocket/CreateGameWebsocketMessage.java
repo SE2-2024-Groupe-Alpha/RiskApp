@@ -3,9 +3,11 @@ package se2.alpha.riskapp.model.websocket;
 import java.util.ArrayList;
 import java.util.UUID;
 
+import lombok.AllArgsConstructor;
+import se2.alpha.riskapp.model.dol.Player;
 import lombok.Getter;
-import se.alpha.riskappbackend.model.db.Player;
 
+@AllArgsConstructor
 @Getter
 public class CreateGameWebsocketMessage implements IGameWebsocketMessage {
     private static final CustomWebsocketMessageType type = CustomWebsocketMessageType.GAME;

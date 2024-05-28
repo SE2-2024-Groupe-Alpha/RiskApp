@@ -2,7 +2,7 @@ package se2.alpha.riskapp.model.websocket;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
-import se.alpha.riskappbackend.model.db.Player;
+import se2.alpha.riskapp.model.dol.Player;
 
 @AllArgsConstructor
 @Getter

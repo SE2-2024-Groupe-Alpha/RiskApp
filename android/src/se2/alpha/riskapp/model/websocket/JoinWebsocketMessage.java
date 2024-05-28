@@ -2,8 +2,10 @@ package se2.alpha.riskapp.model.websocket;
 
 import java.util.UUID;
 
+import lombok.AllArgsConstructor;
 import lombok.Getter;
 
+@AllArgsConstructor
 @Getter
 public class JoinWebsocketMessage implements IGameWebsocketMessage {
     private static final CustomWebsocketMessageType type = CustomWebsocketMessageType.GAME;
