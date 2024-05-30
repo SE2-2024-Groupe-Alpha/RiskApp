@@ -1,5 +1,6 @@
 package se2.alpha.riskapp.utils;
 
+import com.badlogic.gdx.graphics.Texture;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -9,6 +10,8 @@ import java.util.List;
 public class TerritoryNode {
     public String name;
     private final List<TerritoryNode> adjTerritories;
+
+    private Texture mask;
 
     private int unitCnt;
     private String ownedBy;
@@ -30,6 +33,24 @@ public class TerritoryNode {
 
     public List<TerritoryNode> getAdjTerritories() {
         return adjTerritories;
+    }
+
+    public Texture getMask() {
+        return mask;
+    }
+
+    public List<Texture> getNeighborMasks() {
+        ArrayList<Texture> texturesList = new ArrayList<>(adjTerritories.size());
+
+        for (TerritoryNode territory : adjTerritories) {
+            texturesList.add(territory.getMask());
+        }
+
+        return texturesList;
+    }
+
+    public void setMask(Texture mask) {
+        this.mask = mask;
     }
 
     @Override

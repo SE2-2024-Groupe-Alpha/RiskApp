@@ -47,10 +47,9 @@ public class GestureHandler extends GestureAdapter {
         if (selectedTerritory != null) {
             TerritoryClickedEvent territoryClickedEvent = new TerritoryClickedEvent(selectedTerritory);
             EventBus.invoke(territoryClickedEvent);
-            gameMap.onCountryClickedApplyTextureMask(pixelReader.getTextureMaskForTerritory(selectedTerritory));
 
-            gameMap.onCountryClickedApplyTextureMaskToNeighbouringCountries(
-                    pixelReader.getTextureMasksForTerritories(selectedTerritory.getAdjTerritories()));
+            gameMap.onCountryClickedApplyTextureMask(selectedTerritory.getMask());
+            gameMap.onCountryClickedApplyTextureMaskToNeighbouringCountries(selectedTerritory.getNeighborMasks());
         } else {
             gameMap.clearCountryTextureMasks();
         }

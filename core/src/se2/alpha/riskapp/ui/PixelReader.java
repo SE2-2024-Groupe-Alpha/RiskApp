@@ -2,8 +2,11 @@ package se2.alpha.riskapp.ui;
 
 import static se2.alpha.riskapp.utils.Territories.colorsToTerritories;
 
+import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.files.FileHandle;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.Pixmap;
+import com.badlogic.gdx.graphics.PixmapIO;
 import com.badlogic.gdx.graphics.Texture;
 import se2.alpha.riskapp.utils.Territories;
 import se2.alpha.riskapp.utils.TerritoryNode;
@@ -26,7 +29,7 @@ public class PixelReader {
         for (String key : colorsToTerritories.keySet()) {
             TerritoryNode territoryNode = Territories.getTerritoryByColor(key);
             Color color = Color.valueOf(key);
-            colorsToTextures.put(territoryNode, createTextureMaskByColor(color));
+            colorsToTextures.put(territoryNode, createTextureMaskByColor(territoryNode, color));
         }
     }
 
@@ -50,8 +53,17 @@ public class PixelReader {
         }
 
 
-    // CPU heavy function, to improve performance we will probably need to use libgdx shaders instead.
-    private Texture createTextureMaskByColor(Color color) {
+    private Texture createTextureMaskByColor(TerritoryNode node, Color color) {
+
+        FileHandle fileHandle = Gdx.files.local(color.toString() + ".png");
+
+        if (fileHandle.exists()) {
+            Pixmap pixmap = new Pixmap(fileHandle);
+            Texture texture = new Texture(pixmap);
+            pixmap.dispose();
+            node.setMask(texture);
+            return texture;
+        }
 
         if (!pixelMap.getTextureData().isPrepared()) {
             pixelMap.getTextureData().prepare();
@@ -71,24 +83,13 @@ public class PixelReader {
             }
         }
 
+        PixmapIO.writePNG(fileHandle, resultPixmap);
         Texture resultTexture = new Texture(resultPixmap);
         mapPixmap.dispose();
         resultPixmap.dispose();
 
+        node.setMask(resultTexture);
+
         return resultTexture;
-    }
-
-    public Texture getTextureMaskForTerritory(TerritoryNode territoryNode) {
-        return colorsToTextures.get(territoryNode);
-    }
-
-    public List<Texture> getTextureMasksForTerritories(List<TerritoryNode> territoryNodes) {
-        ArrayList<Texture> texturesList = new ArrayList<>(territoryNodes.size());
-
-        for (TerritoryNode territory : territoryNodes) {
-            texturesList.add(getTextureMaskForTerritory(territory));
-        }
-
-        return texturesList;
     }
 }

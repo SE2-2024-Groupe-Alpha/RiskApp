@@ -2,6 +2,7 @@ package se2.alpha.riskapp.ui;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.InputMultiplexer;
+import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
@@ -60,14 +61,29 @@ public class GameMap implements Disposable {
     public void draw() {
         camera.update();
         batch.setProjectionMatrix(camera.combined);
-        waterOffsetX += waterSpeedX * Gdx.graphics.getDeltaTime();
-        waterOffsetY += waterSpeedY * Gdx.graphics.getDeltaTime();
-        float bgWidthScaled = background.getWidth() * screenScaleFactor * 4;
-        float bgHeightScaled = Gdx.graphics.getHeight();
-        batch.begin();
-        batch.draw(waterTexture, 0, 0, bgWidthScaled, bgHeightScaled, waterOffsetX, waterOffsetY, (float) ((bgWidthScaled / waterTexture.getWidth() + waterOffsetX)*1.5), (float) ((bgHeightScaled / waterTexture.getHeight() + waterOffsetY)*1.5));
-        batch.draw(background, 0, 0, background.getWidth() * screenScaleFactor, Gdx.graphics.getHeight());
 
+        batch.begin();
+
+        drawBackground();
+        drawTerritoryColors();
+        drawTerritoryHighlighting();
+
+        for (GameUnit unit : units) {
+            unit.draw(batch, camera.zoom);
+        }
+
+        batch.end();
+    }
+
+    private void drawTerritoryColors() {
+//        batch.setColor(Color.RED);
+//        if (backgroundCountryMask != null) {
+//            batch.draw(backgroundCountryMask, 0, 0, background.getWidth() * screenScaleFactor, Gdx.graphics.getHeight());
+//        }
+    }
+
+
+    private void drawTerritoryHighlighting() {
         // Selected Territory
         batch.setColor(1, 1, 1, 0.5f);
         if (backgroundCountryMask != null) {
@@ -82,12 +98,16 @@ public class GameMap implements Disposable {
             }
         }
         batch.setColor(1, 1, 1, 1);
+    }
 
-        for (GameUnit unit : units) {
-            unit.draw(batch, camera.zoom);
-        }
+    private void drawBackground() {
+        waterOffsetX += waterSpeedX * Gdx.graphics.getDeltaTime();
+        waterOffsetY += waterSpeedY * Gdx.graphics.getDeltaTime();
+        float bgWidthScaled = background.getWidth() * screenScaleFactor * 4;
+        float bgHeightScaled = Gdx.graphics.getHeight();
 
-        batch.end();
+        batch.draw(waterTexture, 0, 0, bgWidthScaled, bgHeightScaled, waterOffsetX, waterOffsetY, (float) ((bgWidthScaled / waterTexture.getWidth() + waterOffsetX)*1.5), (float) ((bgHeightScaled / waterTexture.getHeight() + waterOffsetY)*1.5));
+        batch.draw(background, 0, 0, background.getWidth() * screenScaleFactor, Gdx.graphics.getHeight());
     }
 
     public void addUnit(GameUnit unit) {
