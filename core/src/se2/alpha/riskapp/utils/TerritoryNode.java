@@ -1,5 +1,6 @@
 package se2.alpha.riskapp.utils;
 
+import lombok.Getter;
 import lombok.Setter;
 
 import java.util.ArrayList;
@@ -9,9 +10,14 @@ public class TerritoryNode {
     public String name;
     private final List<TerritoryNode> adjTerritories;
 
+    private int unitCnt;
+    private String ownedBy;
+
     public TerritoryNode(String name) {
         this.name = name;
         this.adjTerritories = new ArrayList<>();
+        this.unitCnt = 0;
+        this.ownedBy = null;
     }
 
     public void addAdjTerritory(TerritoryNode territory) {

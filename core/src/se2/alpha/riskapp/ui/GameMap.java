@@ -68,18 +68,20 @@ public class GameMap implements Disposable {
         batch.draw(waterTexture, 0, 0, bgWidthScaled, bgHeightScaled, waterOffsetX, waterOffsetY, (float) ((bgWidthScaled / waterTexture.getWidth() + waterOffsetX)*1.5), (float) ((bgHeightScaled / waterTexture.getHeight() + waterOffsetY)*1.5));
         batch.draw(background, 0, 0, background.getWidth() * screenScaleFactor, Gdx.graphics.getHeight());
 
-        batch.setColor(1, 1, 1, 0.5f); // Set 50% opacity
+        // Selected Territory
+        batch.setColor(1, 1, 1, 0.5f);
         if (backgroundCountryMask != null) {
             batch.draw(backgroundCountryMask, 0, 0, background.getWidth() * screenScaleFactor, Gdx.graphics.getHeight());
         }
 
-        batch.setColor(1, 1, 1, 0.7f); // Set 70% opacity
+        // Neighbor Selected Territory
+        batch.setColor(1, 1, 1, 0.3f);
         if (neighbouringCountriesMasks != null) {
             for (Texture mask : neighbouringCountriesMasks) {
                 batch.draw(mask, 0, 0, background.getWidth() * screenScaleFactor, Gdx.graphics.getHeight());
             }
         }
-        batch.setColor(1, 1, 1, 1); // Reset the color to full opacity
+        batch.setColor(1, 1, 1, 1);
 
         for (GameUnit unit : units) {
             unit.draw(batch, camera.zoom);
