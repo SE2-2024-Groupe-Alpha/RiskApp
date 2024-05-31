@@ -151,3 +151,17 @@ tasks.register('jacoco', Exec) {
     toolVersion = "0.8.11"
     reportsDirectory = layout.buildDirectory.dir('jacocoTestReport')
 }
+
+tasks.register('sonar', Exec) {
+    properties {
+
+        /*property 'sonar.host.url', 'http://localhost:9000'
+        property 'sonar.projectKey', 'riskappbackend'*/
+        property 'sonar.host.url', 'https://sonarcloud.io'
+        property 'sonar.projectKey', 'SE2-2024-Group-Alpha_RiskApp'
+        property 'sonar.organization', 'se2-2024-group-alpha'
+        property 'sonar.java.coveragePlugin', 'jacoco'
+        property 'sonar.coverage.jacoco.xmlReportPaths', "${project.projectDir}/build/reports/jacoco/jacocoTestReport/jacocoTestReport.xml"
+        property 'sonar.coverage.exclusions', '**/test/**, **/core/**, **/android/**'
+    }
+}
