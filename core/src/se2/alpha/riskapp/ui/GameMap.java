@@ -12,6 +12,7 @@ import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.Disposable;
 import com.badlogic.gdx.utils.viewport.ScreenViewport;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import se2.alpha.riskapp.GameUnit;
@@ -21,8 +22,6 @@ public class GameMap implements Disposable {
     SpriteBatch batch;
     OrthographicCamera camera;
     float waterSpeedX = 0.1f, waterSpeedY = 0.05f, waterOffsetX = 0, waterOffsetY = 0;
-    int screenHeight;
-    int screenWidth;
     public Texture background, backgroundCountryMask, waterTexture;
     public List<Texture> neighbouringCountriesMasks;
     float screenScaleFactor;
@@ -32,30 +31,43 @@ public class GameMap implements Disposable {
     InputMultiplexer multiplexer;
     OverlayShowNewRiskCard overlayShowNewRiskCard;
     OverlayShowAllRiskCards overlayShowAllRiskCards;
+    float bgWidthScaled ;
+    float bgHeightScaled;
 
     public GameMap(int screenHeight, int screenWidth) {
-        this.screenHeight = screenHeight;
-        this.screenWidth = screenWidth;
-        this.batch = new SpriteBatch();
-        this.camera = new OrthographicCamera(screenWidth, screenHeight);
-        this.camera.setToOrtho(false);
+        initializeComponents(screenWidth, screenHeight);
+        configureInput();
+        initializeOverlays();
+    }
+
+    private void initializeComponents(int screenWidth, int screenHeight) {
+        batch = new SpriteBatch();
+        camera = new OrthographicCamera(screenWidth, screenHeight);
+        camera.setToOrtho(false);
+        stage = new Stage(new ScreenViewport(camera));
 
         background = new Texture("riskMapWhite.png");
         waterTexture = new Texture("woah.png");
         waterTexture.setWrap(Texture.TextureWrap.Repeat, Texture.TextureWrap.Repeat);
         screenScaleFactor = (float) Gdx.graphics.getHeight() / background.getHeight();
-        gestureHandler = new GestureHandler(camera, background, screenScaleFactor, this);
+
+        bgHeightScaled = Gdx.graphics.getHeight();
+        bgWidthScaled = background.getWidth() * screenScaleFactor * 4;
+
         units = new Array<>();
+        neighbouringCountriesMasks = new ArrayList<>();
+    }
 
-        multiplexer = new InputMultiplexer();
-        multiplexer.addProcessor(new GestureDetector(gestureHandler));
-
-        stage = new Stage(new ScreenViewport());
-        multiplexer.addProcessor(stage);
+    private void configureInput() {
+        GestureHandler gestureHandler = new GestureHandler(camera, background, screenScaleFactor, this);
+        GestureDetector gestureDetector = new GestureDetector(gestureHandler);
+        multiplexer = new InputMultiplexer(stage, gestureDetector);
         Gdx.input.setInputProcessor(multiplexer);
+    }
 
-        this.overlayShowNewRiskCard = new OverlayShowNewRiskCard(stage, multiplexer, camera);
-        this.overlayShowAllRiskCards = new OverlayShowAllRiskCards(stage, multiplexer, camera);
+    private void initializeOverlays() {
+        overlayShowNewRiskCard = new OverlayShowNewRiskCard(stage, multiplexer, camera);
+        overlayShowAllRiskCards = new OverlayShowAllRiskCards(stage, multiplexer, camera);
     }
 
     public void draw() {
@@ -65,14 +77,29 @@ public class GameMap implements Disposable {
         batch.begin();
 
         drawBackground();
-        drawTerritoryColors();
-        drawTerritoryHighlighting();
+        drawTerritories();
 
         for (GameUnit unit : units) {
             unit.draw(batch, camera.zoom);
         }
 
         batch.end();
+        stage.act(Gdx.graphics.getDeltaTime());
+        stage.draw();
+    }
+
+    private void drawTerritories() {
+        if (backgroundCountryMask != null) {
+            batch.setColor(1, 1, 1, 0.5f);  // Selected Territory
+            batch.draw(backgroundCountryMask, 0, 0, background.getWidth() * screenScaleFactor, Gdx.graphics.getHeight());
+        }
+
+        if (neighbouringCountriesMasks != null) {
+            batch.setColor(1, 1, 1, 0.3f);  // Neighbor Selected Territory
+            neighbouringCountriesMasks.forEach(mask -> batch.draw(mask, 0, 0, background.getWidth() * screenScaleFactor, Gdx.graphics.getHeight()));
+        }
+
+        batch.setColor(Color.WHITE);  // Reset color to default after drawing
     }
 
     private void drawTerritoryColors() {
@@ -80,24 +107,6 @@ public class GameMap implements Disposable {
 //        if (backgroundCountryMask != null) {
 //            batch.draw(backgroundCountryMask, 0, 0, background.getWidth() * screenScaleFactor, Gdx.graphics.getHeight());
 //        }
-    }
-
-
-    private void drawTerritoryHighlighting() {
-        // Selected Territory
-        batch.setColor(1, 1, 1, 0.5f);
-        if (backgroundCountryMask != null) {
-            batch.draw(backgroundCountryMask, 0, 0, background.getWidth() * screenScaleFactor, Gdx.graphics.getHeight());
-        }
-
-        // Neighbor Selected Territory
-        batch.setColor(1, 1, 1, 0.3f);
-        if (neighbouringCountriesMasks != null) {
-            for (Texture mask : neighbouringCountriesMasks) {
-                batch.draw(mask, 0, 0, background.getWidth() * screenScaleFactor, Gdx.graphics.getHeight());
-            }
-        }
-        batch.setColor(1, 1, 1, 1);
     }
 
     private void drawBackground() {
@@ -131,9 +140,15 @@ public class GameMap implements Disposable {
     public void dispose() {
         batch.dispose();
         background.dispose();
-        for (GameUnit unit : units) {
-            unit.dispose();
-        }
+        waterTexture.dispose();
         stage.dispose();
+        if (backgroundCountryMask != null)
+            backgroundCountryMask.dispose();
+        neighbouringCountriesMasks.forEach(Texture::dispose);
+        units.forEach(GameUnit::dispose);
+    }
+
+    public InputMultiplexer getInputMultiplexer() {
+        return multiplexer;
     }
 }
