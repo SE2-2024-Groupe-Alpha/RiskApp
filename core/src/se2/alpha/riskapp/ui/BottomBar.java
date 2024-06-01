@@ -3,7 +3,6 @@ package se2.alpha.riskapp.ui;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.InputMultiplexer;
 import com.badlogic.gdx.graphics.OrthographicCamera;
-import com.badlogic.gdx.input.GestureDetector;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
@@ -15,7 +14,7 @@ import com.badlogic.gdx.utils.viewport.ScreenViewport;
 public class BottomBar implements Disposable {
     private Stage stage;
     private OrthographicCamera uiCamera;
-    private TextButton buttonOne, buttonTwo;
+    private TextButton buttonRiskCards, buttonDiceRoll;
     private int screenHeight;
     private int screenWidth;
 
@@ -37,15 +36,15 @@ public class BottomBar implements Disposable {
     }
 
     private void initializeButtons(Skin skin) {
-        buttonOne = new TextButton("Show Cards", skin);
-        buttonOne.setSize(400, 100);
-        buttonOne.setPosition(20, 70);
+        buttonRiskCards = new TextButton("Show Cards", skin);
+        buttonRiskCards.setSize(400, 100);
+        buttonRiskCards.setPosition(20, 70);
 
-        buttonTwo = new TextButton("Roll Dice", skin);
-        buttonTwo.setSize(400, 100);
-        buttonTwo.setPosition(screenWidth - buttonTwo.getWidth() - 20, 70); // Adjust position
+        buttonDiceRoll = new TextButton("Roll Dice", skin);
+        buttonDiceRoll.setSize(400, 100);
+        buttonDiceRoll.setPosition(screenWidth - buttonDiceRoll.getWidth() - 20, 70); // Adjust position
 
-        buttonOne.addListener(new ClickListener() {
+        buttonRiskCards.addListener(new ClickListener() {
             @Override
             public void clicked(InputEvent event, float x, float y) {
                 System.out.println("Clicked BUTTON");
@@ -53,8 +52,16 @@ public class BottomBar implements Disposable {
             }
         });
 
-        stage.addActor(buttonOne);
-//        stage.addActor(buttonTwo);
+        buttonDiceRoll.addListener(new ClickListener() {
+            @Override
+            public void clicked(InputEvent event, float x, float y) {
+                System.out.println("Clicked BUTTON");
+                event.stop();
+            }
+        });
+
+        stage.addActor(buttonRiskCards);
+        stage.addActor(buttonDiceRoll);
     }
 
     public void draw() {
