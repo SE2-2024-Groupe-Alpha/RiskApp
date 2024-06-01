@@ -1,9 +1,8 @@
-package se2.alpha.riskapp;
+package se2.alpha.riskapp.inputs;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.OrthographicCamera;
-import com.badlogic.gdx.graphics.Pixmap;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.input.GestureDetector.GestureAdapter;
 import com.badlogic.gdx.math.Vector2;
@@ -15,7 +14,7 @@ import se2.alpha.riskapp.ui.PixelReader;
 import se2.alpha.riskapp.utils.Territories;
 import se2.alpha.riskapp.utils.TerritoryNode;
 
-public class GestureHandler extends GestureAdapter {
+public class GestureHandlerMap extends GestureAdapter {
     private OrthographicCamera camera;
     private Vector3 touchPoint = new Vector3();
     private float initialScale = 1f;
@@ -24,7 +23,7 @@ public class GestureHandler extends GestureAdapter {
     PixelReader pixelReader;
     private GameMap gameMap;
 
-    public GestureHandler(OrthographicCamera camera, Texture background, float screenScaleFactor, GameMap gameMap) {
+    public GestureHandlerMap(OrthographicCamera camera, Texture background, float screenScaleFactor, GameMap gameMap) {
         this.camera = camera;
         this.background = background;
         this.screenScaleFactor = screenScaleFactor;

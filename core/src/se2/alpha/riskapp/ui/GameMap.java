@@ -16,7 +16,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import se2.alpha.riskapp.GameUnit;
-import se2.alpha.riskapp.GestureHandler;
+import se2.alpha.riskapp.inputs.GestureHandlerMap;
 
 public class GameMap implements Disposable {
     SpriteBatch batch;
@@ -25,7 +25,7 @@ public class GameMap implements Disposable {
     public Texture background, backgroundCountryMask, waterTexture;
     public List<Texture> neighbouringCountriesMasks;
     float screenScaleFactor;
-    GestureHandler gestureHandler;
+    GestureHandlerMap gestureHandlerMap;
     private Array<GameUnit> units;
     Stage stage;
     InputMultiplexer multiplexer;
@@ -36,7 +36,6 @@ public class GameMap implements Disposable {
 
     public GameMap(int screenHeight, int screenWidth) {
         initializeComponents(screenWidth, screenHeight);
-        configureInput();
         initializeOverlays();
     }
 
@@ -56,13 +55,15 @@ public class GameMap implements Disposable {
 
         units = new Array<>();
         neighbouringCountriesMasks = new ArrayList<>();
+
+        gestureHandlerMap = new GestureHandlerMap(camera, background, screenScaleFactor, this);
     }
 
-    private void configureInput() {
-        GestureHandler gestureHandler = new GestureHandler(camera, background, screenScaleFactor, this);
-        GestureDetector gestureDetector = new GestureDetector(gestureHandler);
-        multiplexer = new InputMultiplexer(stage, gestureDetector);
-        Gdx.input.setInputProcessor(multiplexer);
+    public void configureInput(InputMultiplexer multiplexer) {
+        this.multiplexer = multiplexer;
+        multiplexer.addProcessor(new GestureDetector(gestureHandlerMap));
+        stage = new Stage(new ScreenViewport());
+        multiplexer.addProcessor(stage);
     }
 
     private void initializeOverlays() {

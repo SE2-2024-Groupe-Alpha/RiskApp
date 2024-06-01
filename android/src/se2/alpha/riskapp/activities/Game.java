@@ -38,7 +38,6 @@ public class Game extends AndroidApplication {
                     showToast("Backend is unreachable");
                     Log.d(TAG, "Backend is unreachable");
                 } else {
-                    showToast("Backend is reachable!");
                     Log.d(TAG, "Backend is reachable!");
                 }
             });

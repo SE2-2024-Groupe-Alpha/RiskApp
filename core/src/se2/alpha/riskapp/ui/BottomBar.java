@@ -4,12 +4,13 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.InputMultiplexer;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.input.GestureDetector;
+import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
+import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.utils.Disposable;
 import com.badlogic.gdx.utils.viewport.ScreenViewport;
-import se2.alpha.riskapp.GestureHandler;
 
 public class BottomBar implements Disposable {
     private Stage stage;
@@ -18,7 +19,7 @@ public class BottomBar implements Disposable {
     private int screenHeight;
     private int screenWidth;
 
-    public BottomBar(int screenHeight, int screenWidth, Skin skin, InputMultiplexer multiplexer) {
+    public BottomBar(int screenHeight, int screenWidth, Skin skin) {
         this.screenWidth = screenWidth;
         this.screenHeight = screenHeight;
 
@@ -29,6 +30,9 @@ public class BottomBar implements Disposable {
 
         // Initialize buttons
         initializeButtons(skin);
+    }
+
+    public void configureInput(InputMultiplexer multiplexer) {
         multiplexer.addProcessor(stage);
     }
 
@@ -41,8 +45,16 @@ public class BottomBar implements Disposable {
         buttonTwo.setSize(400, 100);
         buttonTwo.setPosition(screenWidth - buttonTwo.getWidth() - 20, 70); // Adjust position
 
+        buttonOne.addListener(new ClickListener() {
+            @Override
+            public void clicked(InputEvent event, float x, float y) {
+                System.out.println("Clicked BUTTON");
+                event.stop();
+            }
+        });
+
         stage.addActor(buttonOne);
-        stage.addActor(buttonTwo);
+//        stage.addActor(buttonTwo);
     }
 
     public void draw() {

@@ -56,12 +56,17 @@ public class RiskGame extends ApplicationAdapter {
 	private void initializeGameComponents() {
 		Skin skin = new Skin(Gdx.files.internal("defaultUIskin/uiskin.json"));
 
+		InputMultiplexer multiplexer = new InputMultiplexer();
+
 		topBar = new TopBar(screenHeight, screenWidth);
-
 		gameMap = new GameMap(screenHeight, screenWidth);
-		InputMultiplexer multiplexer = gameMap.getInputMultiplexer();
+		bottomBar = new BottomBar(screenHeight, screenWidth, skin);
 
-		bottomBar = new BottomBar(screenHeight, screenWidth, skin, multiplexer);
+		bottomBar.configureInput(multiplexer);
+		gameMap.configureInput(multiplexer);
+
 		Gdx.app.log("RiskGame", "Game components initialized.");
+
+		Gdx.input.setInputProcessor(multiplexer);
 	}
 }
