@@ -148,8 +148,4 @@ public class GameMap implements Disposable {
         neighbouringCountriesMasks.forEach(Texture::dispose);
         units.forEach(GameUnit::dispose);
     }
-
-    public InputMultiplexer getInputMultiplexer() {
-        return multiplexer;
-    }
 }
