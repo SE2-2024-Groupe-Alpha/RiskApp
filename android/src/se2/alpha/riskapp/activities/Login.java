@@ -41,7 +41,7 @@ public class Login extends AppCompatActivity {
                 buttonLogin.setEnabled(true);
                 buttonRegisterNow.setEnabled(true);
                 scheduler.shutdown();
-                Toast.makeText(Login.this, "Backend reached!", Toast.LENGTH_LONG).show();
+//                Toast.makeText(Login.this, "Backend reached!", Toast.LENGTH_LONG).show();
                 isLoggedIn();
             }
 
