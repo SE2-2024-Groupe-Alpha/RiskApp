@@ -11,6 +11,10 @@ buildscript {
     }
 }
 
+plugins {
+    id "org.sonarqube" version "4.4.1.3373"
+}
+
 allprojects {
     apply plugin: "eclipse"
 
@@ -33,6 +37,26 @@ allprojects {
         maven { url "https://oss.sonatype.org/content/repositories/snapshots/" }
         maven { url "https://oss.sonatype.org/content/repositories/releases/" }
         maven { url "https://jitpack.io" }
+    }
+}
+
+sonar {
+    properties {
+        property "sonar.projectKey", "SE2-2024-Group-Alpha_RiskApp"
+        property "sonar.organization", "se2-2024-group-alpha"
+        property "sonar.host.url", "https://sonarcloud.io"
+//        property "sonar.sources", "android/src/se2, core/src"
+        property "sonar.tests", "android/src/test"
+        property "sonar.java.binaries", "build/classes"
+
+        property "sonar.test.inclusions", "**/*test"
+
+        // Optional: Specify exclusions if there are files you want to exclude from analysis
+        property "sonar.exclusions", "**/*Generated.java, **/R.java, **/BuildConfig.*"
+        property "sonar.test.exclusions", "**/*Mock.java"
+
+        property "sonar.java.test.libraries", "android/build/intermediates/javac/debug/compileDebugJavaWithJavac/classes"
+        property "sonar.java.libraries", "android/build/intermediates/javac/debug/compileDebugJavaWithJavac/classes"
     }
 }
 
