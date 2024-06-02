@@ -203,7 +203,6 @@ public class BackendService {
             Log.e("Data", result);
             boolean canTrade = gson.fromJson(result, boolean.class);
             callback.onSuccess(canTrade);
-
         }, callback::onError);
     }
 
@@ -240,7 +239,6 @@ public class BackendService {
         }
 
         Request request = requestBuilder.build();
-
         executeRequest(request, callback, errorCallback);
     }
 

@@ -52,7 +52,7 @@ public class RiskWebsocket extends WebSocketListener {
                         handleSyncUsers(text);
                     }
                     else if (action == GameWebsocketMessageAction.GAME_STARTED) {
-                            handleGameStarted(text);
+                        handleGameStarted(text);
                     }
                     else if (action == GameWebsocketMessageAction.NEW_TURN) {
                         handleNewTurn(text);

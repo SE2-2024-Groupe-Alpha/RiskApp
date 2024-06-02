@@ -6,5 +6,4 @@ import lombok.Getter;
 public class CustomWebsocketMessage implements ICustomWebsocketMessage {
     private CustomWebsocketMessageType type;
 
-
 }

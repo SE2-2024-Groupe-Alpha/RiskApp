@@ -8,8 +8,8 @@ import lombok.Getter;
 @AllArgsConstructor
 @Getter
 public class UserReadyWebsocketMessage implements IGameWebsocketMessage {
-    private static final CustomWebsocketMessageType type = CustomWebsocketMessageType.GAME;
-    private static final GameWebsocketMessageAction action = GameWebsocketMessageAction.JOIN;
+    private final CustomWebsocketMessageType type = CustomWebsocketMessageType.GAME;
+    private final GameWebsocketMessageAction action = GameWebsocketMessageAction.USER_READY;
     private UUID gameSessionId;
     private Boolean isReady;
 
