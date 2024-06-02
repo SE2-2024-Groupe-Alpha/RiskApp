@@ -2,6 +2,7 @@ plugins {
     id("com.android.application")
     id("de.mannodermaus.android-junit5") version "1.10.0.0"
     id 'jacoco'
+    id 'org.sonarqube' version '5.0.0.4638'
 }
 
 android {
@@ -152,7 +153,7 @@ tasks.register('jacoco', Exec) {
     reportsDirectory = layout.buildDirectory.dir('jacocoTestReport')
 }
 
-tasks.register('sonar', Exec) {
+sonar {
     properties {
 
         /*property 'sonar.host.url', 'http://localhost:9000'
@@ -162,6 +163,6 @@ tasks.register('sonar', Exec) {
         property 'sonar.organization', 'se2-2024-group-alpha'
         property 'sonar.java.coveragePlugin', 'jacoco'
         property 'sonar.coverage.jacoco.xmlReportPaths', "${project.projectDir}/build/reports/jacoco/jacocoTestReport/jacocoTestReport.xml"
-        property 'sonar.coverage.exclusions', '**/test/**, **/core/**, **/android/**'
+        property 'sonar.coverage.exclusions', '**/**'
     }
 }
