@@ -78,7 +78,7 @@ public class Lobby extends AppCompatActivity {
                 userStateList.add(userState);
             }
 
-            if(userStateList.size() >= 3)
+            if(userStateList.size() >= 3 && userStateList.stream().allMatch(UserState::getIsReady))
                 buttonCreateGame.setEnabled(true);
             else
                 buttonCreateGame.setEnabled(false);
@@ -97,9 +97,6 @@ public class Lobby extends AppCompatActivity {
                 }
             }
         });
-
-        if(!(bundle != null && bundle.getBoolean("host")))
-            buttonCreateGame.setVisibility(View.INVISIBLE);
     }
 
     @Override

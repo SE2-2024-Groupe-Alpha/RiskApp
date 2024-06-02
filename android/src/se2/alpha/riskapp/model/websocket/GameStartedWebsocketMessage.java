@@ -9,8 +9,8 @@ import se2.alpha.riskapp.model.dol.Player;
 @AllArgsConstructor
 @Getter
 public class GameStartedWebsocketMessage implements IGameWebsocketMessage {
-    private static final CustomWebsocketMessageType type = CustomWebsocketMessageType.GAME;
-    private static final GameWebsocketMessageAction action = GameWebsocketMessageAction.GAME_STARTED;
+    private final CustomWebsocketMessageType type = CustomWebsocketMessageType.GAME;
+    private final GameWebsocketMessageAction action = GameWebsocketMessageAction.GAME_STARTED;
     private ArrayList<Player> players;
     private Player activePlayer;
 

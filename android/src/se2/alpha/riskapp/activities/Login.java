@@ -48,6 +48,7 @@ public class Login extends AppCompatActivity {
             @Override
             public void onError(String error) {
                 Toast.makeText(Login.this, "Server currently unreachable!", Toast.LENGTH_LONG).show();
+                backendService.saveSessionToken(null);
             }
         });
     }
