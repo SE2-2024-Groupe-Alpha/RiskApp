@@ -42,7 +42,7 @@ android {
 
     buildTypes {
         release {
-            minifyEnabled true
+            minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
             buildConfigField("String", "API_URL", project.properties["API_URL"].toString())
             buildConfigField("String", "WSS_URL", project.properties["WSS_URL"].toString())
@@ -163,6 +163,6 @@ sonar {
         property 'sonar.organization', 'se2-2024-group-alpha'
         property 'sonar.java.coveragePlugin', 'jacoco'
         property 'sonar.coverage.jacoco.xmlReportPaths', "${project.projectDir}/build/reports/jacoco/jacocoTestReport/jacocoTestReport.xml"
-        property 'sonar.coverage.exclusions', '**/**'
+        property 'sonar.coverage.exclusions', '**/test/**'
     }
 }
