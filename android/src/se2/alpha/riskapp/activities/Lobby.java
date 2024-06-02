@@ -46,6 +46,7 @@ public class Lobby extends AppCompatActivity {
     @Inject
     RiskCardService riskCardService;
 
+
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);

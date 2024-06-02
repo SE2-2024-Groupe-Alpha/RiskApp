@@ -18,6 +18,10 @@ public class Board {
         this.continents = continents;
     }
 
+    public ArrayList<Continent> getContinents() {
+        return continents;
+    }
+
     public void setCards(ArrayList<RiskCard> cards) {
         this.cards = cards;
     }

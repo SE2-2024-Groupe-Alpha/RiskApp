@@ -6,6 +6,7 @@ import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.utils.ScreenUtils;
 import com.badlogic.gdx.Gdx;
 
+import se2.alpha.riskapp.dol.Board;
 import se2.alpha.riskapp.ui.BottomBar;
 import se2.alpha.riskapp.ui.GameMap;
 import se2.alpha.riskapp.ui.TopBar;
@@ -17,6 +18,18 @@ public class RiskGame extends ApplicationAdapter {
 	private GameMap gameMap;
 	private int screenHeight;
 	private int screenWidth;
+	private static RiskGame riskGameInstance;
+	private Board board;
+
+	private RiskGame(){}
+
+	public static RiskGame getInstance(){
+		if (riskGameInstance == null){
+			riskGameInstance = new RiskGame();
+		}
+
+		return riskGameInstance;
+	}
 
 	@Override
 	public void create() {
@@ -68,5 +81,10 @@ public class RiskGame extends ApplicationAdapter {
 		Gdx.app.log("RiskGame", "Game components initialized.");
 
 		Gdx.input.setInputProcessor(multiplexer);
+	}
+
+	public void updateBoard(Board board){
+		this.board = board;
+		gameMap.drawPlayerColors(board);
 	}
 }

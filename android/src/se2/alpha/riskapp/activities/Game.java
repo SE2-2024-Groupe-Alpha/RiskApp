@@ -42,7 +42,7 @@ public class Game extends AndroidApplication {
                 }
             });
 
-            initialize(new RiskGame(), config);
+            initialize( gameService.startGame(), config);
         } catch (Exception e) {
             Log.e(TAG, "Error during onCreate in Game activity", e);
             showToast("Error initializing the game: " + e.getMessage());

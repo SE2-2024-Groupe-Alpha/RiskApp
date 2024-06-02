@@ -21,6 +21,10 @@ public class Continent extends Area{
         this.countries = countries;
     }
 
+    public ArrayList<Country> getCountries() {
+        return countries;
+    }
+
     public void addCountry(Country c)
     {
         countries.add(c);

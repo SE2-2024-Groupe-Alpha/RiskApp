@@ -16,6 +16,9 @@ import java.util.ArrayList;
 import java.util.List;
 
 import se2.alpha.riskapp.GameUnit;
+import se2.alpha.riskapp.dol.Board;
+import se2.alpha.riskapp.dol.Continent;
+import se2.alpha.riskapp.dol.Country;
 import se2.alpha.riskapp.inputs.GestureHandlerMap;
 
 public class GameMap implements Disposable {
@@ -108,6 +111,16 @@ public class GameMap implements Disposable {
 //        if (backgroundCountryMask != null) {
 //            batch.draw(backgroundCountryMask, 0, 0, background.getWidth() * screenScaleFactor, Gdx.graphics.getHeight());
 //        }
+    }
+
+    public void drawPlayerColors(Board board){
+        for (Continent continent: board.getContinents()){
+            for (Country country: continent.getCountries()){
+                if (country.getOwner()!= null){
+                    System.out.println(country.getName());
+                }
+            }
+        }
     }
 
     private void drawBackground() {

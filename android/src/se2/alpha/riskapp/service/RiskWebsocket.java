@@ -10,7 +10,9 @@ import okhttp3.Response;
 import okhttp3.WebSocket;
 import okhttp3.WebSocketListener;
 import okio.ByteString;
+import se2.alpha.riskapp.RiskGame;
 import se2.alpha.riskapp.activities.Game;
+import se2.alpha.riskapp.dol.Board;
 import se2.alpha.riskapp.model.websocket.CountryChangedWebsocketMessage;
 import se2.alpha.riskapp.model.websocket.GameStartedWebsocketMessage;
 import se2.alpha.riskapp.model.websocket.GameWebsocketMessage;
@@ -95,10 +97,13 @@ public class RiskWebsocket extends WebSocketListener {
         gameService.getGameStarted().postValue(true);
         gameService.updatePlayers(gameStartedWebsocketMessage.getPlayers());
         gameService.setActivePlayer(gameStartedWebsocketMessage.getActivePlayer());
+        gameService.startGame();
     }
 
     public void handleGameSync(String text) {
         System.out.println("GAME SYNC RECEIVED");
+        Board board = gson.fromJson(text, Board.class);
+        gameService.syncGame(board);
     }
 
     public void handleNewTurn(String text) {
