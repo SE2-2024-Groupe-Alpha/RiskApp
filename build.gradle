@@ -13,10 +13,12 @@ buildscript {
 
 plugins {
     id "org.sonarqube" version "4.4.1.3373"
+    id "jacoco"
 }
 
 allprojects {
     apply plugin: "eclipse"
+    apply plugin: "jacoco"
 
     version = '1.0'
     ext {
@@ -50,8 +52,9 @@ sonar {
         property "sonar.java.binaries", "build/classes"
 
         property "sonar.test.inclusions", "**/*test"
-
-        // Optional: Specify exclusions if there are files you want to exclude from analysis
+        property 'sonar.java.coveragePlugin', 'jacoco'
+        property 'sonar.coverage.jacoco.xmlReportPaths', "${project.projectDir}/android/build/reports/jacoco/jacocoTestReport/jacocoTestReport.xml"
+        //Specify exclusions
         property "sonar.exclusions", "**/*Generated.java, **/R.java, **/BuildConfig.*"
         property "sonar.test.exclusions", "**/*Mock.java"
 
