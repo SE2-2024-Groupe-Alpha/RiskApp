@@ -52,8 +52,8 @@ sonar {
         property "sonar.java.binaries", "build/classes"
 
         property "sonar.test.inclusions", "**/*test"
-        property 'sonar.java.coveragePlugin', 'jacoco'
-        property 'sonar.coverage.jacoco.xmlReportPaths', "${project.projectDir}/android/build/reports/jacoco/jacocoTestReport/jacocoTestReport.xml"
+        property "sonar.java.coveragePlugin", "jacoco"
+        property "sonar.coverage.jacoco.xmlReportPaths", "${project.projectDir}/android/build/reports/jacoco/jacocoTestReportRelease/jacocoTestReportRelease.xml"
         //Specify exclusions
         property "sonar.exclusions", "**/*Generated.java, **/R.java, **/BuildConfig.*"
         property "sonar.test.exclusions", "**/*Mock.java"
