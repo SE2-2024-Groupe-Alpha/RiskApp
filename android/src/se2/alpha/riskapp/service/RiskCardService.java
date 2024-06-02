@@ -6,7 +6,7 @@ import java.util.List;
 
 import javax.inject.Inject;
 
-import se2.alpha.riskapp.model.dol.RiskCard;
+import se2.alpha.riskapp.dol.RiskCard;
 
 public class RiskCardService {
     @Inject

@@ -4,7 +4,7 @@ import java.util.ArrayList;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
-import se2.alpha.riskapp.model.dol.Player;
+import se2.alpha.riskapp.dol.Player;
 
 @AllArgsConstructor
 @Getter

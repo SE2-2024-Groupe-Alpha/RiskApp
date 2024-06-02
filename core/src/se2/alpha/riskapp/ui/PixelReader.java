@@ -55,7 +55,7 @@ public class PixelReader {
 
     private Texture createTextureMaskByColor(TerritoryNode node, Color color) {
 
-        FileHandle fileHandle = Gdx.files.local(color.toString() + ".png");
+        FileHandle fileHandle = Gdx.files.local(color.toString() + "_white.png");
 
         if (fileHandle.exists()) {
             Pixmap pixmap = new Pixmap(fileHandle);
@@ -75,7 +75,7 @@ public class PixelReader {
             for (int x = 0; x < mapPixmap.getWidth(); x++) {
                 int mapColor = mapPixmap.getPixel(x, y);
                 int maskColor = Color.rgba8888(color);
-                int overlayColor = Color.rgba8888(Color.BLACK);
+                int overlayColor = Color.rgba8888(Color.WHITE);
 
                 if (mapColor == maskColor) {
                     resultPixmap.drawPixel(x, y, overlayColor);

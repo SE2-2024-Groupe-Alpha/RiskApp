@@ -91,12 +91,12 @@ public class GameMap implements Disposable {
 
     private void drawTerritories() {
         if (backgroundCountryMask != null) {
-            batch.setColor(1, 1, 1, 0.5f);  // Selected Territory
+            batch.setColor(0, 0, 0, 0.5f);  // Selected Territory
             batch.draw(backgroundCountryMask, 0, 0, background.getWidth() * screenScaleFactor, Gdx.graphics.getHeight());
         }
 
         if (neighbouringCountriesMasks != null) {
-            batch.setColor(1, 1, 1, 0.3f);  // Neighbor Selected Territory
+            batch.setColor(0, 0, 0, 0.3f);  // Neighbor Selected Territory
             neighbouringCountriesMasks.forEach(mask -> batch.draw(mask, 0, 0, background.getWidth() * screenScaleFactor, Gdx.graphics.getHeight()));
         }
 

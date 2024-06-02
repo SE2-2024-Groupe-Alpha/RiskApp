@@ -5,7 +5,7 @@ import android.content.Context;
 import androidx.lifecycle.MutableLiveData;
 import lombok.Getter;
 import lombok.Setter;
-import se2.alpha.riskapp.model.dol.Player;
+import se2.alpha.riskapp.dol.Player;
 
 import java.util.ArrayList;
 import java.util.HashMap;

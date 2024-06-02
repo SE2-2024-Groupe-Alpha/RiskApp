@@ -8,7 +8,7 @@ import java.util.UUID;
 
 import javax.inject.Inject;
 
-import se2.alpha.riskapp.model.dol.Player;
+import se2.alpha.riskapp.dol.Player;
 import se2.alpha.riskapp.model.websocket.AttackWebsocketMessage;
 import se2.alpha.riskapp.model.websocket.CreateGameWebsocketMessage;
 import se2.alpha.riskapp.model.websocket.EndTurnWebsocketMessage;
