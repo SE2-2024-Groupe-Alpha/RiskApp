@@ -1,7 +1,7 @@
 package se2.alpha.riskapp.model.websocket;
 
 import lombok.Getter;
-import se2.alpha.riskapp.model.dol.Board;
+import se2.alpha.riskapp.dol.Board;
 @Getter
 public class GameSyncWebsocketMessage implements IGameWebsocketMessage {
     private final CustomWebsocketMessageType type = CustomWebsocketMessageType.GAME;
