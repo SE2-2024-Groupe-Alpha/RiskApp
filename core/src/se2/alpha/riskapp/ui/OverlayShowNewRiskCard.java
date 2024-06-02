@@ -5,16 +5,9 @@ import com.badlogic.gdx.InputMultiplexer;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.input.GestureDetector;
-import com.badlogic.gdx.math.Vector2;
-import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.Stage;
-import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
-import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 
-import java.util.ArrayList;
-
-import se2.alpha.riskapp.GestureHandlerShowNewRiskCard;
-import se2.alpha.riskapp.RiskCardType;
+import se2.alpha.riskapp.inputs.GestureHandlerShowNewRiskCard;
 
 public class OverlayShowNewRiskCard {
     private Stage stage;

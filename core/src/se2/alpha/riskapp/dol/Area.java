@@ -1,15 +1,15 @@
-package se2.alpha.riskapp.model.dol;
+package se2.alpha.riskapp.dol;
 
 public abstract class Area {
-    protected String name;
-    protected Player owner;
+    private String name;
+    private Player owner;
 
     public Area(String name, Player owner) {
         this.name = name;
         this.owner = owner;
     }
 
-    public Area() {
+    protected Area() {
     }
 
     public String getName() {

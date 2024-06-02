@@ -18,7 +18,7 @@ import se2.alpha.riskapp.model.auth.ValidationRequest;
 import se2.alpha.riskapp.model.game.CreateLobbyRequest;
 import se2.alpha.riskapp.model.game.CreateLobbyResponse;
 import se2.alpha.riskapp.model.game.GameSession;
-import se2.alpha.riskapp.model.dol.RiskCard;
+import se2.alpha.riskapp.dol.RiskCard;
 import se2.alpha.riskapp.model.websocket.ICustomWebsocketMessage;
 
 import javax.inject.Inject;
@@ -59,6 +59,34 @@ public class BackendService {
         securePreferencesService.saveSessionToken(token);
     }
 
+    public interface ReachabilityCallback {
+        void onReachabilityChecked(boolean isReachable);
+    }
+
+    public interface HealthCheckCallback {
+        void onHealthy();
+        void onError(String error);
+    }
+
+    public void checkApiHealth(HealthCheckCallback callback) {
+        String healthCheckUrl = API_URL + "/health";
+        makeGetRequest(healthCheckUrl, result -> {
+            if ("Api healthy!".equals(result)) {
+                callback.onHealthy();
+            } else {
+                callback.onError("API is not healthy: Unexpected response");
+            }
+        }, callback::onError);
+    }
+
+    // Asynchronous backend reachability check
+    public void checkBackendReachability(ReachabilityCallback callback) {
+        executorService.submit(() -> {
+            boolean reachable = NetworkUtils.isBackendReachable("http://se2-demo.aau.at:53209/api/v1", 5000);
+
+            new Handler(Looper.getMainLooper()).post(() -> callback.onReachabilityChecked(reachable));
+        });
+    }
     public interface NetworkCallback {
         void onResult(String result);
     }
@@ -142,8 +170,8 @@ public class BackendService {
         void onError(String error);
     }
 
-    public void getNewRiskCardRequest(GetNewRiskCardCallback callback) {
-        makeGetRequest(API_URL + "/game/riskcard", result -> {
+    public void getNewRiskCardRequest(String id, GetNewRiskCardCallback callback) {
+        makeGetRequest(API_URL + "/game" + "/" + gameService.getSessionId() + "/player/" + id + "/riskcard", result -> {
             Log.e("Data", result);
             RiskCard riskCard = gson.fromJson(result, new TypeToken<RiskCard>(){}.getType());
             callback.onSuccess(riskCard);
@@ -157,10 +185,36 @@ public class BackendService {
     }
 
     public void getAllRiskCardsByPlayerRequest(String id, GetAllRiskCardsByPlayerCallback callback) {
-        makeGetRequest(API_URL + "/game/riskcard/player/" + id, result -> {
+        makeGetRequest(API_URL + "/game" + "/" + gameService.getSessionId() + "/player/" + id + "/riskcards", result -> {
             Log.e("Data", result);
             List<RiskCard> riskCard = gson.fromJson(result, new TypeToken<List<RiskCard>>(){}.getType());
             callback.onSuccess(riskCard);
+
+        }, callback::onError);
+    }
+
+    public interface CanPlayerTradeRiskCardsCallback {
+        void onSuccess(boolean canTrade);
+        void onError(String error);
+    }
+
+    public void getCanPlayerTradeRiskCardsRequest(String id, CanPlayerTradeRiskCardsCallback callback) {
+        makeGetRequest(API_URL + "/game" + "/" + gameService.getSessionId() + "/player/" + id + "/riskcards/tradable", result -> {
+            Log.e("Data", result);
+            boolean canTrade = gson.fromJson(result, boolean.class);
+            callback.onSuccess(canTrade);
+        }, callback::onError);
+    }
+
+    public interface PlayerTradeRiskCardsCallback {
+        void onSuccess();
+        void onError(String error);
+    }
+
+    public void getPlayerTradeRiskCardsRequest(String id, PlayerTradeRiskCardsCallback callback) {
+        makeGetRequest(API_URL + "/game" + "/" + gameService.getSessionId() + "/player/" + id + "/riskcards/trade", result -> {
+            Log.e("Data", result);
+            callback.onSuccess();
 
         }, callback::onError);
     }
@@ -185,7 +239,6 @@ public class BackendService {
         }
 
         Request request = requestBuilder.build();
-
         executeRequest(request, callback, errorCallback);
     }
 

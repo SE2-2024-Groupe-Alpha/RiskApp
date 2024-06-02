@@ -1,4 +1,4 @@
-package se2.alpha.riskapp;
+package se2.alpha.riskapp.inputs;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Color;
@@ -11,8 +11,10 @@ import se2.alpha.riskapp.events.TerritoryClickedEvent;
 import se2.alpha.riskapp.logic.EventBus;
 import se2.alpha.riskapp.ui.GameMap;
 import se2.alpha.riskapp.ui.PixelReader;
+import se2.alpha.riskapp.utils.Territories;
+import se2.alpha.riskapp.utils.TerritoryNode;
 
-public class GestureHandler extends GestureAdapter {
+public class GestureHandlerMap extends GestureAdapter {
     private OrthographicCamera camera;
     private Vector3 touchPoint = new Vector3();
     private float initialScale = 1f;
@@ -21,7 +23,7 @@ public class GestureHandler extends GestureAdapter {
     PixelReader pixelReader;
     private GameMap gameMap;
 
-    public GestureHandler(OrthographicCamera camera, Texture background, float screenScaleFactor, GameMap gameMap) {
+    public GestureHandlerMap(OrthographicCamera camera, Texture background, float screenScaleFactor, GameMap gameMap) {
         this.camera = camera;
         this.background = background;
         this.screenScaleFactor = screenScaleFactor;
@@ -37,15 +39,19 @@ public class GestureHandler extends GestureAdapter {
         int pixelY = (int)(worldCoordinates.y / screenScaleFactor);
         int flippedY = gameMap.background.getHeight() + (pixelY) * (-gameMap.background.getHeight()) / (gameMap.background.getHeight());
         Color color = this.pixelReader.getPixelColor((int)(worldCoordinates.x / screenScaleFactor), flippedY);
-        System.out.println(this.pixelReader.getTerritory(color));
 
-        TerritoryClickedEvent territoryClickedEvent = new TerritoryClickedEvent(this.pixelReader.getTerritory(color));
-        EventBus.invoke(territoryClickedEvent);
-//        Vector3 worldCoordinates = camera.unproject(new Vector3(x, y, 0));
-//        GameUnit unit = new GameUnit(GameUnitType.ARTILLERY, new Vector2(worldCoordinates.x, worldCoordinates.y));
-//        gameMap.addUnit(unit);
+        TerritoryNode selectedTerritory = Territories.getTerritoryByColor(color);
+        System.out.println(selectedTerritory);
 
-        gameMap.onCountryClickedApplyTextureMask(pixelReader.getTextureMaskByColor(color));
+        if (selectedTerritory != null) {
+            TerritoryClickedEvent territoryClickedEvent = new TerritoryClickedEvent(selectedTerritory);
+            EventBus.invoke(territoryClickedEvent);
+
+            gameMap.onCountryClickedApplyTextureMask(selectedTerritory.getMask());
+            gameMap.onCountryClickedApplyTextureMaskToNeighbouringCountries(selectedTerritory.getNeighborMasks());
+        } else {
+            gameMap.clearCountryTextureMasks();
+        }
 
         return true;
     }

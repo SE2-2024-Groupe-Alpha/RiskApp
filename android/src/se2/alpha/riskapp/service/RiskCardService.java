@@ -6,7 +6,7 @@ import java.util.List;
 
 import javax.inject.Inject;
 
-import se2.alpha.riskapp.model.dol.RiskCard;
+import se2.alpha.riskapp.dol.RiskCard;
 
 public class RiskCardService {
     @Inject
@@ -21,8 +21,8 @@ public class RiskCardService {
         void onResult(RiskCard riskCard);
         void onError(String error);
     }
-    public void getNewRiskCard(GetNewRiskCardCallback getNewRiskCardCallback){
-            backendService.getNewRiskCardRequest(new BackendService.GetNewRiskCardCallback() {
+    public void getNewRiskCard(String id, GetNewRiskCardCallback getNewRiskCardCallback){
+            backendService.getNewRiskCardRequest(id, new BackendService.GetNewRiskCardCallback() {
                 @Override
                 public void onSuccess(RiskCard response) {
                     getNewRiskCardCallback.onResult(response);
@@ -49,6 +49,42 @@ public class RiskCardService {
             @Override
             public void onError(String error) {
                 getAllRiskCardsByPlayerCallback.onError(error);
+            }
+        });
+    }
+
+    public interface CanPlayerTradeRiskCardsCallback {
+        void onResult(boolean canTrade);
+        void onError(String error);
+    }
+    public void canPlayerTradeRiskCards(String id, CanPlayerTradeRiskCardsCallback canPlayerTradeRiskCardsCallback){
+        backendService.getCanPlayerTradeRiskCardsRequest(id, new BackendService.CanPlayerTradeRiskCardsCallback() {
+            @Override
+            public void onSuccess(boolean response) {
+                canPlayerTradeRiskCardsCallback.onResult(response);
+            }
+
+            @Override
+            public void onError(String error) {
+                canPlayerTradeRiskCardsCallback.onError(error);
+            }
+        });
+    }
+
+    public interface PlayerTradeRiskCardsCallback {
+        void onResult();
+        void onError(String error);
+    }
+    public void playerTradeRiskCards(String id, PlayerTradeRiskCardsCallback canPlayerTradeRiskCardsCallback){
+        backendService.getPlayerTradeRiskCardsRequest(id, new BackendService.PlayerTradeRiskCardsCallback() {
+            @Override
+            public void onSuccess() {
+                canPlayerTradeRiskCardsCallback.onResult();
+            }
+
+            @Override
+            public void onError(String error) {
+                canPlayerTradeRiskCardsCallback.onError(error);
             }
         });
     }

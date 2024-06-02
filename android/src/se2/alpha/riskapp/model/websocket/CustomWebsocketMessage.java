@@ -5,4 +5,5 @@ import lombok.Getter;
 @Getter
 public class CustomWebsocketMessage implements ICustomWebsocketMessage {
     private CustomWebsocketMessageType type;
+
 }

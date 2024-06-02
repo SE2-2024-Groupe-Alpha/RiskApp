@@ -1,7 +1,10 @@
-package se2.alpha.riskapp.model.dol;
+package se2.alpha.riskapp.dol;
 
 import java.util.ArrayList;
 
+import lombok.Getter;
+
+@Getter
 public class Continent extends Area{
     private ArrayList<Country> countries;
 
@@ -14,12 +17,12 @@ public class Continent extends Area{
         super();
     }
 
-    public ArrayList<Country> getCountries() {
-        return countries;
-    }
-
     public void setCountries(ArrayList<Country> countries) {
         this.countries = countries;
+    }
+
+    public ArrayList<Country> getCountries() {
+        return countries;
     }
 
     public void addCountry(Country c)

@@ -1,4 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+    <color name="primary">#6200EE</color>  <!-- Assuming existing primary color -->
+    <color name="primaryVariant">#3700B3</color>  <!-- Assuming existing primary variant -->
+    <color name="buttonColor">#0356fc</color>  <!-- Your new button color -->
     <color name="ic_background_color">#FFFFFFFF</color>
+    <color name="button_background">#4CAF50</color>
+    <color name="button_text">#FFFFFF</color>
 </resources>

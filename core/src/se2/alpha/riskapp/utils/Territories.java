@@ -1,6 +1,8 @@
 package se2.alpha.riskapp.utils;
 
-import lombok.Setter;
+import com.badlogic.gdx.graphics.Color;
+import com.badlogic.gdx.graphics.Pixmap;
+import com.badlogic.gdx.graphics.Texture;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -463,11 +465,33 @@ public class Territories {
         colorsToTerritories.put("228B22", WesternAustralia);
         colorsToTerritories.put("ADFF2F", EasternAustralia);
         colorsToTerritories.put("F0E68C", MiddleEast);
+
+        createTextureMasks();
     }
 
+    private static void createTextureMasks() {
+//        for (String key : colorsToTerritories.keySet()) {
+//            TerritoryNode territoryNode = Territories.getTerritoryByColor(key);
+//            Color color = Color.valueOf(key);
+//            territoryNode.setMask(createTextureMaskByColor(color));
+//        }
+    }
 
     public static TerritoryNode getTerritoryByColor(String colorKey) {
         return colorsToTerritories.get(colorKey);
     }
 
+    public static TerritoryNode getTerritoryByColor(Color color) {
+
+        String colorKey = color.toString().substring(0, 6).toUpperCase();
+        TerritoryNode territoryNode = Territories.getTerritoryByColor(colorKey);
+
+        if (territoryNode == null) {
+            System.out.println("Territory node not found for color: " + colorKey);
+            return null;
+        }
+
+        System.out.println(territoryNode.getAdjTerritories());
+        return territoryNode;
+    }
 }

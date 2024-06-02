@@ -2,20 +2,34 @@ package se2.alpha.riskapp;
 
 import com.badlogic.gdx.ApplicationAdapter;
 import com.badlogic.gdx.InputMultiplexer;
-import com.badlogic.gdx.scenes.scene2d.Stage;
+import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.utils.ScreenUtils;
 import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.utils.viewport.ScreenViewport;
 
+import se2.alpha.riskapp.dol.Board;
+import se2.alpha.riskapp.ui.BottomBar;
 import se2.alpha.riskapp.ui.GameMap;
 import se2.alpha.riskapp.ui.TopBar;
 
 
 public class RiskGame extends ApplicationAdapter {
 	private TopBar topBar;
+	private BottomBar bottomBar;
 	private GameMap gameMap;
 	private int screenHeight;
 	private int screenWidth;
+	private static RiskGame riskGameInstance;
+	private Board board;
+
+	private RiskGame(){}
+
+	public static RiskGame getInstance(){
+		if (riskGameInstance == null){
+			riskGameInstance = new RiskGame();
+		}
+
+		return riskGameInstance;
+	}
 
 	@Override
 	public void create() {
@@ -30,6 +44,7 @@ public class RiskGame extends ApplicationAdapter {
 		ScreenUtils.clear(1, 0, 0, 1);
 		gameMap.draw();
 		topBar.draw();
+		bottomBar.draw();
 	}
 
 	@Override
@@ -52,8 +67,24 @@ public class RiskGame extends ApplicationAdapter {
 	}
 
 	private void initializeGameComponents() {
+		Skin skin = new Skin(Gdx.files.internal("defaultUIskin/uiskin.json"));
+
+		InputMultiplexer multiplexer = new InputMultiplexer();
+
 		topBar = new TopBar(screenHeight, screenWidth);
 		gameMap = new GameMap(screenHeight, screenWidth);
+		bottomBar = new BottomBar(screenHeight, screenWidth, skin);
+
+		bottomBar.configureInput(multiplexer);
+		gameMap.configureInput(multiplexer);
+
 		Gdx.app.log("RiskGame", "Game components initialized.");
+
+		Gdx.input.setInputProcessor(multiplexer);
+	}
+
+	public void updateBoard(Board board){
+		this.board = board;
+		gameMap.drawPlayerColors(board);
 	}
 }
