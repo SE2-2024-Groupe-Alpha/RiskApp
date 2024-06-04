@@ -5,13 +5,16 @@ import com.badlogic.gdx.InputMultiplexer;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.utils.ScreenUtils;
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.graphics.Color;
 
 import se2.alpha.riskapp.dol.Board;
 import se2.alpha.riskapp.dol.Country;
+import se2.alpha.riskapp.dol.Player;
 import se2.alpha.riskapp.ui.BottomBar;
 import se2.alpha.riskapp.ui.GameMap;
 import se2.alpha.riskapp.ui.TopBar;
 
+import java.util.ArrayList;
 import java.util.List;
 
 
@@ -23,6 +26,34 @@ public class RiskGame extends ApplicationAdapter {
 	private int screenWidth;
 	private static RiskGame riskGameInstance;
 	private Board board = new Board();
+	private List<Player> players = new ArrayList<>();
+
+	public Color getPlayerColor(String id) {
+		for (Player player : players) {
+			if (player.getId().equals(id)) {
+				switch(player.getColor())
+				{
+					case -65536:
+						return Color.RED;
+					case -16776961:
+						return Color.BLUE;
+					case -256:
+						return Color.YELLOW;
+					case -16711936:
+						return Color.GREEN;
+					case -65281:
+						return Color.MAGENTA;
+					case -16711681:
+						return Color.CYAN;
+				}
+			}
+		}
+		return Color.WHITE;
+	}
+
+	public void setPlayers(List<Player> players) {
+		this.players = players;
+	}
 
 	private RiskGame(){}
 
@@ -88,6 +119,5 @@ public class RiskGame extends ApplicationAdapter {
 
 	public void syncMap(List<Country> countryList){
 		board.updateCountries(countryList);
-//		gameMap.drawPlayerColors(board);
 	}
 }

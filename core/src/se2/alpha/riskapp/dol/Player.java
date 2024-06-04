@@ -24,6 +24,10 @@ public class Player {
     private static final int TROOPSFORFIFTHTRADE = 12;
     private static final int TROOPSFORSIXTHTRADE = 15;
 
+    public int getColor() {
+        return color;
+    }
+
     public Player(String id, String name, int color, int numberOfTroops) {
         this.id = id;
         this.name = name;
@@ -53,5 +57,9 @@ public class Player {
         controlledContinents = new ArrayList<Continent>();
         controlledCountries = new ArrayList<Country>();
         currentTurn = false;
+    }
+
+    public String getId() {
+        return id;
     }
 }

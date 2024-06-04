@@ -16,6 +16,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import se2.alpha.riskapp.GameUnit;
+import se2.alpha.riskapp.RiskGame;
 import se2.alpha.riskapp.dol.Board;
 import se2.alpha.riskapp.dol.Continent;
 import se2.alpha.riskapp.dol.Country;
@@ -126,7 +127,9 @@ public class GameMap implements Disposable {
                         country.setMask(territoryMask);
                     }
 
-                    batch.setColor(Color.RED);
+                    Color color = RiskGame.getInstance().getPlayerColor(country.getOwner().getId());
+
+                    batch.setColor(color);
                     batch.draw(country.getMask(), 0, 0, background.getWidth() * screenScaleFactor, Gdx.graphics.getHeight());
                     batch.setColor(Color.WHITE);
                     System.out.println(country.getName());

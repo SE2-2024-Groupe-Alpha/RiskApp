@@ -66,6 +66,7 @@ public class Board {
     }
 
     private void updateContinent(Continent continent){
+//        this cant work yet... TODO fix this
         Player owner = continent.getCountries().get(0).getOwner();
         boolean checkOwner = true;
 

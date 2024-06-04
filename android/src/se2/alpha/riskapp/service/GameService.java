@@ -40,6 +40,8 @@ public class GameService {
     }
 
     public RiskGame startGame(){
-        return riskGame = RiskGame.getInstance();
+        riskGame = RiskGame.getInstance();
+        riskGame.setPlayers(players.getValue());
+        return riskGame;
     }
 }
