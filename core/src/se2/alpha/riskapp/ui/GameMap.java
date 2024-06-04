@@ -132,7 +132,6 @@ public class GameMap implements Disposable {
                     batch.setColor(color);
                     batch.draw(country.getMask(), 0, 0, background.getWidth() * screenScaleFactor, Gdx.graphics.getHeight());
                     batch.setColor(Color.WHITE);
-                    System.out.println(country.getName());
                 }
             }
         }
