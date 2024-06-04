@@ -13,16 +13,10 @@ import okio.ByteString;
 import se2.alpha.riskapp.RiskGame;
 import se2.alpha.riskapp.activities.Game;
 import se2.alpha.riskapp.dol.Board;
-import se2.alpha.riskapp.model.websocket.CountryChangedWebsocketMessage;
-import se2.alpha.riskapp.model.websocket.GameStartedWebsocketMessage;
-import se2.alpha.riskapp.model.websocket.GameWebsocketMessage;
-import se2.alpha.riskapp.model.websocket.GameWebsocketMessageAction;
-import se2.alpha.riskapp.model.websocket.IGameWebsocketMessage;
-import se2.alpha.riskapp.model.websocket.NewTurnWebsocketMessage;
-import se2.alpha.riskapp.model.websocket.PlayerEliminatedWebsocketMessage;
-import se2.alpha.riskapp.model.websocket.PlayerWonWebsocketMessage;
-import se2.alpha.riskapp.model.websocket.UserSyncWebsocketMessage;
+import se2.alpha.riskapp.dol.Country;
+import se2.alpha.riskapp.model.websocket.*;
 
+import java.util.List;
 import java.util.Objects;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
@@ -97,13 +91,12 @@ public class RiskWebsocket extends WebSocketListener {
         gameService.getGameStarted().postValue(true);
         gameService.updatePlayers(gameStartedWebsocketMessage.getPlayers());
         gameService.setActivePlayer(gameStartedWebsocketMessage.getActivePlayer());
-        gameService.startGame();
     }
 
     public void handleGameSync(String text) {
         System.out.println("GAME SYNC RECEIVED");
-        Board board = gson.fromJson(text, Board.class);
-        gameService.syncGame(board);
+        GameSyncWebsocketMessage gameSyncWebsocketMessage = gson.fromJson(text, GameSyncWebsocketMessage.class);
+        gameService.getRiskGame().syncMap(gameSyncWebsocketMessage.getCountries());
     }
 
     public void handleNewTurn(String text) {

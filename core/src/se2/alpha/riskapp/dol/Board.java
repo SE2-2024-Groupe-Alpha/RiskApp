@@ -1,8 +1,6 @@
 package se2.alpha.riskapp.dol;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.Map;
+import java.util.*;
 
 import lombok.Getter;
 import se2.alpha.riskapp.utils.TerritoryNode;
@@ -48,7 +46,39 @@ public class Board {
 
     private void setupCountry(TerritoryNode territoryNode, String territoryName) {
         Continent continent = getContinentByName(territoryNode.getContinent());
-        continent.addCountry(new Country(territoryName, null, continent));
+        Country newCountry = new Country(territoryName, null, continent) ;
+        continent.addCountry(newCountry);
+    }
+
+    public void updateCountries(List<Country> countries){
+        for (Continent continent : continents){
+            for (Country countryOld : continent.getCountries()){
+                for (Country countryNew : countries){
+                    if (Objects.equals(countryOld.getName(), countryNew.getName())){
+                        countryOld.setOwner(countryNew.getOwner());
+                        countryOld.setNumberOfTroops(countryNew.getNumberOfTroops());
+                    }
+                }
+            }
+            System.out.println("UPDATED COUNTRIES");
+//            updateContinent(continent);
+        }
+    }
+
+    private void updateContinent(Continent continent){
+        Player owner = continent.getCountries().get(0).getOwner();
+        boolean checkOwner = true;
+
+        for (Country country : continent.getCountries()) {
+            if (!country.getOwner().equals(owner)) {
+                checkOwner = false;
+                break;
+            }
+        }
+
+        if (checkOwner) {
+            continent.setOwner(owner);
+        }
     }
 
     private Continent getContinentByName(String name) {

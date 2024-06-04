@@ -7,9 +7,12 @@ import com.badlogic.gdx.utils.ScreenUtils;
 import com.badlogic.gdx.Gdx;
 
 import se2.alpha.riskapp.dol.Board;
+import se2.alpha.riskapp.dol.Country;
 import se2.alpha.riskapp.ui.BottomBar;
 import se2.alpha.riskapp.ui.GameMap;
 import se2.alpha.riskapp.ui.TopBar;
+
+import java.util.List;
 
 
 public class RiskGame extends ApplicationAdapter {
@@ -19,7 +22,7 @@ public class RiskGame extends ApplicationAdapter {
 	private int screenHeight;
 	private int screenWidth;
 	private static RiskGame riskGameInstance;
-	private Board board;
+	private Board board = new Board();
 
 	private RiskGame(){}
 
@@ -72,7 +75,7 @@ public class RiskGame extends ApplicationAdapter {
 		InputMultiplexer multiplexer = new InputMultiplexer();
 
 		topBar = new TopBar(screenHeight, screenWidth);
-		gameMap = new GameMap(screenHeight, screenWidth);
+		gameMap = new GameMap(screenHeight, screenWidth, board);
 		bottomBar = new BottomBar(screenHeight, screenWidth, skin);
 
 		bottomBar.configureInput(multiplexer);
@@ -83,8 +86,8 @@ public class RiskGame extends ApplicationAdapter {
 		Gdx.input.setInputProcessor(multiplexer);
 	}
 
-	public void updateBoard(Board board){
-		this.board = board;
-		gameMap.drawPlayerColors(board);
+	public void syncMap(List<Country> countryList){
+		board.updateCountries(countryList);
+//		gameMap.drawPlayerColors(board);
 	}
 }

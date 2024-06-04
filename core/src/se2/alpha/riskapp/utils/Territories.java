@@ -252,4 +252,8 @@ public class Territories {
         System.out.println(territoryNode.getAdjTerritories());
         return territoryNode;
     }
+
+    public static TerritoryNode getTerritoryByName(String name){
+        return territoryMap.get(name);
+    }
 }
