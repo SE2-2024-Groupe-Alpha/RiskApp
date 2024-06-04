@@ -6,8 +6,8 @@ import lombok.Getter;
 
 @Getter
 public class Country extends Area{
-    private ArrayList<Country> attackableCountries;
-    private Continent continent;
+    private transient ArrayList<Country> attackableCountries;
+    private transient Continent continent;
     private int numberOfTroops;
 
     public Country(String name, Player owner, Continent continent) {
