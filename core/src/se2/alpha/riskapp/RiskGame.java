@@ -10,10 +10,7 @@ import com.badlogic.gdx.graphics.Color;
 import se2.alpha.riskapp.dol.Board;
 import se2.alpha.riskapp.dol.Country;
 import se2.alpha.riskapp.dol.Player;
-import se2.alpha.riskapp.ui.BottomBar;
-import se2.alpha.riskapp.ui.GameMap;
-import se2.alpha.riskapp.ui.PlayerList;
-import se2.alpha.riskapp.ui.TopBar;
+import se2.alpha.riskapp.ui.*;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -25,12 +22,14 @@ public class RiskGame extends ApplicationAdapter {
 	private TopBar topBar;
 	private BottomBar bottomBar;
 	private PlayerList playerList;
+	private TroopCardList troopCardList;
 	private GameMap gameMap;
 	private int screenHeight;
 	private int screenWidth;
 	private static RiskGame riskGameInstance;
 	private Board board = new Board();
 	private List<Player> players = new ArrayList<>();
+
 
 	public Color getPlayerColor(String id) {
 		for (Player player : players) {
@@ -83,6 +82,7 @@ public class RiskGame extends ApplicationAdapter {
 		gameMap.draw();
 		topBar.draw();
 		playerList.draw();
+		troopCardList.draw();
 		bottomBar.draw();
 	}
 
@@ -113,6 +113,7 @@ public class RiskGame extends ApplicationAdapter {
 		topBar = new TopBar(screenHeight, screenWidth);
 		gameMap = new GameMap(screenHeight, screenWidth, board);
 		playerList = new PlayerList(screenHeight, screenWidth, skin);
+		troopCardList = new TroopCardList(screenHeight, screenWidth, skin);
 		bottomBar = new BottomBar(screenHeight, screenWidth, skin);
 
 
@@ -123,6 +124,8 @@ public class RiskGame extends ApplicationAdapter {
 		}
 
 		playerList.initializePlayerLabels(playerNamesColorMap);
+
+		troopCardList.initializeInfoLabels();
 
 		bottomBar.configureInput(multiplexer);
 		gameMap.configureInput(multiplexer);

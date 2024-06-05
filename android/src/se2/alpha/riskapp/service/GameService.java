@@ -37,11 +37,16 @@ public class GameService {
 
     public void setActivePlayer(Player newActivePlayer){
         activePlayer.postValue(newActivePlayer);
+
     }
 
     public RiskGame startGame(){
         riskGame = RiskGame.getInstance();
         riskGame.setPlayers(players.getValue());
         return riskGame;
+    }
+
+    public UUID getSessionId() {
+        return sessionId;
     }
 }
