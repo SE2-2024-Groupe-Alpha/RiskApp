@@ -43,8 +43,8 @@ public class PlayerList implements Disposable {
             style.font.getData().setScale(3f);
             style.background = skin.newDrawable("white", entry.getValue());
             Label playerLabel = new Label(entry.getKey(), style);
-            playerLabel.setSize(250, 100); // Set the desired size
-            playerLabel.setPosition(screenWidth - 200, screenHeight - (cnt * 100 + 250)); // Adjust position vertically
+            playerLabel.setSize(280, 100); // Set the desired size
+            playerLabel.setPosition(screenWidth - 280, screenHeight - (cnt * 100 + 250)); // Adjust position vertically
             playerLabels.add(playerLabel);
             stage.addActor(playerLabel);
             cnt++;

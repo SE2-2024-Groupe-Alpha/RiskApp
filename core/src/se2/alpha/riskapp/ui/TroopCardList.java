@@ -41,13 +41,13 @@ public class TroopCardList implements Disposable {
         style.background = skin.newDrawable("white", Color.DARK_GRAY);
 
         Label troopLabel = new Label("Troops: " + troops, style);
-        troopLabel.setSize(250, 100); // Set the desired size
+        troopLabel.setSize(280, 100); // Set the desired size
         troopLabel.setPosition(0, screenHeight - (100 + 250)); // Adjust position vertically
         infoLabels.add(troopLabel);
         stage.addActor(troopLabel);
 
         Label cardLabel = new Label("Cards: " + cards, style);
-        cardLabel.setSize(250, 100); // Set the desired size
+        cardLabel.setSize(280, 100); // Set the desired size
         cardLabel.setPosition(0, screenHeight - (200 + 250)); // Adjust position vertically
         infoLabels.add(cardLabel);
         stage.addActor(cardLabel);

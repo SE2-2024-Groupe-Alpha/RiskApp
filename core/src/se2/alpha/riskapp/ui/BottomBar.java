@@ -73,4 +73,9 @@ public class BottomBar implements Disposable {
     public void dispose() {
         stage.dispose();
     }
+
+    public void setButtonsActive(boolean active) {
+        buttonRiskCards.setVisible(active);
+        buttonDiceRoll.setVisible(active);
+    }
 }
