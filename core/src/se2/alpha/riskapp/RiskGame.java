@@ -12,15 +12,19 @@ import se2.alpha.riskapp.dol.Country;
 import se2.alpha.riskapp.dol.Player;
 import se2.alpha.riskapp.ui.BottomBar;
 import se2.alpha.riskapp.ui.GameMap;
+import se2.alpha.riskapp.ui.PlayerList;
 import se2.alpha.riskapp.ui.TopBar;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 
 public class RiskGame extends ApplicationAdapter {
 	private TopBar topBar;
 	private BottomBar bottomBar;
+	private PlayerList playerList;
 	private GameMap gameMap;
 	private int screenHeight;
 	private int screenWidth;
@@ -78,6 +82,7 @@ public class RiskGame extends ApplicationAdapter {
 		ScreenUtils.clear(1, 0, 0, 1);
 		gameMap.draw();
 		topBar.draw();
+		playerList.draw();
 		bottomBar.draw();
 	}
 
@@ -107,7 +112,17 @@ public class RiskGame extends ApplicationAdapter {
 
 		topBar = new TopBar(screenHeight, screenWidth);
 		gameMap = new GameMap(screenHeight, screenWidth, board);
+		playerList = new PlayerList(screenHeight, screenWidth, skin);
 		bottomBar = new BottomBar(screenHeight, screenWidth, skin);
+
+
+		Map<String, Color> playerNamesColorMap = new HashMap<>();
+
+		for (Player player : players) {
+			playerNamesColorMap.put(player.getName(), getPlayerColor(player.getId()));
+		}
+
+		playerList.initializePlayerLabels(playerNamesColorMap);
 
 		bottomBar.configureInput(multiplexer);
 		gameMap.configureInput(multiplexer);
