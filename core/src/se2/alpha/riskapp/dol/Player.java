@@ -9,14 +9,14 @@ public class Player {
     private String id;
     private String name;
     private int color;
-    private ArrayList<RiskCard> cards;
+    private transient final ArrayList<RiskCard> cards;
     private boolean eliminated;
     private int cntRiskCardsTraded;
     private int totalNumberOfTroops;
     private int freeNumberOfTroops;
     private boolean currentTurn;
-    private ArrayList<Country> controlledCountries;
-    private ArrayList<Continent> controlledContinents;
+    private transient final ArrayList<Country> controlledCountries;
+    private transient final ArrayList<Continent> controlledContinents;
     private static final int TROOPSFORFIRSTTRADE = 4;
     private static final int TROOPSFORSECONDTRADE = 6;
     private static final int TROOPSFORTHIRDTRADE = 8;
