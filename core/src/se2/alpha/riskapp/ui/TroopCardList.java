@@ -31,6 +31,7 @@ public class TroopCardList implements Disposable {
         stage = new Stage(new ScreenViewport(uiCamera));
     }
 
+//    TODO implement troop and card change
     public void initializeInfoLabels() {
         int troops = 10;
         int cards = 10;

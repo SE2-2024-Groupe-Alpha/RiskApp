@@ -10,7 +10,10 @@ import com.badlogic.gdx.graphics.Color;
 import se2.alpha.riskapp.dol.Board;
 import se2.alpha.riskapp.dol.Country;
 import se2.alpha.riskapp.dol.Player;
+import se2.alpha.riskapp.events.TerritoryClickedEvent;
+import se2.alpha.riskapp.logic.EventBus;
 import se2.alpha.riskapp.ui.*;
+import se2.alpha.riskapp.utils.TerritoryNode;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -29,6 +32,8 @@ public class RiskGame extends ApplicationAdapter {
 	private static RiskGame riskGameInstance;
 	private Board board = new Board();
 	private List<Player> players = new ArrayList<>();
+	private static TerritoryNode selectedTerritory;
+	private boolean isActive = true;
 
 
 	public Color getPlayerColor(String id) {
@@ -58,7 +63,12 @@ public class RiskGame extends ApplicationAdapter {
 		this.players = players;
 	}
 
-	private RiskGame(){}
+	private RiskGame(){
+		EventBus.registerCallback(TerritoryClickedEvent.class, event -> {
+			TerritoryClickedEvent territoryClickedEvent = (TerritoryClickedEvent) event;
+			RiskGame.selectedTerritory = territoryClickedEvent.getTerritory();
+		});
+	}
 
 	public static RiskGame getInstance(){
 		if (riskGameInstance == null){
@@ -72,6 +82,7 @@ public class RiskGame extends ApplicationAdapter {
 	public void create() {
 		initializeScreenDimensions();
 		initializeGameComponents();
+
 		topBar.setTopBarText("Game Started!");
 		Gdx.app.log("RiskGame", "Game created.");
 	}
@@ -116,7 +127,6 @@ public class RiskGame extends ApplicationAdapter {
 		troopCardList = new TroopCardList(screenHeight, screenWidth, skin);
 		bottomBar = new BottomBar(screenHeight, screenWidth, skin);
 
-
 		Map<String, Color> playerNamesColorMap = new HashMap<>();
 
 		for (Player player : players) {
@@ -133,9 +143,14 @@ public class RiskGame extends ApplicationAdapter {
 		Gdx.app.log("RiskGame", "Game components initialized.");
 
 		Gdx.input.setInputProcessor(multiplexer);
+		bottomBar.disableButtons(isActive);
 	}
 
 	public void syncMap(List<Country> countryList){
 		board.updateCountries(countryList);
+	}
+
+	public void setActive(boolean active) {
+		isActive = active;
 	}
 }

@@ -59,6 +59,10 @@ public class BackendService {
         securePreferencesService.saveSessionToken(token);
     }
 
+    public void saveUserName(String userName) {
+        securePreferencesService.saveUserName(userName);
+    }
+
     public interface ReachabilityCallback {
         void onReachabilityChecked(boolean isReachable);
     }

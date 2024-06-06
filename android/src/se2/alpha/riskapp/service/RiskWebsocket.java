@@ -97,6 +97,8 @@ public class RiskWebsocket extends WebSocketListener {
         System.out.println("GAME SYNC RECEIVED");
         GameSyncWebsocketMessage gameSyncWebsocketMessage = gson.fromJson(text, GameSyncWebsocketMessage.class);
         gameService.getRiskGame().syncMap(gameSyncWebsocketMessage.getCountries());
+        gameService.updatePlayers(gameSyncWebsocketMessage.getPlayers());
+        gameService.setActivePlayer(gameSyncWebsocketMessage.getActivePlayer());
     }
 
     public void handleNewTurn(String text) {
