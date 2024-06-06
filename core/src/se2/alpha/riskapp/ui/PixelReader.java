@@ -13,58 +13,62 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+
+
 public class PixelReader {
 
-    Texture pixelMap;
-    float screenScaleFactor;
-    Map<TerritoryNode, Texture> colorsToTextures = new HashMap<>();
+    private Texture pixelMap;
+    private float screenScaleFactor;
+    private Map<TerritoryNode, Texture> colorsToTextures = new HashMap<>();
 
     public PixelReader(float screenScaleFactor) {
         this.pixelMap = new Texture("riskMapColored.png");
         this.screenScaleFactor = screenScaleFactor;
 
+        initializeColorTextures();
+    }
+
+    private void initializeColorTextures() {
+        Pixmap mapPixmap = prepareAndConsumePixmap();
         for (String key : colorsToTerritories.keySet()) {
             TerritoryNode territoryNode = Territories.getTerritoryByColor(key);
             Color color = Color.valueOf(key);
-            colorsToTextures.put(territoryNode, createTextureMaskByColor(color));
+            colorsToTextures.put(territoryNode, createTextureMaskByColor(color, mapPixmap));
         }
+        mapPixmap.dispose();
     }
 
     public Color getPixelColor(int x, int y) {
+        Pixmap pixmap = prepareAndConsumePixmap();
+        int pixelValue = pixmap.getPixel(x, y);
 
-            if (!this.pixelMap.getTextureData().isPrepared()) {
-                this.pixelMap.getTextureData().prepare();
-            }
+        Color color = new Color();
+        Color.rgba8888ToColor(color, pixelValue);
 
-            Pixmap pixmap = this.pixelMap.getTextureData().consumePixmap();
-            int pixelValue = pixmap.getPixel(x, y);
+        pixmap.dispose();
 
-            Color color = new Color();
-            Color.rgba8888ToColor(color, pixelValue);
+        System.out.println("Extracted color at coordinates (" + x + ", " + y + "): " + color);
 
-            pixmap.dispose();
+        return color;
+    }
 
-            System.out.println("Extracted color at coordinates (" + x + ", " + y + "): " + color);
-
-            return color;
+    private Pixmap prepareAndConsumePixmap() {
+        if (!this.pixelMap.getTextureData().isPrepared()) {
+            this.pixelMap.getTextureData().prepare();
         }
-
+        return this.pixelMap.getTextureData().consumePixmap();
+    }
 
     // CPU heavy function, to improve performance we will probably need to use libgdx shaders instead.
-    private Texture createTextureMaskByColor(Color color) {
-
-        if (!pixelMap.getTextureData().isPrepared()) {
-            pixelMap.getTextureData().prepare();
-        }
-        Pixmap mapPixmap = pixelMap.getTextureData().consumePixmap();
+    private Texture createTextureMaskByColor(Color color, Pixmap mapPixmap) {
         Pixmap resultPixmap = new Pixmap(mapPixmap.getWidth(), mapPixmap.getHeight(), mapPixmap.getFormat());
+
+        int maskColor = Color.rgba8888(color);
+        int overlayColor = Color.rgba8888(Color.BLACK);
 
         for (int y = 0; y < mapPixmap.getHeight(); y++) {
             for (int x = 0; x < mapPixmap.getWidth(); x++) {
                 int mapColor = mapPixmap.getPixel(x, y);
-                int maskColor = Color.rgba8888(color);
-                int overlayColor = Color.rgba8888(Color.BLACK);
-
                 if (mapColor == maskColor) {
                     resultPixmap.drawPixel(x, y, overlayColor);
                 }
@@ -72,18 +76,21 @@ public class PixelReader {
         }
 
         Texture resultTexture = new Texture(resultPixmap);
-        mapPixmap.dispose();
         resultPixmap.dispose();
 
         return resultTexture;
     }
 
     public Texture getTextureMaskForTerritory(TerritoryNode territoryNode) {
-        return colorsToTextures.get(territoryNode);
+        Texture texture = colorsToTextures.get(territoryNode);
+        if (texture == null) {
+            throw new IllegalArgumentException("No texture found for territory: " + territoryNode);
+        }
+        return texture;
     }
 
     public List<Texture> getTextureMasksForTerritories(List<TerritoryNode> territoryNodes) {
-        ArrayList<Texture> texturesList = new ArrayList<>(territoryNodes.size());
+        List<Texture> texturesList = new ArrayList<>(territoryNodes.size());
 
         for (TerritoryNode territory : territoryNodes) {
             texturesList.add(getTextureMaskForTerritory(territory));
