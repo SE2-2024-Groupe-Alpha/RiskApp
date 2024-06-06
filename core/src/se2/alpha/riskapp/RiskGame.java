@@ -33,6 +33,7 @@ public class RiskGame extends ApplicationAdapter {
 	private Board board = new Board();
 	private List<Player> players = new ArrayList<>();
 	private static TerritoryNode selectedTerritory;
+	private String playerName;
 	private boolean isActive = true;
 
 
@@ -152,5 +153,16 @@ public class RiskGame extends ApplicationAdapter {
 
 	public void setActive(boolean active) {
 		isActive = active;
+	}
+
+	public void setPlayerName(String playerName) {
+		this.board.playerName = playerName;
+	}
+	public static TerritoryNode getSelectedTerritory() {
+		return selectedTerritory;
+	}
+
+	public List<Player> getPlayers() {
+		return players;
 	}
 }

@@ -26,7 +26,7 @@ public class GameService {
     private MutableLiveData<List<Player>> players = new MutableLiveData<>();
     private MutableLiveData<Player> activePlayer = new MutableLiveData<>();
 
-    private String playerName ="";
+    private String playerName = "";
 
     @Inject
     public GameService(Context context, SecurePreferencesService securePreferencesService) {
@@ -53,9 +53,10 @@ public class GameService {
     }
 
     public RiskGame startGame(){
+        playerName = securePreferencesService.getPlayerName();
         riskGame = RiskGame.getInstance();
         riskGame.setPlayers(players.getValue());
-        playerName = securePreferencesService.getPlayerName();
+        riskGame.setPlayerName(playerName);
         checkIfActivePlayer();
         return riskGame;
     }

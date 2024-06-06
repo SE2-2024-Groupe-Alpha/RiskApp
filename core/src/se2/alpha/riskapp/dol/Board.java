@@ -10,6 +10,7 @@ import se2.alpha.riskapp.utils.Territories;
 public class Board {
     private ArrayList<Continent> continents;
     private ArrayList<RiskCard> cards;
+    public String playerName;
 
     public Board(){
         setupContinents();
@@ -99,7 +100,7 @@ public class Board {
         }
     }
 
-    private Country getCountryByName(String name) {
+    public Country getCountryByName(String name) {
         for (Country country : getAllCountries()) {
             if (country.getName().equals(name))
                 return country;

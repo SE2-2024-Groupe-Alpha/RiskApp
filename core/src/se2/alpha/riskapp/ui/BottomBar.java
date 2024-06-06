@@ -10,6 +10,11 @@ import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.utils.Disposable;
 import com.badlogic.gdx.utils.viewport.ScreenViewport;
+import se2.alpha.riskapp.events.InitiateAttackEvent;
+import se2.alpha.riskapp.events.TerritoryAttackEvent;
+import se2.alpha.riskapp.events.TerritoryClickedClearEvent;
+import se2.alpha.riskapp.events.TerritoryClickedEvent;
+import se2.alpha.riskapp.logic.EventBus;
 
 public class BottomBar implements Disposable {
     private Stage stage;
@@ -30,6 +35,14 @@ public class BottomBar implements Disposable {
 
         // Initialize buttons
         initializeButtons(skin);
+
+        EventBus.registerCallback(TerritoryClickedEvent.class, event -> {
+            disableButtons(false);
+        });
+
+        EventBus.registerCallback(TerritoryClickedClearEvent.class, event -> {
+            disableButtons(true);
+        });
     }
 
     public void configureInput(InputMultiplexer multiplexer) {
@@ -72,8 +85,8 @@ public class BottomBar implements Disposable {
         buttonAttack.addListener(new ClickListener() {
             @Override
             public void clicked(InputEvent event, float x, float y) {
+                EventBus.invoke(new InitiateAttackEvent());
                 System.out.println("Clicked ATTACK");
-
                 event.stop();
             }
         });
