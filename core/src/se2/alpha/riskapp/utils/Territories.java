@@ -4,424 +4,187 @@ import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.Pixmap;
 import com.badlogic.gdx.graphics.Texture;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 public class Territories {
-    private static final TerritoryNode Alaska = new TerritoryNode("Alaska");
-    private static final TerritoryNode NorthwestTerritory = new TerritoryNode("Northwest Territory");
-    private static final TerritoryNode Greenland = new TerritoryNode("Greenland");
-    private static final TerritoryNode Alberta = new TerritoryNode("Alberta");
-    private static final TerritoryNode Ontario = new TerritoryNode("Ontario");
-    private static final TerritoryNode Quebec = new TerritoryNode("Quebec");
-    private static final TerritoryNode WesternUnitedStates = new TerritoryNode("Western United States");
-    private static final TerritoryNode EasternUnitedStates = new TerritoryNode("Eastern United States");
-    private static final TerritoryNode CentralAmerica = new TerritoryNode("Central America");
-    private static final TerritoryNode Venezuela = new TerritoryNode("Venezuela");
-    private static final TerritoryNode Peru = new TerritoryNode("Peru");
-    private static final TerritoryNode Brazil = new TerritoryNode("Brazil");
-    private static final TerritoryNode Argentina = new TerritoryNode("Argentina");
-    private static final TerritoryNode Iceland = new TerritoryNode("Iceland");
-    private static final TerritoryNode Scandinavia = new TerritoryNode("Scandinavia");
-    private static final TerritoryNode Russia = new TerritoryNode("Russia");
-    private static final TerritoryNode GreatBritain = new TerritoryNode("Great Britain");
-    private static final TerritoryNode NorthernEurope = new TerritoryNode("Northern Europe");
-    private static final TerritoryNode WesternEurope = new TerritoryNode("Western Europe");
-    private static final TerritoryNode Austria = new TerritoryNode("Austria");
-    private static final TerritoryNode NorthAfrica = new TerritoryNode("North Africa");
-    private static final TerritoryNode Egypt = new TerritoryNode("Egypt");
-    private static final TerritoryNode EastAfrica = new TerritoryNode("East Africa");
-    private static final TerritoryNode Congo = new TerritoryNode("Congo");
-    private static final TerritoryNode SouthAfrica = new TerritoryNode("South Africa");
-    private static final TerritoryNode Madagascar = new TerritoryNode("Madagascar");
-    private static final TerritoryNode Ural = new TerritoryNode("Ural");
-    private static final TerritoryNode Siberia = new TerritoryNode("Siberia");
-    private static final TerritoryNode Yakutsk = new TerritoryNode("Yakutsk");
-    private static final TerritoryNode Kamchatka = new TerritoryNode("Kamchatka");
-    private static final TerritoryNode Irkutsk = new TerritoryNode("Irkutsk");
-    private static final TerritoryNode Mongolia = new TerritoryNode("Mongolia");
-    private static final TerritoryNode Japan = new TerritoryNode("Japan");
-    private static final TerritoryNode Afghanistan = new TerritoryNode("Afghanistan");
-    private static final TerritoryNode China = new TerritoryNode("China");
-    private static final TerritoryNode India = new TerritoryNode("India");
-    private static final TerritoryNode Siam = new TerritoryNode("Siam");
-    private static final TerritoryNode Indonesia = new TerritoryNode("Indonesia");
-    private static final TerritoryNode NewGuinea = new TerritoryNode("New Guinea");
-    private static final TerritoryNode WesternAustralia = new TerritoryNode("Western Australia");
-    private static final TerritoryNode EasternAustralia = new TerritoryNode("Eastern Australia");
-    private static final TerritoryNode MiddleEast = new TerritoryNode("Middle East");
+    private static final String NORTH_AMERICA = "North America";
+    private static final String SOUTH_AMERICA = "South America";
+    private static final String EUROPE = "Europe";
+    private static final String AFRICA = "Africa";
+    private static final String ASIA = "Asia";
+    private static final String OCEANIA = "Oceania";
+    private static final TerritoryNode Alaska = new TerritoryNode("Alaska", NORTH_AMERICA);
+    private static final TerritoryNode NorthwestTerritory = new TerritoryNode("Northwest Territory", NORTH_AMERICA);
+    private static final TerritoryNode Greenland = new TerritoryNode("Greenland", NORTH_AMERICA);
+    private static final TerritoryNode Alberta = new TerritoryNode("Alberta", NORTH_AMERICA);
+    private static final TerritoryNode Ontario = new TerritoryNode("Ontario", NORTH_AMERICA);
+    private static final TerritoryNode Quebec = new TerritoryNode("Quebec", NORTH_AMERICA);
+    private static final TerritoryNode WesternUnitedStates = new TerritoryNode("Western United States", NORTH_AMERICA);
+    private static final TerritoryNode EasternUnitedStates = new TerritoryNode("Eastern United States", NORTH_AMERICA);
+    private static final TerritoryNode CentralAmerica = new TerritoryNode("Central America", NORTH_AMERICA);
+    private static final TerritoryNode Venezuela = new TerritoryNode("Venezuela", SOUTH_AMERICA);
+    private static final TerritoryNode Peru = new TerritoryNode("Peru", SOUTH_AMERICA);
+    private static final TerritoryNode Brazil = new TerritoryNode("Brazil", SOUTH_AMERICA);
+    private static final TerritoryNode Argentina = new TerritoryNode("Argentina", SOUTH_AMERICA);
+    private static final TerritoryNode Iceland = new TerritoryNode("Iceland", EUROPE);
+    private static final TerritoryNode Scandinavia = new TerritoryNode("Scandinavia", EUROPE);
+    private static final TerritoryNode Russia = new TerritoryNode("Russia", EUROPE);
+    private static final TerritoryNode GreatBritain = new TerritoryNode("Great Britain", EUROPE);
+    private static final TerritoryNode NorthernEurope = new TerritoryNode("Northern Europe", EUROPE);
+    private static final TerritoryNode WesternEurope = new TerritoryNode("Western Europe", EUROPE);
+    private static final TerritoryNode Austria = new TerritoryNode("Austria", EUROPE);
+    private static final TerritoryNode NorthAfrica = new TerritoryNode("North Africa", AFRICA);
+    private static final TerritoryNode Egypt = new TerritoryNode("Egypt", AFRICA);
+    private static final TerritoryNode EastAfrica = new TerritoryNode("East Africa", AFRICA);
+    private static final TerritoryNode Congo = new TerritoryNode("Congo", AFRICA);
+    private static final TerritoryNode SouthAfrica = new TerritoryNode("South Africa", AFRICA);
+    private static final TerritoryNode Madagascar = new TerritoryNode("Madagascar", AFRICA);
+    private static final TerritoryNode Ural = new TerritoryNode("Ural", ASIA);
+    private static final TerritoryNode Siberia = new TerritoryNode("Siberia", ASIA);
+    private static final TerritoryNode Yakutsk = new TerritoryNode("Yakutsk", ASIA);
+    private static final TerritoryNode Kamchatka = new TerritoryNode("Kamchatka", ASIA);
+    private static final TerritoryNode Irkutsk = new TerritoryNode("Irkutsk", ASIA);
+    private static final TerritoryNode Mongolia = new TerritoryNode("Mongolia", ASIA);
+    private static final TerritoryNode Japan = new TerritoryNode("Japan", ASIA);
+    private static final TerritoryNode Afghanistan = new TerritoryNode("Afghanistan", ASIA);
+    private static final TerritoryNode China = new TerritoryNode("China", ASIA);
+    private static final TerritoryNode India = new TerritoryNode("India", ASIA);
+    private static final TerritoryNode Siam = new TerritoryNode("Siam", ASIA);
+    private static final TerritoryNode Indonesia = new TerritoryNode("Indonesia", OCEANIA);
+    private static final TerritoryNode NewGuinea = new TerritoryNode("New Guinea", OCEANIA);
+    private static final TerritoryNode WesternAustralia = new TerritoryNode("Western Australia", OCEANIA);
+    private static final TerritoryNode EasternAustralia = new TerritoryNode("Eastern Australia", OCEANIA);
+    private static final TerritoryNode MiddleEast = new TerritoryNode("Middle East", ASIA);
 
     public static final Map<String, TerritoryNode> colorsToTerritories = new HashMap<>();
 
+    private static final HashMap<String, TerritoryNode> territoryMap = new HashMap<>();
+
     static {
-        Alaska.addAdjTerritory(
-            new ArrayList<TerritoryNode>() {{
-                add(NorthwestTerritory);
-                add(Alberta);
-                add(Kamchatka);
-            }}
-        );
+        Alaska.addAdjTerritory(Arrays.asList(NorthwestTerritory, Alberta, Kamchatka));
 
-        NorthwestTerritory.addAdjTerritory(
-                new ArrayList<TerritoryNode>() {{
-                    add(Alaska);
-                    add(Alberta);
-                    add(Ontario);
-                    add(Greenland);
-                }}
-        );
+        NorthwestTerritory.addAdjTerritory(Arrays.asList(Alaska, Alberta, Ontario, Greenland));
 
-        Greenland.addAdjTerritory(
-                new ArrayList<TerritoryNode>() {{
-                    add(NorthwestTerritory);
-                    add(Quebec);
-                    add(Ontario);
-                    add(Iceland);
-                }}
-        );
+        Greenland.addAdjTerritory(Arrays.asList(NorthwestTerritory, Quebec, Ontario, Iceland));
 
-        Alberta.addAdjTerritory(
-                new ArrayList<TerritoryNode>() {{
-                    add(Alaska);
-                    add(NorthwestTerritory);
-                    add(Ontario);
-                    add(WesternUnitedStates);
-                }}
-        );
+        Alberta.addAdjTerritory(Arrays.asList(Alaska, NorthwestTerritory, Ontario, WesternUnitedStates));
 
-        Ontario.addAdjTerritory(
-                new ArrayList<TerritoryNode>() {{
-                    add(Alberta);
-                    add(NorthwestTerritory);
-                    add(Quebec);
-                    add(Greenland);
-                }}
-        );
+        Ontario.addAdjTerritory(Arrays.asList(Alberta, NorthwestTerritory, Quebec, Greenland));
 
-        Quebec.addAdjTerritory(
-                new ArrayList<TerritoryNode>() {{
-                    add(Ontario);
-                    add(EasternUnitedStates);
-                    add(Greenland);
-                }}
-        );
+        Quebec.addAdjTerritory(Arrays.asList(Ontario, EasternUnitedStates, Greenland));
 
-        WesternUnitedStates.addAdjTerritory(
-                new ArrayList<TerritoryNode>() {{
-                    add(Alberta);
-                    add(Ontario);
-                    add(EasternUnitedStates);
-                    add(CentralAmerica);
-                }}
-        );
+        WesternUnitedStates.addAdjTerritory(Arrays.asList(Alberta, Ontario, EasternUnitedStates, CentralAmerica));
 
-        EasternUnitedStates.addAdjTerritory(
-                new ArrayList<TerritoryNode>() {{
-                    add(Ontario);
-                    add(Quebec);
-                    add(WesternUnitedStates);
-                    add(CentralAmerica);
-                }}
-        );
+        EasternUnitedStates.addAdjTerritory(Arrays.asList(Ontario, Quebec, WesternUnitedStates, CentralAmerica));
 
+        CentralAmerica.addAdjTerritory(Arrays.asList(WesternUnitedStates, EasternUnitedStates, Venezuela));
 
-        CentralAmerica.addAdjTerritory(
-                new ArrayList<TerritoryNode>() {{
-                    add(WesternUnitedStates);
-                    add(EasternUnitedStates);
-                    add(Venezuela);
-                }}
-        );
+        Venezuela.addAdjTerritory(Arrays.asList(CentralAmerica, Peru, Brazil));
 
-        Venezuela.addAdjTerritory(
-                new ArrayList<TerritoryNode>() {{
-                    add(CentralAmerica);
-                    add(Peru);
-                    add(Brazil);
-                }}
-        );
+        Peru.addAdjTerritory(Arrays.asList(Venezuela, Brazil, Argentina));
 
-        Peru.addAdjTerritory(
-                new ArrayList<TerritoryNode>() {{
-                    add(Venezuela);
-                    add(Brazil);
-                    add(Argentina);
-                }}
-        );
+        Brazil.addAdjTerritory(Arrays.asList(Venezuela, Peru, Argentina, NorthAfrica));
 
-        Brazil.addAdjTerritory(
-                new ArrayList<TerritoryNode>() {{
-                    add(Venezuela);
-                    add(Peru);
-                    add(Argentina);
-                    add(NorthAfrica);
-                }}
-        );
+        Argentina.addAdjTerritory(Arrays.asList(Brazil, Peru));
 
-        Argentina.addAdjTerritory(
-                new ArrayList<TerritoryNode>() {{
-                    add(Brazil);
-                    add(Peru);
-                }}
-        );
+        Iceland.addAdjTerritory(Arrays.asList(Greenland, GreatBritain, Scandinavia));
 
-        Iceland.addAdjTerritory(
-                new ArrayList<TerritoryNode>() {{
-                    add(Greenland);
-                    add(GreatBritain);
-                    add(Scandinavia);
-                }}
-        );
+        Scandinavia.addAdjTerritory(Arrays.asList(Iceland, GreatBritain, NorthernEurope, Russia));
 
-        Scandinavia.addAdjTerritory(
-                new ArrayList<TerritoryNode>() {{
-                    add(Iceland);
-                    add(GreatBritain);
-                    add(NorthernEurope);
-                    add(Russia);
-                }}
-        );
+        Russia.addAdjTerritory(Arrays.asList(Scandinavia, NorthernEurope, Austria, MiddleEast, Afghanistan, Ural));
 
-        Russia.addAdjTerritory(
-                new ArrayList<TerritoryNode>() {{
-                    add(Scandinavia);
-                    add(NorthernEurope);
-                    add(Austria);
-                    add(MiddleEast);
-                    add(Afghanistan);
-                    add(Ural);
-                }}
-        );
+        GreatBritain.addAdjTerritory(Arrays.asList(Iceland, Scandinavia, NorthernEurope, WesternEurope));
 
-        GreatBritain.addAdjTerritory(
-                new ArrayList<TerritoryNode>() {{
-                    add(Iceland);
-                    add(Scandinavia);
-                    add(NorthernEurope);
-                    add(WesternEurope);
-                }}
-        );
+        NorthernEurope.addAdjTerritory(Arrays.asList(Scandinavia, GreatBritain, WesternEurope, Austria, Russia));
 
-        NorthernEurope.addAdjTerritory(
-                new ArrayList<TerritoryNode>() {{
-                    add(Scandinavia);
-                    add(GreatBritain);
-                    add(WesternEurope);
-                    add(Austria);
-                    add(Russia);
-                }}
-        );
+        WesternEurope.addAdjTerritory(Arrays.asList(GreatBritain, NorthernEurope, Austria, NorthAfrica));
 
-        WesternEurope.addAdjTerritory(
-                new ArrayList<TerritoryNode>() {{
-                    add(GreatBritain);
-                    add(NorthernEurope);
-                    add(Austria);
-                    add(NorthAfrica);
-                }}
-        );
+        Austria.addAdjTerritory(Arrays.asList(WesternEurope, NorthernEurope, Russia, MiddleEast, NorthAfrica, Egypt));
 
-        Austria.addAdjTerritory(
-                new ArrayList<TerritoryNode>() {{
-                    add(WesternEurope);
-                    add(NorthernEurope);
-                    add(Russia);
-                    add(MiddleEast);
-                    add(NorthAfrica);
-                    add(Egypt);
-                }}
-        );
+        NorthAfrica.addAdjTerritory(Arrays.asList(WesternEurope, Austria, Brazil, Egypt, EastAfrica, Congo));
 
-        NorthAfrica.addAdjTerritory(
-                new ArrayList<TerritoryNode>() {{
-                    add(WesternEurope);
-                    add(Austria);
-                    add(Brazil);
-                    add(Egypt);
-                    add(EastAfrica);
-                    add(Congo);
-                }}
-        );
+        Egypt.addAdjTerritory(Arrays.asList(NorthAfrica, Austria, MiddleEast, EastAfrica));
 
-        Egypt.addAdjTerritory(
-                new ArrayList<TerritoryNode>() {{
-                    add(NorthAfrica);
-                    add(Austria);
-                    add(MiddleEast);
-                    add(EastAfrica);
-                }}
-        );
+        EastAfrica.addAdjTerritory(Arrays.asList(NorthAfrica, Egypt, Congo, MiddleEast, SouthAfrica, Madagascar));
 
-        EastAfrica.addAdjTerritory(
-                new ArrayList<TerritoryNode>() {{
-                    add(NorthAfrica);
-                    add(Egypt);
-                    add(Congo);
-                    add(MiddleEast);
-                    add(SouthAfrica);
-                    add(Madagascar);
-                }}
-        );
+        Congo.addAdjTerritory(Arrays.asList(NorthAfrica, EastAfrica, SouthAfrica));
 
-        Congo.addAdjTerritory(
-                new ArrayList<TerritoryNode>() {{
-                    add(NorthAfrica);
-                    add(EastAfrica);
-                    add(SouthAfrica);
-                }}
-        );
+        SouthAfrica.addAdjTerritory(Arrays.asList(Congo, EastAfrica, Madagascar));
 
-        SouthAfrica.addAdjTerritory(
-                new ArrayList<TerritoryNode>() {{
-                    add(Congo);
-                    add(EastAfrica);
-                    add(Madagascar);
-                }}
-        );
+        Madagascar.addAdjTerritory(Arrays.asList(SouthAfrica, EastAfrica));
 
-        Madagascar.addAdjTerritory(
-                new ArrayList<TerritoryNode>() {{
-                    add(SouthAfrica);
-                    add(EastAfrica);
-                }}
-        );
+        Ural.addAdjTerritory(Arrays.asList(Russia, Afghanistan, China, Siberia));
 
-        Ural.addAdjTerritory(
-                new ArrayList<TerritoryNode>() {{
-                    add(Russia);
-                    add(Afghanistan);
-                    add(China);
-                    add(Siberia);
-                }}
-        );
+        Siberia.addAdjTerritory(Arrays.asList(Ural, Yakutsk, Irkutsk, Mongolia, China));
 
-        Siberia.addAdjTerritory(
-                new ArrayList<TerritoryNode>() {{
-                    add(Ural);
-                    add(Yakutsk);
-                    add(Irkutsk);
-                    add(Mongolia);
-                    add(China);
-                }}
-        );
+        Yakutsk.addAdjTerritory(Arrays.asList(Siberia, Kamchatka, Irkutsk));
 
-        Yakutsk.addAdjTerritory(
-                new ArrayList<TerritoryNode>() {{
-                    add(Siberia);
-                    add(Kamchatka);
-                    add(Irkutsk);
-                }}
-        );
+        Kamchatka.addAdjTerritory(Arrays.asList(Alaska, Yakutsk, Irkutsk, Mongolia, Japan));
 
-        Kamchatka.addAdjTerritory(
-                new ArrayList<TerritoryNode>() {{
-                    add(Alaska);
-                    add(Yakutsk);
-                    add(Irkutsk);
-                    add(Mongolia);
-                    add(Japan);
-                }}
-        );
+        Mongolia.addAdjTerritory(Arrays.asList(Japan, Kamchatka, Irkutsk, Siberia, China));
 
-        Mongolia.addAdjTerritory(
-                new ArrayList<TerritoryNode>() {{
-                    add(Japan);
-                    add(Kamchatka);
-                    add(Irkutsk);
-                    add(Siberia);
-                    add(China);
-                }}
-        );
+        Japan.addAdjTerritory(Arrays.asList(Mongolia, Kamchatka));
 
-        Japan.addAdjTerritory(
-                new ArrayList<TerritoryNode>() {{
-                    add(Mongolia);
-                    add(Kamchatka);
-                }}
-        );
+        Afghanistan.addAdjTerritory(Arrays.asList(Ural, China, India, MiddleEast, Russia));
 
-        Afghanistan.addAdjTerritory(
-                new ArrayList<TerritoryNode>() {{
-                    add(Ural);
-                    add(China);
-                    add(India);
-                    add(MiddleEast);
-                    add(Russia);
-                }}
-        );
+        China.addAdjTerritory(Arrays.asList(Mongolia, Siberia, Ural, Afghanistan, India, Siam));
 
-        China.addAdjTerritory(
-                new ArrayList<TerritoryNode>() {{
-                    add(Mongolia);
-                    add(Siberia);
-                    add(Ural);
-                    add(Afghanistan);
-                    add(India);
-                    add(Siam);
-                }}
-        );
+        India.addAdjTerritory(Arrays.asList(MiddleEast, Afghanistan, China, Siam));
 
-        India.addAdjTerritory(
-                new ArrayList<TerritoryNode>() {{
-                    add(MiddleEast);
-                    add(Afghanistan);
-                    add(China);
-                    add(Siam);
-                }}
-        );
+        Siam.addAdjTerritory(Arrays.asList(India, China, Indonesia));
 
-        Siam.addAdjTerritory(
-                new ArrayList<TerritoryNode>() {{
-                    add(India);
-                    add(China);
-                    add(Indonesia);
-                }}
-        );
+        Indonesia.addAdjTerritory(Arrays.asList(Siam, NewGuinea, WesternAustralia));
 
-        Indonesia.addAdjTerritory(
-                new ArrayList<TerritoryNode>() {{
-                    add(Siam);
-                    add(NewGuinea);
-                    add(WesternAustralia);
-                }}
-        );
+        NewGuinea.addAdjTerritory(Arrays.asList(Indonesia, WesternAustralia, EasternAustralia));
 
-        NewGuinea.addAdjTerritory(
-                new ArrayList<TerritoryNode>() {{
-                    add(Indonesia);
-                    add(WesternAustralia);
-                    add(EasternAustralia);
-                }}
-        );
+        WesternAustralia.addAdjTerritory(Arrays.asList(Indonesia, NewGuinea, EasternAustralia));
 
-        WesternAustralia.addAdjTerritory(
-                new ArrayList<TerritoryNode>() {{
-                    add(Indonesia);
-                    add(NewGuinea);
-                    add(EasternAustralia);
-                }}
-        );
+        EasternAustralia.addAdjTerritory(Arrays.asList(Indonesia, NewGuinea, WesternAustralia));
 
-        EasternAustralia.addAdjTerritory(
-                new ArrayList<TerritoryNode>() {{
-                    add(Indonesia);
-                    add(NewGuinea);
-                    add(WesternAustralia);
-                }}
-        );
+        MiddleEast.addAdjTerritory(Arrays.asList(Austria, Russia, Afghanistan, India, Egypt, EastAfrica));
 
-        MiddleEast.addAdjTerritory(
-                new ArrayList<TerritoryNode>() {{
-                    add(Austria);
-                    add(Russia);
-                    add(Afghanistan);
-                    add(India);
-                    add(Egypt);
-                    add(EastAfrica);
-                }}
-        );
+        territoryMap.put("Alaska", Alaska);
+        territoryMap.put("Northwest Territory", NorthwestTerritory);
+        territoryMap.put("Greenland", Greenland);
+        territoryMap.put("Alberta", Alberta);
+        territoryMap.put("Ontario", Ontario);
+        territoryMap.put("Quebec", Quebec);
+        territoryMap.put("Western United States", WesternUnitedStates);
+        territoryMap.put("Eastern United States", EasternUnitedStates);
+        territoryMap.put("Central America", CentralAmerica);
+        territoryMap.put("Venezuela", Venezuela);
+        territoryMap.put("Peru", Peru);
+        territoryMap.put("Brazil", Brazil);
+        territoryMap.put("Argentina", Argentina);
+        territoryMap.put("Iceland", Iceland);
+        territoryMap.put("Scandinavia", Scandinavia);
+        territoryMap.put("Russia", Russia);
+        territoryMap.put("Great Britain", GreatBritain);
+        territoryMap.put("Northern Europe", NorthernEurope);
+        territoryMap.put("Western Europe", WesternEurope);
+        territoryMap.put("Austria", Austria);
+        territoryMap.put("North Africa", NorthAfrica);
+        territoryMap.put("Egypt", Egypt);
+        territoryMap.put("East Africa", EastAfrica);
+        territoryMap.put("Congo", Congo);
+        territoryMap.put("South Africa", SouthAfrica);
+        territoryMap.put("Madagascar", Madagascar);
+        territoryMap.put("Ural", Ural);
+        territoryMap.put("Siberia", Siberia);
+        territoryMap.put("Yakutsk", Yakutsk);
+        territoryMap.put("Kamchatka", Kamchatka);
+        territoryMap.put("Irkutsk", Irkutsk);
+        territoryMap.put("Mongolia", Mongolia);
+        territoryMap.put("Japan", Japan);
+        territoryMap.put("Afghanistan", Afghanistan);
+        territoryMap.put("China", China);
+        territoryMap.put("India", India);
+        territoryMap.put("Siam", Siam);
+        territoryMap.put("Indonesia", Indonesia);
+        territoryMap.put("New Guinea", NewGuinea);
+        territoryMap.put("Western Australia", WesternAustralia);
+        territoryMap.put("Eastern Australia", EasternAustralia);
+        territoryMap.put("Middle East", MiddleEast);
 
         colorsToTerritories.put("FF6347", Alaska);
         colorsToTerritories.put("4682B4", NorthwestTerritory);
@@ -465,16 +228,11 @@ public class Territories {
         colorsToTerritories.put("228B22", WesternAustralia);
         colorsToTerritories.put("ADFF2F", EasternAustralia);
         colorsToTerritories.put("F0E68C", MiddleEast);
-
-        createTextureMasks();
     }
 
-    private static void createTextureMasks() {
-//        for (String key : colorsToTerritories.keySet()) {
-//            TerritoryNode territoryNode = Territories.getTerritoryByColor(key);
-//            Color color = Color.valueOf(key);
-//            territoryNode.setMask(createTextureMaskByColor(color));
-//        }
+    public static Map<String, TerritoryNode> getAllTerritories()
+    {
+        return territoryMap;
     }
 
     public static TerritoryNode getTerritoryByColor(String colorKey) {
@@ -493,5 +251,9 @@ public class Territories {
 
         System.out.println(territoryNode.getAdjTerritories());
         return territoryNode;
+    }
+
+    public static TerritoryNode getTerritoryByName(String name){
+        return territoryMap.get(name);
     }
 }

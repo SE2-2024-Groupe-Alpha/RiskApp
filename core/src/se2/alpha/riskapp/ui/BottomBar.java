@@ -15,6 +15,7 @@ public class BottomBar implements Disposable {
     private Stage stage;
     private OrthographicCamera uiCamera;
     private TextButton buttonRiskCards, buttonDiceRoll;
+    private TextButton buttonAttack, buttonReinforce;
     private int screenHeight;
     private int screenWidth;
 
@@ -47,7 +48,7 @@ public class BottomBar implements Disposable {
         buttonRiskCards.addListener(new ClickListener() {
             @Override
             public void clicked(InputEvent event, float x, float y) {
-                System.out.println("Clicked BUTTON");
+                System.out.println("Clicked CARDS");
                 event.stop();
             }
         });
@@ -55,13 +56,40 @@ public class BottomBar implements Disposable {
         buttonDiceRoll.addListener(new ClickListener() {
             @Override
             public void clicked(InputEvent event, float x, float y) {
-                System.out.println("Clicked BUTTON");
+                System.out.println("Clicked ROLL");
+                event.stop();
+            }
+        });
+
+        buttonAttack = new TextButton("Attack", skin);
+        buttonAttack.setSize(400, 100);
+        buttonAttack.setPosition(20, 200);
+
+        buttonReinforce = new TextButton("Reinforce", skin);
+        buttonReinforce.setSize(400, 100);
+        buttonReinforce.setPosition(screenWidth - buttonDiceRoll.getWidth() - 20, 200); // Adjust position
+
+        buttonAttack.addListener(new ClickListener() {
+            @Override
+            public void clicked(InputEvent event, float x, float y) {
+                System.out.println("Clicked ATTACK");
+
+                event.stop();
+            }
+        });
+
+        buttonReinforce.addListener(new ClickListener() {
+            @Override
+            public void clicked(InputEvent event, float x, float y) {
+                System.out.println("Clicked REINFORCE");
                 event.stop();
             }
         });
 
         stage.addActor(buttonRiskCards);
         stage.addActor(buttonDiceRoll);
+        stage.addActor(buttonAttack);
+        stage.addActor(buttonReinforce);
     }
 
     public void draw() {
@@ -72,5 +100,12 @@ public class BottomBar implements Disposable {
     @Override
     public void dispose() {
         stage.dispose();
+    }
+
+    public void disableButtons(boolean active) {
+        buttonRiskCards.setDisabled(active);
+        buttonDiceRoll.setDisabled(active);
+        buttonAttack.setDisabled(active);
+        buttonReinforce.setDisabled(active);
     }
 }

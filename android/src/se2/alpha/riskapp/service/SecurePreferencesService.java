@@ -13,6 +13,7 @@ public class SecurePreferencesService {
 
     private static final String FILE_NAME = "secure_prefs";
     private static final String KEY_SESSION_TOKEN = "KEY_SESSION_TOKEN";
+    private static final String USER_NAME = "USER_NAME";
     private SharedPreferences sharedPreferences;
 
     public SecurePreferencesService(Context context) {
@@ -38,5 +39,15 @@ public class SecurePreferencesService {
 
     public String getSessionToken() {
         return sharedPreferences.getString(KEY_SESSION_TOKEN, null);
+    }
+
+    public void saveUserName(String userName) {
+        SharedPreferences.Editor editor = sharedPreferences.edit();
+        editor.putString(USER_NAME, userName);
+        editor.apply();
+    }
+
+    public String getPlayerName() {
+        return sharedPreferences.getString(USER_NAME, null);
     }
 }

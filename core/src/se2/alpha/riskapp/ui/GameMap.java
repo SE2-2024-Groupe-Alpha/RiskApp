@@ -16,10 +16,12 @@ import java.util.ArrayList;
 import java.util.List;
 
 import se2.alpha.riskapp.GameUnit;
+import se2.alpha.riskapp.RiskGame;
 import se2.alpha.riskapp.dol.Board;
 import se2.alpha.riskapp.dol.Continent;
 import se2.alpha.riskapp.dol.Country;
 import se2.alpha.riskapp.inputs.GestureHandlerMap;
+import se2.alpha.riskapp.utils.Territories;
 
 public class GameMap implements Disposable {
     SpriteBatch batch;
@@ -36,10 +38,12 @@ public class GameMap implements Disposable {
     OverlayShowAllRiskCards overlayShowAllRiskCards;
     float bgWidthScaled ;
     float bgHeightScaled;
+    Board board;
 
-    public GameMap(int screenHeight, int screenWidth) {
+    public GameMap(int screenHeight, int screenWidth, Board board) {
         initializeComponents(screenWidth, screenHeight);
         initializeOverlays();
+        this.board = board;
     }
 
     private void initializeComponents(int screenWidth, int screenHeight) {
@@ -81,6 +85,7 @@ public class GameMap implements Disposable {
         batch.begin();
 
         drawBackground();
+        drawPlayerColors();
         drawTerritories();
 
         for (GameUnit unit : units) {
@@ -113,11 +118,20 @@ public class GameMap implements Disposable {
 //        }
     }
 
-    public void drawPlayerColors(Board board){
+    public void drawPlayerColors(){
         for (Continent continent: board.getContinents()){
             for (Country country: continent.getCountries()){
                 if (country.getOwner()!= null){
-                    System.out.println(country.getName());
+                    if (country.getMask() == null){
+                        Texture territoryMask = Territories.getTerritoryByName(country.getName()).getMask();
+                        country.setMask(territoryMask);
+                    }
+
+                    Color color = RiskGame.getInstance().getPlayerColor(country.getOwner().getId());
+
+                    batch.setColor(color);
+                    batch.draw(country.getMask(), 0, 0, background.getWidth() * screenScaleFactor, Gdx.graphics.getHeight());
+                    batch.setColor(Color.WHITE);
                 }
             }
         }

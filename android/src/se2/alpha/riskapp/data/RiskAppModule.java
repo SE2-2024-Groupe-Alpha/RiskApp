@@ -39,8 +39,8 @@ public class RiskAppModule {
 
     @Provides
     @Singleton
-    public GameService provideGameService(Context context){
-        return new GameService(context);
+    public GameService provideGameService(Context context, SecurePreferencesService securePreferences){
+        return new GameService(context, securePreferences);
     }
 
     @Provides

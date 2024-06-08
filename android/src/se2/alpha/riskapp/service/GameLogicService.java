@@ -60,7 +60,7 @@ public class GameLogicService {
 
     private ArrayList<Player> getPlayers()
     {
-        ArrayList<Player> players = new ArrayList<Player>();
+        ArrayList<Player> players = new ArrayList<>();
         int playerCount = 0;
         for(String player: gameService.getUserStates().getValue().keySet())
         {

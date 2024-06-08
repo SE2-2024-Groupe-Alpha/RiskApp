@@ -9,18 +9,15 @@ import java.util.List;
 
 public class TerritoryNode {
     public String name;
+    private final String continent;
     private final List<TerritoryNode> adjTerritories;
 
     private Texture mask;
 
-    private int unitCnt;
-    private String ownedBy;
-
-    public TerritoryNode(String name) {
+    public TerritoryNode(String name, String continent) {
         this.name = name;
+        this.continent = continent;
         this.adjTerritories = new ArrayList<>();
-        this.unitCnt = 0;
-        this.ownedBy = null;
     }
 
     public void addAdjTerritory(TerritoryNode territory) {
@@ -51,6 +48,14 @@ public class TerritoryNode {
 
     public void setMask(Texture mask) {
         this.mask = mask;
+    }
+
+    public String getContinent() {
+        return continent;
+    }
+
+    public String getName() {
+        return name;
     }
 
     @Override
