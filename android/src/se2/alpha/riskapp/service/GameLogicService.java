@@ -84,7 +84,8 @@ public class GameLogicService {
                 return Color.MAGENTA;
             case 6:
                 return Color.CYAN;
+            default:
+                return Color.WHITE;
         }
-        return 0;
     }
 }
