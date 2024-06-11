@@ -11,6 +11,7 @@ import okhttp3.*;
 import org.json.JSONException;
 import org.json.JSONObject;
 import se2.alpha.riskapp.BuildConfig;
+import se2.alpha.riskapp.events.EndTurnEvent;
 import se2.alpha.riskapp.events.TerritoryAttackEvent;
 import se2.alpha.riskapp.events.TerritoryClickedClearEvent;
 import se2.alpha.riskapp.events.TerritoryClickedEvent;
@@ -24,6 +25,7 @@ import se2.alpha.riskapp.model.game.CreateLobbyResponse;
 import se2.alpha.riskapp.model.game.GameSession;
 import se2.alpha.riskapp.dol.RiskCard;
 import se2.alpha.riskapp.model.websocket.AttackWebsocketMessage;
+import se2.alpha.riskapp.model.websocket.EndTurnWebsocketMessage;
 import se2.alpha.riskapp.model.websocket.ICustomWebsocketMessage;
 
 import javax.inject.Inject;
@@ -67,6 +69,14 @@ public class BackendService {
             );
 
             sendMessage(attackWebsocketMessage);
+        });
+
+        EventBus.registerCallback(EndTurnEvent.class, event -> {
+            EndTurnWebsocketMessage endTurnWebsocketMessage = new EndTurnWebsocketMessage(
+                    gameService.getSessionId()
+            );
+
+            sendMessage(endTurnWebsocketMessage);
         });
     }
 
