@@ -33,6 +33,7 @@ public class RiskGame extends ApplicationAdapter {
 	private Board board = new Board();
 	private List<Player> players = new ArrayList<>();
 	private static TerritoryNode selectedTerritory;
+	private String playerName;
 	private boolean isActive = true;
 
 
@@ -143,7 +144,7 @@ public class RiskGame extends ApplicationAdapter {
 		Gdx.app.log("RiskGame", "Game components initialized.");
 
 		Gdx.input.setInputProcessor(multiplexer);
-		bottomBar.disableButtons(isActive);
+		bottomBar.disableButtons(!isActive);
 	}
 
 	public void syncMap(List<Country> countryList){
@@ -152,5 +153,18 @@ public class RiskGame extends ApplicationAdapter {
 
 	public void setActive(boolean active) {
 		isActive = active;
+		if(bottomBar != null)
+			bottomBar.disableButtons(!isActive);
+	}
+
+	public void setPlayerName(String playerName) {
+		this.board.playerName = playerName;
+	}
+	public static TerritoryNode getSelectedTerritory() {
+		return selectedTerritory;
+	}
+
+	public List<Player> getPlayers() {
+		return players;
 	}
 }

@@ -7,12 +7,20 @@ import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.input.GestureDetector.GestureAdapter;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.math.Vector3;
+import se2.alpha.riskapp.RiskGame;
+import se2.alpha.riskapp.dol.Country;
+import se2.alpha.riskapp.dol.Player;
+import se2.alpha.riskapp.events.InitiateAttackEvent;
+import se2.alpha.riskapp.events.TerritoryAttackEvent;
+import se2.alpha.riskapp.events.TerritoryClickedClearEvent;
 import se2.alpha.riskapp.events.TerritoryClickedEvent;
 import se2.alpha.riskapp.logic.EventBus;
 import se2.alpha.riskapp.ui.GameMap;
 import se2.alpha.riskapp.ui.PixelReader;
 import se2.alpha.riskapp.utils.Territories;
 import se2.alpha.riskapp.utils.TerritoryNode;
+
+import java.util.Objects;
 
 public class GestureHandlerMap extends GestureAdapter {
     private OrthographicCamera camera;
@@ -23,12 +31,19 @@ public class GestureHandlerMap extends GestureAdapter {
     PixelReader pixelReader;
     private GameMap gameMap;
 
+    private TerritoryNode attackFrom;
+    private boolean attackNext = false;
+
     public GestureHandlerMap(OrthographicCamera camera, Texture background, float screenScaleFactor, GameMap gameMap) {
         this.camera = camera;
         this.background = background;
         this.screenScaleFactor = screenScaleFactor;
         this.gameMap = gameMap;
         this.pixelReader = new PixelReader(screenScaleFactor);
+
+        EventBus.registerCallback(InitiateAttackEvent.class, event -> {
+            attackNext = true;
+        });
     }
 
     @Override
@@ -43,14 +58,44 @@ public class GestureHandlerMap extends GestureAdapter {
         TerritoryNode selectedTerritory = Territories.getTerritoryByColor(color);
         System.out.println(selectedTerritory);
 
-        if (selectedTerritory != null) {
-            TerritoryClickedEvent territoryClickedEvent = new TerritoryClickedEvent(selectedTerritory);
-            EventBus.invoke(territoryClickedEvent);
 
-            gameMap.onCountryClickedApplyTextureMask(selectedTerritory.getMask());
-            gameMap.onCountryClickedApplyTextureMaskToNeighbouringCountries(selectedTerritory.getNeighborMasks());
+        if (selectedTerritory != null) {
+            if (
+                    gameMap.board.getCountryByName(selectedTerritory.getName()).getOwner() != null &&
+                    Objects.equals(gameMap.board.getCountryByName(selectedTerritory.getName()).getOwner().getName(), gameMap.board.playerName)
+            ) {
+                attackFrom = selectedTerritory;
+                TerritoryClickedEvent territoryClickedEvent = new TerritoryClickedEvent(selectedTerritory);
+                EventBus.invoke(territoryClickedEvent);
+                gameMap.onCountryClickedApplyTextureMask(selectedTerritory.getMask());
+                gameMap.onCountryClickedApplyTextureMaskToNeighbouringCountries(selectedTerritory.getNeighborMasks());
+            }
+
+            if (            (gameMap.board.getCountryByName(selectedTerritory.getName()).getOwner() == null ||
+                            !Objects.equals(gameMap.board.getCountryByName(selectedTerritory.getName()).getOwner().getName(), gameMap.board.playerName)) &&
+                            attackNext && selectedTerritory.getAdjTerritories().contains(attackFrom)
+            ) {
+                Player attackingPlayer = RiskGame.getInstance().getPlayers().stream()
+                        .filter(player -> gameMap.board.playerName.equals(player.getName()))
+                        .findFirst()
+                        .orElse(null);
+                Player defendingPlayer = gameMap.board.getCountryByName(selectedTerritory.getName()).getOwner();
+
+                Country attackingCountry = gameMap.board.getCountryByName(attackFrom.getName());
+                Country defendingCountry = gameMap.board.getCountryByName(selectedTerritory.getName());
+
+                TerritoryAttackEvent territoryAttackEvent = new TerritoryAttackEvent(
+                        attackingPlayer.getId(),
+                        defendingPlayer != null ? defendingPlayer.getId() : null,
+                        attackingCountry.getName(),
+                        defendingCountry.getName()
+                );
+                EventBus.invoke(territoryAttackEvent);
+            }
         } else {
             gameMap.clearCountryTextureMasks();
+            TerritoryClickedClearEvent territoryClickedClearEvent = new TerritoryClickedClearEvent();
+            EventBus.invoke(territoryClickedClearEvent);
         }
 
         return true;

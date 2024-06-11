@@ -38,7 +38,7 @@ public class GameMap implements Disposable {
     OverlayShowAllRiskCards overlayShowAllRiskCards;
     float bgWidthScaled ;
     float bgHeightScaled;
-    Board board;
+    public Board board;
 
     public GameMap(int screenHeight, int screenWidth, Board board) {
         initializeComponents(screenWidth, screenHeight);

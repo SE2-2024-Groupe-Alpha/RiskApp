@@ -26,11 +26,12 @@ public class GameService {
     private MutableLiveData<List<Player>> players = new MutableLiveData<>();
     private MutableLiveData<Player> activePlayer = new MutableLiveData<>();
 
-    private String playerName ="";
+    private String playerName = "";
 
     @Inject
     public GameService(Context context, SecurePreferencesService securePreferencesService) {
         this.securePreferencesService = securePreferencesService;
+        playerName = securePreferencesService.getPlayerName();
     }
 
     public void updateUsers(Map<String, Boolean> newUserStates){
@@ -43,20 +44,17 @@ public class GameService {
 
     public void setActivePlayer(Player newActivePlayer){
         activePlayer.postValue(newActivePlayer);
-        checkIfActivePlayer();
+        checkIfActivePlayer(newActivePlayer.getName());
     }
 
-    public void checkIfActivePlayer(){
-        if (activePlayer.getValue() != null){
-            riskGame.setActive(activePlayer.getValue().getName().equals(playerName));
-        }
+    public void checkIfActivePlayer(String activePlayerName){
+            riskGame.setActive(activePlayerName.equals(playerName));
     }
 
     public RiskGame startGame(){
         riskGame = RiskGame.getInstance();
         riskGame.setPlayers(players.getValue());
-        playerName = securePreferencesService.getPlayerName();
-        checkIfActivePlayer();
+        riskGame.setPlayerName(playerName);
         return riskGame;
     }
 

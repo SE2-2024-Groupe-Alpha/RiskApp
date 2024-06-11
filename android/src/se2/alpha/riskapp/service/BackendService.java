@@ -11,6 +11,11 @@ import okhttp3.*;
 import org.json.JSONException;
 import org.json.JSONObject;
 import se2.alpha.riskapp.BuildConfig;
+import se2.alpha.riskapp.events.EndTurnEvent;
+import se2.alpha.riskapp.events.TerritoryAttackEvent;
+import se2.alpha.riskapp.events.TerritoryClickedClearEvent;
+import se2.alpha.riskapp.events.TerritoryClickedEvent;
+import se2.alpha.riskapp.logic.EventBus;
 import se2.alpha.riskapp.model.auth.JwtAuthenticationResponse;
 import se2.alpha.riskapp.model.auth.SignInRequest;
 import se2.alpha.riskapp.model.auth.SignUpRequest;
@@ -19,6 +24,8 @@ import se2.alpha.riskapp.model.game.CreateLobbyRequest;
 import se2.alpha.riskapp.model.game.CreateLobbyResponse;
 import se2.alpha.riskapp.model.game.GameSession;
 import se2.alpha.riskapp.dol.RiskCard;
+import se2.alpha.riskapp.model.websocket.AttackWebsocketMessage;
+import se2.alpha.riskapp.model.websocket.EndTurnWebsocketMessage;
 import se2.alpha.riskapp.model.websocket.ICustomWebsocketMessage;
 
 import javax.inject.Inject;
@@ -50,6 +57,28 @@ public class BackendService {
         this.securePreferencesService = securePreferences;
         this.gameService = gameService;
         this.context = context;
+
+        EventBus.registerCallback(TerritoryAttackEvent.class, event -> {
+            TerritoryAttackEvent territoryAttackEvent = (TerritoryAttackEvent) event;
+
+            AttackWebsocketMessage attackWebsocketMessage = new AttackWebsocketMessage(
+                    gameService.getSessionId(),
+                    territoryAttackEvent.getAttackerPlayerId(),
+                    territoryAttackEvent.getDefenderPlayerId(),
+                    territoryAttackEvent.getAttackingCountryName(),
+                    territoryAttackEvent.getDefendingCountryName()
+            );
+
+            sendMessage(attackWebsocketMessage);
+        });
+
+        EventBus.registerCallback(EndTurnEvent.class, event -> {
+            EndTurnWebsocketMessage endTurnWebsocketMessage = new EndTurnWebsocketMessage(
+                    gameService.getSessionId()
+            );
+
+            sendMessage(endTurnWebsocketMessage);
+        });
     }
 
     public String getSessionToken() {
