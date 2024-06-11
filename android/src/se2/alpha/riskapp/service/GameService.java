@@ -31,6 +31,7 @@ public class GameService {
     @Inject
     public GameService(Context context, SecurePreferencesService securePreferencesService) {
         this.securePreferencesService = securePreferencesService;
+        playerName = securePreferencesService.getPlayerName();
     }
 
     public void updateUsers(Map<String, Boolean> newUserStates){
@@ -42,22 +43,20 @@ public class GameService {
     }
 
     public void setActivePlayer(Player newActivePlayer){
+        System.out.println("risklog active player changes: " + newActivePlayer.getName());
         activePlayer.postValue(newActivePlayer);
-        checkIfActivePlayer();
+        checkIfActivePlayer(newActivePlayer.getName());
     }
 
-    public void checkIfActivePlayer(){
-        if (activePlayer.getValue() != null){
-            riskGame.setActive(activePlayer.getValue().getName().equals(playerName));
-        }
+    public void checkIfActivePlayer(String activePlayerName){
+            System.out.println("risklog playername: " + playerName + " activeplayer: " + activePlayerName + " equal? " + activePlayerName.equals(playerName));
+            riskGame.setActive(activePlayerName.equals(playerName));
     }
 
     public RiskGame startGame(){
-        playerName = securePreferencesService.getPlayerName();
         riskGame = RiskGame.getInstance();
         riskGame.setPlayers(players.getValue());
         riskGame.setPlayerName(playerName);
-        checkIfActivePlayer();
         return riskGame;
     }
 

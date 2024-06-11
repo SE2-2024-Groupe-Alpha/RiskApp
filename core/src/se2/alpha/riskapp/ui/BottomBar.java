@@ -2,14 +2,20 @@ package se2.alpha.riskapp.ui;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.InputMultiplexer;
+import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.OrthographicCamera;
+import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.Stage;
+import com.badlogic.gdx.scenes.scene2d.Touchable;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
+import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.utils.Disposable;
 import com.badlogic.gdx.utils.viewport.ScreenViewport;
+
+import se2.alpha.riskapp.events.EndTurnEvent;
 import se2.alpha.riskapp.events.InitiateAttackEvent;
 import se2.alpha.riskapp.events.TerritoryAttackEvent;
 import se2.alpha.riskapp.events.TerritoryClickedClearEvent;
@@ -20,7 +26,7 @@ public class BottomBar implements Disposable {
     private Stage stage;
     private OrthographicCamera uiCamera;
     private TextButton buttonRiskCards, buttonDiceRoll;
-    private TextButton buttonAttack, buttonReinforce;
+    private TextButton buttonAttack, buttonReinforce, buttonEndTurn;
     private int screenHeight;
     private int screenWidth;
 
@@ -37,11 +43,11 @@ public class BottomBar implements Disposable {
         initializeButtons(skin);
 
         EventBus.registerCallback(TerritoryClickedEvent.class, event -> {
-            disableButtons(false);
+            disableButtonsTerritoryClicked(false);
         });
 
         EventBus.registerCallback(TerritoryClickedClearEvent.class, event -> {
-            disableButtons(true);
+            disableButtonsTerritoryClicked(true);
         });
     }
 
@@ -58,17 +64,17 @@ public class BottomBar implements Disposable {
         buttonDiceRoll.setSize(400, 100);
         buttonDiceRoll.setPosition(screenWidth - buttonDiceRoll.getWidth() - 20, 70); // Adjust position
 
-        buttonRiskCards.addListener(new ClickListener() {
+        buttonRiskCards.addListener(new ChangeListener() {
             @Override
-            public void clicked(InputEvent event, float x, float y) {
+            public void changed(ChangeEvent event, Actor actor) {
                 System.out.println("Clicked CARDS");
                 event.stop();
             }
         });
 
-        buttonDiceRoll.addListener(new ClickListener() {
+        buttonDiceRoll.addListener(new ChangeListener() {
             @Override
-            public void clicked(InputEvent event, float x, float y) {
+            public void changed(ChangeEvent event, Actor actor) {
                 System.out.println("Clicked ROLL");
                 event.stop();
             }
@@ -82,19 +88,32 @@ public class BottomBar implements Disposable {
         buttonReinforce.setSize(400, 100);
         buttonReinforce.setPosition(screenWidth - buttonDiceRoll.getWidth() - 20, 200); // Adjust position
 
-        buttonAttack.addListener(new ClickListener() {
+        buttonAttack.addListener(new ChangeListener() {
             @Override
-            public void clicked(InputEvent event, float x, float y) {
+            public void changed(ChangeEvent event, Actor actor) {
                 EventBus.invoke(new InitiateAttackEvent());
                 System.out.println("Clicked ATTACK");
                 event.stop();
             }
         });
 
-        buttonReinforce.addListener(new ClickListener() {
+        buttonReinforce.addListener(new ChangeListener() {
             @Override
-            public void clicked(InputEvent event, float x, float y) {
+            public void changed(ChangeEvent event, Actor actor) {
                 System.out.println("Clicked REINFORCE");
+                event.stop();
+            }
+        });
+
+        buttonEndTurn = new TextButton("End Turn", skin);
+        buttonEndTurn.setSize(400, 100);
+        buttonEndTurn.setPosition(20, 300);
+
+        buttonEndTurn.addListener(new ChangeListener() {
+            @Override
+            public void changed(ChangeEvent event, Actor actor) {
+                EventBus.invoke(new EndTurnEvent());
+                System.out.println("Clicked END TURN");
                 event.stop();
             }
         });
@@ -103,6 +122,7 @@ public class BottomBar implements Disposable {
         stage.addActor(buttonDiceRoll);
         stage.addActor(buttonAttack);
         stage.addActor(buttonReinforce);
+        stage.addActor(buttonEndTurn);
     }
 
     public void draw() {
@@ -115,10 +135,20 @@ public class BottomBar implements Disposable {
         stage.dispose();
     }
 
-    public void disableButtons(boolean active) {
-        buttonRiskCards.setDisabled(active);
-        buttonDiceRoll.setDisabled(active);
-        buttonAttack.setDisabled(active);
-        buttonReinforce.setDisabled(active);
+    public void disableButtons(boolean inactive) {
+        System.out.println("risklog disable buttons: " + inactive);
+
+        buttonRiskCards.setDisabled(inactive);
+        buttonDiceRoll.setDisabled(inactive);
+        buttonAttack.setDisabled(inactive);
+        buttonReinforce.setDisabled(inactive);
+        buttonEndTurn.setDisabled(inactive);
+    }
+
+    public void disableButtonsTerritoryClicked(boolean inactive) {
+        System.out.println("risklog disable buttons: " + inactive);
+
+        buttonAttack.setDisabled(inactive);
+        buttonReinforce.setDisabled(inactive);
     }
 }
