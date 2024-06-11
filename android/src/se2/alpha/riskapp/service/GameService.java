@@ -43,13 +43,11 @@ public class GameService {
     }
 
     public void setActivePlayer(Player newActivePlayer){
-        System.out.println("risklog active player changes: " + newActivePlayer.getName());
         activePlayer.postValue(newActivePlayer);
         checkIfActivePlayer(newActivePlayer.getName());
     }
 
     public void checkIfActivePlayer(String activePlayerName){
-            System.out.println("risklog playername: " + playerName + " activeplayer: " + activePlayerName + " equal? " + activePlayerName.equals(playerName));
             riskGame.setActive(activePlayerName.equals(playerName));
     }
 

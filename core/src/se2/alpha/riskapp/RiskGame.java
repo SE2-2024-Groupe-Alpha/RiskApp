@@ -152,7 +152,6 @@ public class RiskGame extends ApplicationAdapter {
 	}
 
 	public void setActive(boolean active) {
-		System.out.println("risklog is active: " + active);
 		isActive = active;
 		if(bottomBar != null)
 			bottomBar.disableButtons(!isActive);

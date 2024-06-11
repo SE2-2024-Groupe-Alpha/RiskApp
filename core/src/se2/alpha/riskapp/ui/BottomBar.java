@@ -136,8 +136,6 @@ public class BottomBar implements Disposable {
     }
 
     public void disableButtons(boolean inactive) {
-        System.out.println("risklog disable buttons: " + inactive);
-
         buttonRiskCards.setDisabled(inactive);
         buttonDiceRoll.setDisabled(inactive);
         buttonAttack.setDisabled(inactive);
@@ -146,8 +144,6 @@ public class BottomBar implements Disposable {
     }
 
     public void disableButtonsTerritoryClicked(boolean inactive) {
-        System.out.println("risklog disable buttons: " + inactive);
-
         buttonAttack.setDisabled(inactive);
         buttonReinforce.setDisabled(inactive);
     }
