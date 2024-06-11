@@ -61,6 +61,10 @@ public class GameService {
         return riskGame;
     }
 
+    public void setPlayerName(String playerName) {
+        this.playerName = playerName;
+    }
+
     public UUID getSessionId() {
         return sessionId;
     }

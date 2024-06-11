@@ -165,4 +165,11 @@ public class RiskGame extends ApplicationAdapter {
 	public List<Player> getPlayers() {
 		return players;
 	}
+
+	public boolean isActive() {
+		return this.isActive;
+	}
+	public String getPlayerName() {
+		return playerName;
+	}
 }
