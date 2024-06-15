@@ -18,4 +18,5 @@ public interface RiskAppComponent {
 
     void inject(BackendService backendService);
 
+    void inject(EndOfGame endOfGame);
 }

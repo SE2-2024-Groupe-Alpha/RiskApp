@@ -56,6 +56,11 @@
                   android:exported="true">
         </activity>
 
+        <activity android:permission=""
+            android:name="se2.alpha.riskapp.activities.EndOfGame"
+            android:exported="true">
+        </activity>
+
     </application>
 
 </manifest>

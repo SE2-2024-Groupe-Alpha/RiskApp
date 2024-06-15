@@ -25,6 +25,7 @@ public class GameService {
     private MutableLiveData<Boolean> gameStarted = new MutableLiveData<>();
     private MutableLiveData<List<Player>> players = new MutableLiveData<>();
     private MutableLiveData<Player> activePlayer = new MutableLiveData<>();
+    private MutableLiveData<Player> winner = new MutableLiveData<>();
 
     private String playerName = "";
 
@@ -42,6 +43,16 @@ public class GameService {
         players.postValue(newPlayers);
     }
 
+    public void updateWinner(String id){
+        for(Player player : players.getValue())
+            if(id.equals(player.getId()))
+            {
+                System.out.println("risklog player won " + player.getName());
+                winner.postValue(player);
+                System.out.println("risklog player won " + player.getName());
+            }
+    }
+
     public void setActivePlayer(Player newActivePlayer){
         activePlayer.postValue(newActivePlayer);
         checkIfActivePlayer(newActivePlayer.getName());
@@ -56,6 +67,10 @@ public class GameService {
         riskGame.setPlayers(players.getValue());
         riskGame.setPlayerName(playerName);
         return riskGame;
+    }
+
+    public void setPlayerName(String playerName) {
+        this.playerName = playerName;
     }
 
     public UUID getSessionId() {

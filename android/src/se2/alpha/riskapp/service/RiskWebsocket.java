@@ -117,5 +117,7 @@ public class RiskWebsocket extends WebSocketListener {
 
     public void handlePlayerWon(String text) {
         PlayerWonWebsocketMessage playerWonWebsocketMessage = gson.fromJson(text, PlayerWonWebsocketMessage.class);
+        System.out.println("risklog player won " + playerWonWebsocketMessage.getWinningPlayerId());
+        gameService.updateWinner(playerWonWebsocketMessage.getWinningPlayerId());
     }
 }
