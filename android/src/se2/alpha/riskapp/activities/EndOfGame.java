@@ -27,7 +27,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
-public class Lobby extends AppCompatActivity {
+public class EndOfGame extends AppCompatActivity {
     ListView playerList;
     ProgressBar progressBar;
     Button buttonReady;
@@ -67,7 +67,7 @@ public class Lobby extends AppCompatActivity {
         buttonLeave.setOnClickListener(this::playerLeaveLobby);
         buttonCreateGame.setOnClickListener(this::createGameClick);
 
-        PlayerArrayAdapter adapter = new PlayerArrayAdapter(Lobby.this, new ArrayList<>());
+        PlayerArrayAdapter adapter = new PlayerArrayAdapter(EndOfGame.this, new ArrayList<>());
         playerList.setAdapter(adapter);
 
         gameService.getUserStates().observe(this, newData -> {
@@ -93,7 +93,7 @@ public class Lobby extends AppCompatActivity {
             public void onChanged(Boolean gameStarted) {
                 if(Boolean.TRUE.equals(gameStarted))
                 {
-                    Intent intent = new Intent(Lobby.this, Game.class);
+                    Intent intent = new Intent(EndOfGame.this, Game.class);
                     startActivity(intent);
                 }
             }
@@ -105,7 +105,7 @@ public class Lobby extends AppCompatActivity {
         super.onBackPressed();
         lobbyService.leaveLobby();
         Intent intent = new Intent(this, LobbyList.class);
-        Toast.makeText(Lobby.this, "Left the lobby", Toast.LENGTH_SHORT).show();
+        Toast.makeText(EndOfGame.this, "Left the lobby", Toast.LENGTH_SHORT).show();
         startActivity(intent);
         backendService.closeWebSocket();
         finish();
@@ -114,7 +114,7 @@ public class Lobby extends AppCompatActivity {
     private void playerLeaveLobby(View view) {
         lobbyService.leaveLobby();
         Intent intent = new Intent(this, LobbyList.class);
-        Toast.makeText(Lobby.this, "Left the lobby", Toast.LENGTH_SHORT).show();
+        Toast.makeText(EndOfGame.this, "Left the lobby", Toast.LENGTH_SHORT).show();
         startActivity(intent);
         backendService.closeWebSocket();
         finish();
