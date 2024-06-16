@@ -11,11 +11,7 @@ import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
 import com.badlogic.gdx.utils.Disposable;
 import com.badlogic.gdx.utils.viewport.ScreenViewport;
 
-import se2.alpha.riskapp.events.EndTurnEvent;
-import se2.alpha.riskapp.events.InitiateAttackEvent;
-import se2.alpha.riskapp.events.ShowAllRiskCardsEvent;
-import se2.alpha.riskapp.events.TerritoryClickedClearEvent;
-import se2.alpha.riskapp.events.TerritoryClickedEvent;
+import se2.alpha.riskapp.events.*;
 import se2.alpha.riskapp.logic.EventBus;
 
 public class BottomBar implements Disposable {
@@ -25,6 +21,8 @@ public class BottomBar implements Disposable {
     private TextButton buttonAttack, buttonReinforce, buttonEndTurn;
     private int screenHeight;
     private int screenWidth;
+
+    private boolean reinforceEnabled = true;
 
     public BottomBar(int screenHeight, int screenWidth, Skin skin) {
         this.screenWidth = screenWidth;
@@ -77,6 +75,16 @@ public class BottomBar implements Disposable {
             }
         });
 
+        EventBus.registerCallback(UpdateFreeTroopsEvent.class, e -> {
+            UpdateFreeTroopsEvent event = (UpdateFreeTroopsEvent) e;
+            if (event.getFreeTroops() <= 0) {
+                reinforceEnabled = false;
+                buttonReinforce.setDisabled(true);
+            } else {
+                reinforceEnabled = true;
+            }
+        });
+
         buttonAttack = new TextButton("Attack", skin);
         buttonAttack.setSize(400, 100);
         buttonAttack.setPosition(20, 200);
@@ -98,6 +106,7 @@ public class BottomBar implements Disposable {
             @Override
             public void changed(ChangeEvent event, Actor actor) {
                 System.out.println("Clicked REINFORCE");
+                EventBus.invoke(new TerritoryReinforceEvent());
                 event.stop();
             }
         });
@@ -136,12 +145,16 @@ public class BottomBar implements Disposable {
         buttonRiskCards.setDisabled(inactive);
         buttonDiceRoll.setDisabled(inactive);
         buttonAttack.setDisabled(inactive);
-        buttonReinforce.setDisabled(inactive);
+        if(reinforceEnabled) {
+            buttonReinforce.setDisabled(inactive);
+        }
         buttonEndTurn.setDisabled(inactive);
     }
 
     public void disableButtonsTerritoryClicked(boolean inactive) {
         buttonAttack.setDisabled(inactive);
-        buttonReinforce.setDisabled(inactive);
+        if(reinforceEnabled) {
+            buttonReinforce.setDisabled(inactive);
+        }
     }
 }

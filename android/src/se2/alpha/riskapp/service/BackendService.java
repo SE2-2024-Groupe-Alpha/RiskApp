@@ -11,11 +11,7 @@ import okhttp3.*;
 import org.json.JSONException;
 import org.json.JSONObject;
 import se2.alpha.riskapp.BuildConfig;
-import se2.alpha.riskapp.events.EndTurnEvent;
-import se2.alpha.riskapp.events.ShowAllRiskCardsEvent;
-import se2.alpha.riskapp.events.TerritoryAttackEvent;
-import se2.alpha.riskapp.events.TerritoryClickedClearEvent;
-import se2.alpha.riskapp.events.TerritoryClickedEvent;
+import se2.alpha.riskapp.events.*;
 import se2.alpha.riskapp.logic.EventBus;
 import se2.alpha.riskapp.model.auth.JwtAuthenticationResponse;
 import se2.alpha.riskapp.model.auth.SignInRequest;
@@ -28,6 +24,8 @@ import se2.alpha.riskapp.dol.RiskCard;
 import se2.alpha.riskapp.model.websocket.AttackWebsocketMessage;
 import se2.alpha.riskapp.model.websocket.EndTurnWebsocketMessage;
 import se2.alpha.riskapp.model.websocket.ICustomWebsocketMessage;
+import se2.alpha.riskapp.model.websocket.StrengthenCountryWebsocketMessage;
+import se2.alpha.riskapp.utils.TerritoryNode;
 
 import javax.inject.Inject;
 import java.io.IOException;
@@ -52,6 +50,7 @@ public class BackendService {
     private final OkHttpClient client = new OkHttpClient();
     @Getter
     private WebSocket webSocket;
+    private TerritoryNode slectedCountry;
 
     @Inject
     public BackendService(Context context, SecurePreferencesService securePreferences, GameService gameService) {
@@ -59,6 +58,13 @@ public class BackendService {
         this.gameService = gameService;
         this.context = context;
 
+        EventBus.registerCallback(SelectCountryEvent.class, event -> {
+            SelectCountryEvent territoryAttackEvent = (SelectCountryEvent) event;
+
+            slectedCountry = territoryAttackEvent.getSelctedCountry();
+        });
+
+        // Attack
         EventBus.registerCallback(TerritoryAttackEvent.class, event -> {
             TerritoryAttackEvent territoryAttackEvent = (TerritoryAttackEvent) event;
 
@@ -72,6 +78,19 @@ public class BackendService {
 
             sendMessage(attackWebsocketMessage);
         });
+
+        // Reinforce
+        EventBus.registerCallback(TerritoryReinforceEvent.class, event -> {
+            StrengthenCountryWebsocketMessage reinfoceMessage = new StrengthenCountryWebsocketMessage(
+                    gameService.getSessionId(),
+                    gameService.getPlayerName(),
+                    slectedCountry.getName(),
+                    1
+            );
+
+            sendMessage(reinfoceMessage);
+        });
+
 
         EventBus.registerCallback(EndTurnEvent.class, event -> {
             EndTurnWebsocketMessage endTurnWebsocketMessage = new EndTurnWebsocketMessage(

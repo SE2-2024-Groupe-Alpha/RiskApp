@@ -7,6 +7,8 @@ import lombok.Getter;
 import lombok.Setter;
 import se2.alpha.riskapp.RiskGame;
 import se2.alpha.riskapp.dol.Player;
+import se2.alpha.riskapp.events.UpdateFreeTroopsEvent;
+import se2.alpha.riskapp.logic.EventBus;
 
 import javax.inject.Inject;
 import java.util.*;
@@ -40,6 +42,11 @@ public class GameService {
     }
 
     public void updatePlayers(List<Player> newPlayers){
+        for(Player p : newPlayers) {
+            if(p.getName().equals(playerName)) {
+                EventBus.invoke(new UpdateFreeTroopsEvent(p.getFreeNumberOfTroops()));
+            }
+        }
         players.postValue(newPlayers);
     }
 
@@ -75,5 +82,14 @@ public class GameService {
 
     public UUID getSessionId() {
         return sessionId;
+    }
+
+    public String getPlayerId() {
+        for (Player p : players.getValue()) {
+            if(p.getName() == playerName) {
+                return p.getId();
+            }
+        }
+        return "";
     }
 }

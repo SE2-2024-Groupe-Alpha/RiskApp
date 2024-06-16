@@ -4,7 +4,6 @@ import java.util.ArrayList;
 
 import lombok.Getter;
 
-@Getter
 public class Player {
     private String id;
     private String name;
@@ -65,5 +64,9 @@ public class Player {
 
     public String getId() {
         return id;
+    }
+
+    public int getFreeNumberOfTroops() {
+        return freeNumberOfTroops;
     }
 }

@@ -8,6 +8,9 @@ import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.utils.Disposable;
 import com.badlogic.gdx.utils.viewport.ScreenViewport;
+import se2.alpha.riskapp.events.TerritoryAttackEvent;
+import se2.alpha.riskapp.events.UpdateFreeTroopsEvent;
+import se2.alpha.riskapp.logic.EventBus;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -19,6 +22,8 @@ public class TroopCardList implements Disposable {
     private int screenWidth;
     private List<Label> infoLabels;
     private Skin skin;
+    Label troopLabel;
+    private int freeTroops;
 
     public TroopCardList(int screenHeight, int screenWidth, Skin skin) {
         this.screenWidth = screenWidth;
@@ -29,11 +34,18 @@ public class TroopCardList implements Disposable {
         uiCamera = new OrthographicCamera();
         uiCamera.setToOrtho(false, screenWidth, screenHeight);
         stage = new Stage(new ScreenViewport(uiCamera));
+
+        EventBus.registerCallback(UpdateFreeTroopsEvent.class, e -> {
+            UpdateFreeTroopsEvent event = (UpdateFreeTroopsEvent) e;
+            freeTroops = event.getFreeTroops();
+            troopLabel.setText("Troops: " + freeTroops);
+        });
+
     }
 
 //    TODO implement troop and card change
     public void initializeInfoLabels() {
-        int troops = 10;
+        int troops = 0;
         int cards = 10;
 
         Label.LabelStyle style = new Label.LabelStyle();
@@ -41,7 +53,7 @@ public class TroopCardList implements Disposable {
         style.font.getData().setScale(3f);
         style.background = skin.newDrawable("white", Color.DARK_GRAY);
 
-        Label troopLabel = new Label("Troops: " + troops, style);
+        troopLabel = new Label("Troops: " + troops, style);
         troopLabel.setSize(280, 100); // Set the desired size
         troopLabel.setPosition(0, screenHeight - (100 + 250)); // Adjust position vertically
         infoLabels.add(troopLabel);

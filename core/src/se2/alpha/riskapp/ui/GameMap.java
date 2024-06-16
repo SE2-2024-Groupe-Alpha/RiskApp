@@ -121,7 +121,7 @@ public class GameMap implements Disposable {
 
     private void drawTroopNumbers() {
         Matrix4 originalProjection = new Matrix4(batch.getProjectionMatrix());
-        batch.getProjectionMatrix().setToOrtho2D(0, 0, bgWidthScaled, bgHeightScaled);
+        batch.getProjectionMatrix().setToOrtho2D(0, 0, background.getWidth(), background.getHeight());
         BitmapFont font = skin.getFont("default-font");
 
         font.getData().setScale(4.0f);

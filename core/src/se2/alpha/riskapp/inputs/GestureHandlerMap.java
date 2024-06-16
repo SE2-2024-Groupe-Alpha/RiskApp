@@ -10,10 +10,7 @@ import com.badlogic.gdx.math.Vector3;
 import se2.alpha.riskapp.RiskGame;
 import se2.alpha.riskapp.dol.Country;
 import se2.alpha.riskapp.dol.Player;
-import se2.alpha.riskapp.events.InitiateAttackEvent;
-import se2.alpha.riskapp.events.TerritoryAttackEvent;
-import se2.alpha.riskapp.events.TerritoryClickedClearEvent;
-import se2.alpha.riskapp.events.TerritoryClickedEvent;
+import se2.alpha.riskapp.events.*;
 import se2.alpha.riskapp.logic.EventBus;
 import se2.alpha.riskapp.ui.GameMap;
 import se2.alpha.riskapp.ui.PixelReader;
@@ -64,6 +61,9 @@ public class GestureHandlerMap extends GestureAdapter {
 
 
         if (selectedTerritory != null) {
+
+            EventBus.invoke(new SelectCountryEvent(selectedTerritory));
+
             if (
                     gameMap.board.getCountryByName(selectedTerritory.getName()).getOwner() != null &&
                     Objects.equals(gameMap.board.getCountryByName(selectedTerritory.getName()).getOwner().getName(), gameMap.board.playerName)
@@ -89,8 +89,8 @@ public class GestureHandlerMap extends GestureAdapter {
                 Country defendingCountry = gameMap.board.getCountryByName(selectedTerritory.getName());
 
                 TerritoryAttackEvent territoryAttackEvent = new TerritoryAttackEvent(
-                        attackingPlayer.getId(),
-                        defendingPlayer != null ? defendingPlayer.getId() : null,
+                        attackingPlayer.getName(),
+                        defendingPlayer != null ? defendingPlayer.getName() : null,
                         attackingCountry.getName(),
                         defendingCountry.getName()
                 );
