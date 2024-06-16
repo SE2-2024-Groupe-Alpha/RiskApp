@@ -21,7 +21,7 @@ public class GestureHandler extends GestureAdapter {
     private float initialScale = 1f;
     private Texture background;
     private float screenScaleFactor;
-    PixelReader pixelReader;
+    private PixelReader pixelReader;
     private GameMap gameMap;
 
     public GestureHandler(OrthographicCamera camera, Texture background, float screenScaleFactor, GameMap gameMap) {
