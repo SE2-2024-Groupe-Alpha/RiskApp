@@ -9,6 +9,7 @@ import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.utils.Disposable;
 import se2.alpha.riskapp.events.TerritoryClickedEvent;
+import se2.alpha.riskapp.events.TopBarTextEvent;
 import se2.alpha.riskapp.logic.EventBus;
 
 public class TopBar implements Disposable {
@@ -36,6 +37,11 @@ public class TopBar implements Disposable {
         EventBus.registerCallback(TerritoryClickedEvent.class, event -> {
             TerritoryClickedEvent territoryClickedEvent = (TerritoryClickedEvent) event;
             topBarText = territoryClickedEvent.getName();
+        });
+
+        EventBus.registerCallback(TopBarTextEvent.class, event -> {
+            TopBarTextEvent topBarTextEvent = (TopBarTextEvent) event;
+            topBarText = topBarTextEvent.getText();
         });
     }
 
