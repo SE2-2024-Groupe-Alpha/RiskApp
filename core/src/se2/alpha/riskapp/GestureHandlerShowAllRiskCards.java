@@ -6,8 +6,10 @@ import com.badlogic.gdx.scenes.scene2d.ui.ImageButton;
 import se2.alpha.riskapp.ui.OverlayShowAllRiskCards;
 
 public class GestureHandlerShowAllRiskCards extends GestureDetector.GestureAdapter {
-    OverlayShowAllRiskCards overlayShowRiskCards;
-    ImageButton buttonLeft, buttonRight;
+    private final OverlayShowAllRiskCards overlayShowRiskCards;
+    private final ImageButton buttonLeft;
+    private final ImageButton buttonRight;
+
     public GestureHandlerShowAllRiskCards(OverlayShowAllRiskCards overlayShowRiskCards, ImageButton buttonLeft, ImageButton buttonRight)
     {
         this.overlayShowRiskCards = overlayShowRiskCards;
