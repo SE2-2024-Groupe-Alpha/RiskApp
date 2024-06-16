@@ -12,14 +12,14 @@ import se2.alpha.riskapp.events.TerritoryClickedEvent;
 import se2.alpha.riskapp.logic.EventBus;
 
 public class TopBar implements Disposable {
-    SpriteBatch uiBatch;
-    OrthographicCamera uiCamera;
-    ShapeRenderer shapeRenderer;
-    BitmapFont font;
-    GlyphLayout layout;
-    int screenHeight;
-    int screenWidth;
-    String topBarText;
+    private SpriteBatch uiBatch;
+    private OrthographicCamera uiCamera;
+    private ShapeRenderer shapeRenderer;
+    private BitmapFont font;
+    private GlyphLayout layout;
+    private int screenHeight;
+    private int screenWidth;
+    private String topBarText;
     private static final String DEFAULT_TOP_BAR_TEXT = "Setup";
 
     public TopBar(int screenHeight, int screenWidth) {
