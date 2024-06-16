@@ -63,11 +63,6 @@ public class Game extends AndroidApplication {
 
 
     private void showToast(final String message) {
-        runOnUiThread(new Runnable() {
-            @Override
-            public void run() {
-                Toast.makeText(Game.this, message, Toast.LENGTH_LONG).show();
-            }
-        });
+        runOnUiThread(() -> Toast.makeText(Game.this, message, Toast.LENGTH_LONG).show());
     }
 }

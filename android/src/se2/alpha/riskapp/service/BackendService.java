@@ -45,6 +45,7 @@ public class BackendService {
     private static final String ENCODING = "utf-8";
     private static final String BEARER = "Bearer ";
     private static final String AUTHORIZATION = "Authorization";
+    private static final String PLAYERSTRING = "/player/";
     private final SecurePreferencesService securePreferencesService;
     private final GameService gameService;
     private final Context context;
@@ -227,7 +228,7 @@ public class BackendService {
     }
 
     public void getNewRiskCardRequest(String id, GetNewRiskCardCallback callback) {
-        makeGetRequest(API_URL + "/game" + "/" + gameService.getSessionId() + "/player/" + id + "/riskcard", result -> {
+        makeGetRequest(API_URL + "/game" + "/" + gameService.getSessionId() + PLAYERSTRING + id + "/riskcard", result -> {
             Log.e("Data", result);
             RiskCard riskCard = gson.fromJson(result, new TypeToken<RiskCard>(){}.getType());
             callback.onSuccess(riskCard);
@@ -241,7 +242,7 @@ public class BackendService {
     }
 
     public void getAllRiskCardsByPlayerRequest(String id, GetAllRiskCardsByPlayerCallback callback) {
-        makeGetRequest(API_URL + "/game" + "/" + gameService.getSessionId() + "/player/" + id + "/riskcards", result -> {
+        makeGetRequest(API_URL + "/game" + "/" + gameService.getSessionId() + PLAYERSTRING + id + "/riskcards", result -> {
             Log.e("Data", result);
             List<RiskCard> riskCard = gson.fromJson(result, new TypeToken<List<RiskCard>>(){}.getType());
             callback.onSuccess(riskCard);
@@ -255,7 +256,7 @@ public class BackendService {
     }
 
     public void getCanPlayerTradeRiskCardsRequest(String id, CanPlayerTradeRiskCardsCallback callback) {
-        makeGetRequest(API_URL + "/game" + "/" + gameService.getSessionId() + "/player/" + id + "/riskcards/tradable", result -> {
+        makeGetRequest(API_URL + "/game" + "/" + gameService.getSessionId() + PLAYERSTRING + id + "/riskcards/tradable", result -> {
             Log.e("Data", result);
             boolean canTrade = gson.fromJson(result, boolean.class);
             callback.onSuccess(canTrade);
@@ -268,7 +269,7 @@ public class BackendService {
     }
 
     public void getPlayerTradeRiskCardsRequest(String id, PlayerTradeRiskCardsCallback callback) {
-        makeGetRequest(API_URL + "/game" + "/" + gameService.getSessionId() + "/player/" + id + "/riskcards/trade", result -> {
+        makeGetRequest(API_URL + "/game" + "/" + gameService.getSessionId() + PLAYERSTRING + id + "/riskcards/trade", result -> {
             Log.e("Data", result);
             callback.onSuccess();
 

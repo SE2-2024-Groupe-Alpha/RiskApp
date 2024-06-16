@@ -1,6 +1,7 @@
 plugins {
     id("com.android.application")
     id("de.mannodermaus.android-junit5") version "1.10.0.0"
+    id("jacoco")
 }
 
 android {
@@ -42,6 +43,7 @@ android {
     buildTypes {
         release {
             minifyEnabled false
+            testCoverageEnabled true
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
             buildConfigField("String", "API_URL", project.properties["API_URL"].toString())
             buildConfigField("String", "WSS_URL", project.properties["WSS_URL"].toString())
@@ -49,6 +51,7 @@ android {
         debug {
             debuggable true
             minifyEnabled false
+            testCoverageEnabled true
             proguardFiles(getDefaultProguardFile("proguard-android-optimize.txt"), "proguard-rules.pro")
             buildConfigField("String", "API_URL", project.properties["API_URL"].toString())
             buildConfigField("String", "WSS_URL", project.properties["WSS_URL"].toString())
@@ -63,8 +66,27 @@ android {
     testOptions {
         unitTests.all {
             useJUnitPlatform()
+            finalizedBy 'jacocoTestReport'
         }
     }
+}
+
+task jacocoTestReport(type: JacocoReport, dependsOn: ['testDebugUnitTest']) {
+    group = "Reporting"
+    description = "Generate Jacoco coverage reports after running tests."
+    reports {
+        xml.required = true
+        csv.required = true
+        html.required = true
+    }
+    classDirectories.setFrom(files(classDirectories.files.collect {
+        fileTree(dir: it, exclude: ['**/R.class', '**/R$*.class', '**/*$ViewInjector*.*', '**/BuildConfig.*', '**/Manifest*.*'])
+    }))
+    sourceDirectories.setFrom(files(["src/main/java"]))
+    executionData.setFrom(fileTree(dir: project.buildDir, includes: [
+            "jacoco/testDebugUnitTest.exec",
+            "outputs/code_coverage/debugAndroidTest/connected/*coverage.ec"
+    ]))
 }
 
 // called every time gradle gets executed, takes the native dependencies of
