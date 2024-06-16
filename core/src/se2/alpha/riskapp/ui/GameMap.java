@@ -20,6 +20,7 @@ import se2.alpha.riskapp.RiskGame;
 import se2.alpha.riskapp.dol.Board;
 import se2.alpha.riskapp.dol.Continent;
 import se2.alpha.riskapp.dol.Country;
+import se2.alpha.riskapp.dol.RiskCard;
 import se2.alpha.riskapp.inputs.GestureHandlerMap;
 import se2.alpha.riskapp.utils.Territories;
 
@@ -71,11 +72,12 @@ public class GameMap implements Disposable {
         multiplexer.addProcessor(new GestureDetector(gestureHandlerMap));
         stage = new Stage(new ScreenViewport());
         multiplexer.addProcessor(stage);
+        overlayShowAllRiskCards.configureInput(multiplexer);
     }
 
     private void initializeOverlays() {
         overlayShowNewRiskCard = new OverlayShowNewRiskCard(stage, multiplexer, camera);
-        overlayShowAllRiskCards = new OverlayShowAllRiskCards(stage, multiplexer, camera);
+        overlayShowAllRiskCards = new OverlayShowAllRiskCards(stage, camera);
     }
 
     public void draw() {
@@ -91,6 +93,8 @@ public class GameMap implements Disposable {
         for (GameUnit unit : units) {
             unit.draw(batch, camera.zoom);
         }
+
+        overlayShowAllRiskCards.render(batch);
 
         batch.end();
         stage.act(Gdx.graphics.getDeltaTime());
@@ -162,6 +166,14 @@ public class GameMap implements Disposable {
     public void clearCountryTextureMasks() {
         backgroundCountryMask = null;
         neighbouringCountriesMasks = null;
+    }
+
+    public void showAllRiskCards(List<RiskCard> riskCards)
+    {
+        List<se2.alpha.riskapp.ui.RiskCard> uiRiskCards = new ArrayList<>();
+        for(RiskCard riskCard : riskCards)
+            uiRiskCards.add(new se2.alpha.riskapp.ui.RiskCard(riskCard.getType(), riskCard.getCountryName()));
+        overlayShowAllRiskCards.show(uiRiskCards);
     }
 
     @Override

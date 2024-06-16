@@ -28,7 +28,7 @@ public class OverlayShowNewRiskCard {
 
     public void render(SpriteBatch batch) {
         if (visible) {
-            riskCard.draw(batch, 1f, camera);
+            riskCard.draw(batch, 1f, camera, stage.getViewport());
 
             //stage.act(Math.min(Gdx.graphics.getDeltaTime(), 1 / 30f));
             stage.act();

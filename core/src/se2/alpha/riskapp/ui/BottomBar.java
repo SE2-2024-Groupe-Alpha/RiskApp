@@ -2,22 +2,18 @@ package se2.alpha.riskapp.ui;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.InputMultiplexer;
-import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.scenes.scene2d.Actor;
-import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.Stage;
-import com.badlogic.gdx.scenes.scene2d.Touchable;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
-import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.utils.Disposable;
 import com.badlogic.gdx.utils.viewport.ScreenViewport;
 
 import se2.alpha.riskapp.events.EndTurnEvent;
 import se2.alpha.riskapp.events.InitiateAttackEvent;
-import se2.alpha.riskapp.events.TerritoryAttackEvent;
+import se2.alpha.riskapp.events.ShowAllRiskCardsEvent;
 import se2.alpha.riskapp.events.TerritoryClickedClearEvent;
 import se2.alpha.riskapp.events.TerritoryClickedEvent;
 import se2.alpha.riskapp.logic.EventBus;
@@ -68,6 +64,7 @@ public class BottomBar implements Disposable {
             @Override
             public void changed(ChangeEvent event, Actor actor) {
                 System.out.println("Clicked CARDS");
+                EventBus.invoke(new ShowAllRiskCardsEvent());
                 event.stop();
             }
         });
@@ -107,7 +104,7 @@ public class BottomBar implements Disposable {
 
         buttonEndTurn = new TextButton("End Turn", skin);
         buttonEndTurn.setSize(400, 100);
-        buttonEndTurn.setPosition(20, 300);
+        buttonEndTurn.setPosition(20, 350);
 
         buttonEndTurn.addListener(new ChangeListener() {
             @Override

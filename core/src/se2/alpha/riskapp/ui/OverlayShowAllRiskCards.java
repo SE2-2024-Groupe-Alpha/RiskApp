@@ -12,8 +12,10 @@ import com.badlogic.gdx.scenes.scene2d.ui.ImageButton;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
+import com.badlogic.gdx.utils.viewport.ScreenViewport;
 
 import java.util.ArrayList;
+import java.util.List;
 
 import se2.alpha.riskapp.inputs.GestureHandlerShowAllRiskCards;
 
@@ -30,10 +32,9 @@ public class OverlayShowAllRiskCards {
     private final float relativeButtonWidth = 0.1f;
     private final float relativeButtonHeight = 0.1f;
 
-    public OverlayShowAllRiskCards(Stage stage, InputMultiplexer multiplexer, OrthographicCamera camera) {
+    public OverlayShowAllRiskCards(Stage stage, OrthographicCamera camera) {
         this.stage = stage;
         this.camera = camera;
-        this.multiplexer = multiplexer;
 
         createButtonLeft();
         createButtonRight();
@@ -48,17 +49,17 @@ public class OverlayShowAllRiskCards {
 
     public void render(SpriteBatch batch) {
         if (visible) {
-            riskCard.draw(batch, 1f, camera);
+            riskCard.draw(batch, 1f, camera, stage.getViewport());
 
-            //stage.act(Math.min(Gdx.graphics.getDeltaTime(), 1 / 30f));
-            stage.act();
+            stage.act(Gdx.graphics.getDeltaTime());
             stage.draw();
         }
     }
 
-    public void show(ArrayList<RiskCard> riskCards) {
+    public void show(List<RiskCard> riskCards) {
+        System.out.println("show riskcards: " + riskCards.size());
         if(!riskCards.isEmpty()) {
-            this.riskCards = riskCards;
+            this.riskCards = new ArrayList<>(riskCards);
             visible = true;
             buttonLeft.setVisible(true);
             buttonRight.setVisible(true);
@@ -73,10 +74,15 @@ public class OverlayShowAllRiskCards {
     }
 
     public void hide() {
+        System.out.println("show riskcards hide");
         visible = false;
         buttonLeft.setVisible(false);
         buttonRight.setVisible(false);
         Gdx.input.setInputProcessor(multiplexer);
+    }
+
+    public void configureInput(InputMultiplexer multiplexer) {
+        this.multiplexer = multiplexer;
     }
 
     public void dispose() {

@@ -12,6 +12,7 @@ import org.json.JSONException;
 import org.json.JSONObject;
 import se2.alpha.riskapp.BuildConfig;
 import se2.alpha.riskapp.events.EndTurnEvent;
+import se2.alpha.riskapp.events.ShowAllRiskCardsEvent;
 import se2.alpha.riskapp.events.TerritoryAttackEvent;
 import se2.alpha.riskapp.events.TerritoryClickedClearEvent;
 import se2.alpha.riskapp.events.TerritoryClickedEvent;
@@ -77,6 +78,28 @@ public class BackendService {
             );
 
             sendMessage(endTurnWebsocketMessage);
+        });
+
+        EventBus.registerCallback(ShowAllRiskCardsEvent.class, event -> {
+            System.out.println("show all riskcards clicked");
+
+            getAllRiskCardsByPlayerRequest(gameService.getPlayers().getValue().stream().filter(player -> securePreferences.getPlayerName().equals(player.getName())).findFirst()
+                    .orElse(null).getId(), new BackendService.GetAllRiskCardsByPlayerCallback() {
+                @Override
+                public void onSuccess(List<RiskCard> response) {
+                    System.out.println("show all riskcards response " + response.size());
+
+                    for(RiskCard riskCard : response)
+                        System.out.println("riskcard country: " + riskCard.getCountryName());
+
+                    gameService.getRiskGame().showRiskCards(response);
+                }
+
+                @Override
+                public void onError(String error) {
+                    System.out.println("show all riskcards error");
+                }
+            });
         });
     }
 

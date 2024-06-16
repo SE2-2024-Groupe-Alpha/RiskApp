@@ -10,6 +10,7 @@ import com.badlogic.gdx.graphics.Color;
 import se2.alpha.riskapp.dol.Board;
 import se2.alpha.riskapp.dol.Country;
 import se2.alpha.riskapp.dol.Player;
+import se2.alpha.riskapp.dol.RiskCard;
 import se2.alpha.riskapp.events.TerritoryClickedEvent;
 import se2.alpha.riskapp.logic.EventBus;
 import se2.alpha.riskapp.ui.*;
@@ -149,6 +150,11 @@ public class RiskGame extends ApplicationAdapter {
 
 	public void syncMap(List<Country> countryList){
 		board.updateCountries(countryList);
+	}
+
+	public void showRiskCards(List<RiskCard> riskCards)
+	{
+		gameMap.showAllRiskCards(riskCards);
 	}
 
 	public void setActive(boolean active) {
