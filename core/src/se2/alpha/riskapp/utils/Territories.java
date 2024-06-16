@@ -124,6 +124,8 @@ public class Territories {
 
         Mongolia.addAdjTerritory(Arrays.asList(Japan, Kamchatka, Irkutsk, Siberia, China));
 
+        Irkutsk.addAdjTerritory(Arrays.asList(Siberia, Yakutsk, Kamchatka, Mongolia));
+
         Japan.addAdjTerritory(Arrays.asList(Mongolia, Kamchatka));
 
         Afghanistan.addAdjTerritory(Arrays.asList(Ural, China, India, MiddleEast, Russia));
