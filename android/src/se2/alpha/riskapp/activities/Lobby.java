@@ -79,7 +79,7 @@ public class Lobby extends AppCompatActivity {
                 userStateList.add(userState);
             }
 
-            if(userStateList.size() >= 3 && userStateList.stream().allMatch(UserState::getIsReady))
+            if(userStateList.size() >= 1 && userStateList.stream().allMatch(UserState::getIsReady))
                 buttonCreateGame.setEnabled(true);
             else
                 buttonCreateGame.setEnabled(false);

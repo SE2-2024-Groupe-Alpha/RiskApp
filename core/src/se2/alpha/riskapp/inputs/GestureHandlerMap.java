@@ -51,12 +51,16 @@ public class GestureHandlerMap extends GestureAdapter {
         System.out.println("Clicked at " + x + ", " + y);
 
         Vector3 worldCoordinates = camera.unproject(new Vector3(x, y, 0));
+
+
         int pixelY = (int)(worldCoordinates.y / screenScaleFactor);
         int flippedY = gameMap.background.getHeight() + (pixelY) * (-gameMap.background.getHeight()) / (gameMap.background.getHeight());
         Color color = this.pixelReader.getPixelColor((int)(worldCoordinates.x / screenScaleFactor), flippedY);
 
         TerritoryNode selectedTerritory = Territories.getTerritoryByColor(color);
         System.out.println(selectedTerritory);
+
+        System.out.println("WORLD " + selectedTerritory + " = " + worldCoordinates.x + ", " + worldCoordinates.y);
 
 
         if (selectedTerritory != null) {

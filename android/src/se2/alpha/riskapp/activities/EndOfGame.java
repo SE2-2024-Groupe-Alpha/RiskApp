@@ -38,11 +38,11 @@ public class EndOfGame extends AppCompatActivity {
         Bundle bundle = getIntent().getExtras();
         setContentView(R.layout.end_of_game_activity);
 
-        buttonGoToLobby = findViewById(R.id.btn_back_to_lobby);
-        buttonGoToLobby.setOnClickListener(this::backToLobby);
-
-        textViewWinner = findViewById(R.id.textview_winner);
-        textViewWinner.setText(gameService.getWinner().getValue().getName() + " won the game");
+//        buttonGoToLobby = findViewById(R.id.btn_back_to_lobby);
+//        buttonGoToLobby.setOnClickListener(this::backToLobby);
+//
+//        textViewWinner = findViewById(R.id.textview_winner);
+//        textViewWinner.setText(gameService.getWinner().getValue().getName() + " won the game");
     }
 
     @Override

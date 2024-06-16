@@ -124,7 +124,7 @@ public class RiskGame extends ApplicationAdapter {
 		InputMultiplexer multiplexer = new InputMultiplexer();
 
 		topBar = new TopBar(screenHeight, screenWidth);
-		gameMap = new GameMap(screenHeight, screenWidth, board);
+		gameMap = new GameMap(screenHeight, screenWidth, board, skin);
 		playerList = new PlayerList(screenHeight, screenWidth, skin);
 		troopCardList = new TroopCardList(screenHeight, screenWidth, skin);
 		bottomBar = new BottomBar(screenHeight, screenWidth, skin);
