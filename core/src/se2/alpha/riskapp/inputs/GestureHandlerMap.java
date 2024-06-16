@@ -88,13 +88,21 @@ public class GestureHandlerMap extends GestureAdapter {
                 Country attackingCountry = gameMap.board.getCountryByName(attackFrom.getName());
                 Country defendingCountry = gameMap.board.getCountryByName(selectedTerritory.getName());
 
+//                HERE DICE
+                InitiateDiceEvent initiateDiceEvent = new InitiateDiceEvent();
+                EventBus.invoke(initiateDiceEvent);
+
                 TerritoryAttackEvent territoryAttackEvent = new TerritoryAttackEvent(
                         attackingPlayer.getName(),
                         defendingPlayer != null ? defendingPlayer.getName() : null,
                         attackingCountry.getName(),
                         defendingCountry.getName()
                 );
-                EventBus.invoke(territoryAttackEvent);
+
+
+                EventBus.registerCallback(FinishAttackEvent.class, event ->{
+                    EventBus.invoke(territoryAttackEvent);
+                });
             }
         } else {
             gameMap.clearCountryTextureMasks();

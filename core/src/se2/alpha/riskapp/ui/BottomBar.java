@@ -3,6 +3,7 @@ package se2.alpha.riskapp.ui;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.InputMultiplexer;
 import com.badlogic.gdx.graphics.OrthographicCamera;
+import com.badlogic.gdx.math.Vector3;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
@@ -22,7 +23,12 @@ public class BottomBar implements Disposable {
     private int screenHeight;
     private int screenWidth;
 
+//    Shake detection
+    private Vector3 lastAccelerometer = new Vector3();
+    private float shakeThreshold = 1.5f;
+
     private boolean reinforceEnabled = true;
+    private boolean isAttacking = false;
 
     public BottomBar(int screenHeight, int screenWidth, Skin skin) {
         this.screenWidth = screenWidth;
@@ -32,6 +38,9 @@ public class BottomBar implements Disposable {
         uiCamera = new OrthographicCamera();
         uiCamera.setToOrtho(false, screenWidth, screenHeight);
         stage = new Stage(new ScreenViewport(uiCamera));
+
+//        Accelerometer init
+        lastAccelerometer.set(Gdx.input.getAccelerometerX(), Gdx.input.getAccelerometerY(), Gdx.input.getAccelerometerZ());
 
         // Initialize buttons
         initializeButtons(skin);
@@ -71,9 +80,12 @@ public class BottomBar implements Disposable {
             @Override
             public void changed(ChangeEvent event, Actor actor) {
                 System.out.println("Clicked ROLL");
+                EventBus.invoke(new FinishAttackEvent());
+                buttonDiceRoll.setDisabled(true);
                 event.stop();
             }
         });
+
 
         EventBus.registerCallback(UpdateFreeTroopsEvent.class, e -> {
             UpdateFreeTroopsEvent event = (UpdateFreeTroopsEvent) e;
@@ -83,6 +95,14 @@ public class BottomBar implements Disposable {
             } else {
                 reinforceEnabled = true;
             }
+        });
+
+        buttonDiceRoll.setDisabled(true);
+
+        EventBus.registerCallback(InitiateDiceEvent.class, e -> {
+            buttonDiceRoll.setDisabled(false);
+            isAttacking = true;
+            EventBus.invoke(new TopBarTextEvent("Roll Dice/Shake Device"));
         });
 
         buttonAttack = new TextButton("Attack", skin);
@@ -136,6 +156,10 @@ public class BottomBar implements Disposable {
         stage.draw();
     }
 
+    public void update() {
+        checkForShake();
+    }
+
     @Override
     public void dispose() {
         stage.dispose();
@@ -143,7 +167,7 @@ public class BottomBar implements Disposable {
 
     public void disableButtons(boolean inactive) {
         buttonRiskCards.setDisabled(inactive);
-        buttonDiceRoll.setDisabled(inactive);
+
         buttonAttack.setDisabled(inactive);
         if(reinforceEnabled) {
             buttonReinforce.setDisabled(inactive);
@@ -155,6 +179,21 @@ public class BottomBar implements Disposable {
         buttonAttack.setDisabled(inactive);
         if(reinforceEnabled) {
             buttonReinforce.setDisabled(inactive);
+        }
+    }
+
+    private void checkForShake() {
+        float x = Gdx.input.getAccelerometerX();
+        float y = Gdx.input.getAccelerometerY();
+        float z = Gdx.input.getAccelerometerZ();
+
+        float deltaX = Math.abs(x - lastAccelerometer.x);
+        float deltaY = Math.abs(y - lastAccelerometer.y);
+        float deltaZ = Math.abs(z - lastAccelerometer.z);
+
+        if ((deltaX > shakeThreshold || deltaY > shakeThreshold || deltaZ > shakeThreshold) && isAttacking) {
+            EventBus.invoke(new FinishAttackEvent());
+            lastAccelerometer.set(x, y, z);
         }
     }
 }

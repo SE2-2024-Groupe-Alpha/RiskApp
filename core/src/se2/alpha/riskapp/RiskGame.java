@@ -97,6 +97,7 @@ public class RiskGame extends ApplicationAdapter {
 		playerList.draw();
 		troopCardList.draw();
 		bottomBar.draw();
+		bottomBar.update();
 	}
 
 	@Override
