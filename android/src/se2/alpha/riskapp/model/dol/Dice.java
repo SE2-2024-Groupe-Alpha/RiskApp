@@ -12,7 +12,7 @@ public class Dice {
         random = new Random();
     }
 
-    // In your Dice class
+
     public int getNumSides() {
         return NUM_SIDES;
     }
