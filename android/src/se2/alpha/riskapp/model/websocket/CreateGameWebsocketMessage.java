@@ -4,14 +4,14 @@ import java.util.ArrayList;
 import java.util.UUID;
 
 import lombok.AllArgsConstructor;
-import se2.alpha.riskapp.model.dol.Player;
+import se2.alpha.riskapp.dol.Player;
 import lombok.Getter;
 
 @AllArgsConstructor
 @Getter
 public class CreateGameWebsocketMessage implements IGameWebsocketMessage {
-    private static final CustomWebsocketMessageType type = CustomWebsocketMessageType.GAME;
-    private static final GameWebsocketMessageAction action = GameWebsocketMessageAction.CREATE_GAME;
+    private final CustomWebsocketMessageType type = CustomWebsocketMessageType.GAME;
+    private final GameWebsocketMessageAction action = GameWebsocketMessageAction.CREATE_GAME;
     private UUID gameSessionId;
     private ArrayList<Player> players;
 

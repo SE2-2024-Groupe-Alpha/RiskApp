@@ -1,21 +1,25 @@
-package se2.alpha.riskapp;
+package se2.alpha.riskapp.inputs;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.OrthographicCamera;
-import com.badlogic.gdx.graphics.Pixmap;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.input.GestureDetector.GestureAdapter;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.math.Vector3;
-import se2.alpha.riskapp.events.TerritoryClickedEvent;
+import se2.alpha.riskapp.RiskGame;
+import se2.alpha.riskapp.dol.Country;
+import se2.alpha.riskapp.dol.Player;
+import se2.alpha.riskapp.events.*;
 import se2.alpha.riskapp.logic.EventBus;
 import se2.alpha.riskapp.ui.GameMap;
 import se2.alpha.riskapp.ui.PixelReader;
 import se2.alpha.riskapp.utils.Territories;
 import se2.alpha.riskapp.utils.TerritoryNode;
 
-public class GestureHandler extends GestureAdapter {
+import java.util.Objects;
+
+public class GestureHandlerMap extends GestureAdapter {
     private OrthographicCamera camera;
     private Vector3 touchPoint = new Vector3();
     private float initialScale = 1f;
@@ -24,12 +28,19 @@ public class GestureHandler extends GestureAdapter {
     private PixelReader pixelReader;
     private GameMap gameMap;
 
-    public GestureHandler(OrthographicCamera camera, Texture background, float screenScaleFactor, GameMap gameMap) {
+    private TerritoryNode attackFrom;
+    private boolean attackNext = false;
+
+    public GestureHandlerMap(OrthographicCamera camera, Texture background, float screenScaleFactor, GameMap gameMap) {
         this.camera = camera;
         this.background = background;
         this.screenScaleFactor = screenScaleFactor;
         this.gameMap = gameMap;
         this.pixelReader = new PixelReader(screenScaleFactor);
+
+        EventBus.registerCallback(InitiateAttackEvent.class, event -> {
+            attackNext = true;
+        });
     }
 
     @Override
@@ -37,6 +48,8 @@ public class GestureHandler extends GestureAdapter {
         System.out.println("Clicked at " + x + ", " + y);
 
         Vector3 worldCoordinates = camera.unproject(new Vector3(x, y, 0));
+
+
         int pixelY = (int)(worldCoordinates.y / screenScaleFactor);
         int flippedY = gameMap.background.getHeight() + (pixelY) * (-gameMap.background.getHeight()) / (gameMap.background.getHeight());
         Color color = this.pixelReader.getPixelColor((int)(worldCoordinates.x / screenScaleFactor), flippedY);
@@ -44,15 +57,57 @@ public class GestureHandler extends GestureAdapter {
         TerritoryNode selectedTerritory = Territories.getTerritoryByColor(color);
         System.out.println(selectedTerritory);
 
-        if (selectedTerritory != null) {
-            TerritoryClickedEvent territoryClickedEvent = new TerritoryClickedEvent(selectedTerritory);
-            EventBus.invoke(territoryClickedEvent);
-            gameMap.onCountryClickedApplyTextureMask(pixelReader.getTextureMaskForTerritory(selectedTerritory));
+        System.out.println("WORLD " + selectedTerritory + " = " + worldCoordinates.x + ", " + worldCoordinates.y);
 
-            gameMap.onCountryClickedApplyTextureMaskToNeighbouringCountries(
-                    pixelReader.getTextureMasksForTerritories(selectedTerritory.getAdjTerritories()));
+
+        if (selectedTerritory != null) {
+
+            EventBus.invoke(new SelectCountryEvent(selectedTerritory));
+
+            if (
+                    gameMap.board.getCountryByName(selectedTerritory.getName()).getOwner() != null &&
+                    Objects.equals(gameMap.board.getCountryByName(selectedTerritory.getName()).getOwner().getName(), gameMap.board.playerName)
+            ) {
+                attackFrom = selectedTerritory;
+                TerritoryClickedEvent territoryClickedEvent = new TerritoryClickedEvent(selectedTerritory);
+                EventBus.invoke(territoryClickedEvent);
+                gameMap.onCountryClickedApplyTextureMask(selectedTerritory.getMask());
+                gameMap.onCountryClickedApplyTextureMaskToNeighbouringCountries(selectedTerritory.getNeighborMasks());
+            }
+
+            if (            (gameMap.board.getCountryByName(selectedTerritory.getName()).getOwner() == null ||
+                            !Objects.equals(gameMap.board.getCountryByName(selectedTerritory.getName()).getOwner().getName(), gameMap.board.playerName)) &&
+                            attackNext && selectedTerritory.getAdjTerritories().contains(attackFrom)
+            ) {
+                Player attackingPlayer = RiskGame.getInstance().getPlayers().stream()
+                        .filter(player -> gameMap.board.playerName.equals(player.getName()))
+                        .findFirst()
+                        .orElse(null);
+                Player defendingPlayer = gameMap.board.getCountryByName(selectedTerritory.getName()).getOwner();
+
+                Country attackingCountry = gameMap.board.getCountryByName(attackFrom.getName());
+                Country defendingCountry = gameMap.board.getCountryByName(selectedTerritory.getName());
+
+//                HERE DICE
+                InitiateDiceEvent initiateDiceEvent = new InitiateDiceEvent();
+                EventBus.invoke(initiateDiceEvent);
+
+                TerritoryAttackEvent territoryAttackEvent = new TerritoryAttackEvent(
+                        attackingPlayer.getName(),
+                        defendingPlayer != null ? defendingPlayer.getName() : null,
+                        attackingCountry.getName(),
+                        defendingCountry.getName()
+                );
+
+
+                EventBus.registerCallback(FinishAttackEvent.class, event ->{
+                    EventBus.invoke(territoryAttackEvent);
+                });
+            }
         } else {
             gameMap.clearCountryTextureMasks();
+            TerritoryClickedClearEvent territoryClickedClearEvent = new TerritoryClickedClearEvent();
+            EventBus.invoke(territoryClickedClearEvent);
         }
 
         return true;

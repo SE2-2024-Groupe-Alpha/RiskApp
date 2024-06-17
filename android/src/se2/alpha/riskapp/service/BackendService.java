@@ -11,6 +11,8 @@ import okhttp3.*;
 import org.json.JSONException;
 import org.json.JSONObject;
 import se2.alpha.riskapp.BuildConfig;
+import se2.alpha.riskapp.events.*;
+import se2.alpha.riskapp.logic.EventBus;
 import se2.alpha.riskapp.model.auth.JwtAuthenticationResponse;
 import se2.alpha.riskapp.model.auth.SignInRequest;
 import se2.alpha.riskapp.model.auth.SignUpRequest;
@@ -18,8 +20,12 @@ import se2.alpha.riskapp.model.auth.ValidationRequest;
 import se2.alpha.riskapp.model.game.CreateLobbyRequest;
 import se2.alpha.riskapp.model.game.CreateLobbyResponse;
 import se2.alpha.riskapp.model.game.GameSession;
-import se2.alpha.riskapp.model.dol.RiskCard;
+import se2.alpha.riskapp.dol.RiskCard;
+import se2.alpha.riskapp.model.websocket.AttackWebsocketMessage;
+import se2.alpha.riskapp.model.websocket.EndTurnWebsocketMessage;
 import se2.alpha.riskapp.model.websocket.ICustomWebsocketMessage;
+import se2.alpha.riskapp.model.websocket.StrengthenCountryWebsocketMessage;
+import se2.alpha.riskapp.utils.TerritoryNode;
 
 import javax.inject.Inject;
 import java.io.IOException;
@@ -37,18 +43,84 @@ public class BackendService {
     private static final String ENCODING = "utf-8";
     private static final String BEARER = "Bearer ";
     private static final String AUTHORIZATION = "Authorization";
+    private static final String PLAYERSTRING = "/player/";
     private final SecurePreferencesService securePreferencesService;
     private final GameService gameService;
     private final Context context;
     private final OkHttpClient client = new OkHttpClient();
     @Getter
     private WebSocket webSocket;
+    private TerritoryNode slectedCountry;
 
     @Inject
     public BackendService(Context context, SecurePreferencesService securePreferences, GameService gameService) {
         this.securePreferencesService = securePreferences;
         this.gameService = gameService;
         this.context = context;
+
+        EventBus.registerCallback(SelectCountryEvent.class, event -> {
+            SelectCountryEvent territoryAttackEvent = (SelectCountryEvent) event;
+
+            slectedCountry = territoryAttackEvent.getSelctedCountry();
+        });
+
+        // Attack
+        EventBus.registerCallback(TerritoryAttackEvent.class, event -> {
+            TerritoryAttackEvent territoryAttackEvent = (TerritoryAttackEvent) event;
+
+            AttackWebsocketMessage attackWebsocketMessage = new AttackWebsocketMessage(
+                    gameService.getSessionId(),
+                    territoryAttackEvent.getAttackerPlayerId(),
+                    territoryAttackEvent.getDefenderPlayerId(),
+                    territoryAttackEvent.getAttackingCountryName(),
+                    territoryAttackEvent.getDefendingCountryName()
+            );
+
+            sendMessage(attackWebsocketMessage);
+        });
+
+        // Reinforce
+        EventBus.registerCallback(TerritoryReinforceEvent.class, event -> {
+            StrengthenCountryWebsocketMessage reinfoceMessage = new StrengthenCountryWebsocketMessage(
+                    gameService.getSessionId(),
+                    gameService.getPlayerName(),
+                    slectedCountry.getName(),
+                    1
+            );
+
+            sendMessage(reinfoceMessage);
+        });
+
+
+        EventBus.registerCallback(EndTurnEvent.class, event -> {
+            EndTurnWebsocketMessage endTurnWebsocketMessage = new EndTurnWebsocketMessage(
+                    gameService.getSessionId()
+            );
+
+            sendMessage(endTurnWebsocketMessage);
+        });
+
+        EventBus.registerCallback(ShowAllRiskCardsEvent.class, event -> {
+            System.out.println("show all riskcards clicked");
+
+            getAllRiskCardsByPlayerRequest(gameService.getPlayers().getValue().stream().filter(player -> securePreferences.getPlayerName().equals(player.getName())).findFirst()
+                    .orElse(null).getId(), new BackendService.GetAllRiskCardsByPlayerCallback() {
+                @Override
+                public void onSuccess(List<RiskCard> response) {
+                    System.out.println("show all riskcards response " + response.size());
+
+                    for(RiskCard riskCard : response)
+                        System.out.println("riskcard country: " + riskCard.getCountryName());
+
+                    gameService.getRiskGame().showRiskCards(response);
+                }
+
+                @Override
+                public void onError(String error) {
+                    System.out.println("show all riskcards error");
+                }
+            });
+        });
     }
 
     public String getSessionToken() {
@@ -57,6 +129,10 @@ public class BackendService {
 
     public void saveSessionToken(String token) {
         securePreferencesService.saveSessionToken(token);
+    }
+
+    public void saveUserName(String userName) {
+        securePreferencesService.saveUserName(userName);
     }
 
     public interface ReachabilityCallback {
@@ -171,7 +247,7 @@ public class BackendService {
     }
 
     public void getNewRiskCardRequest(String id, GetNewRiskCardCallback callback) {
-        makeGetRequest(API_URL + "/game" + "/" + gameService.getSessionId() + "/player/" + id + "/riskcard", result -> {
+        makeGetRequest(API_URL + "/game" + "/" + gameService.getSessionId() + PLAYERSTRING + id + "/riskcard", result -> {
             Log.e("Data", result);
             RiskCard riskCard = gson.fromJson(result, new TypeToken<RiskCard>(){}.getType());
             callback.onSuccess(riskCard);
@@ -185,7 +261,7 @@ public class BackendService {
     }
 
     public void getAllRiskCardsByPlayerRequest(String id, GetAllRiskCardsByPlayerCallback callback) {
-        makeGetRequest(API_URL + "/game" + "/" + gameService.getSessionId() + "/player/" + id + "/riskcards", result -> {
+        makeGetRequest(API_URL + "/game" + "/" + gameService.getSessionId() + PLAYERSTRING + id + "/riskcards", result -> {
             Log.e("Data", result);
             List<RiskCard> riskCard = gson.fromJson(result, new TypeToken<List<RiskCard>>(){}.getType());
             callback.onSuccess(riskCard);
@@ -199,11 +275,10 @@ public class BackendService {
     }
 
     public void getCanPlayerTradeRiskCardsRequest(String id, CanPlayerTradeRiskCardsCallback callback) {
-        makeGetRequest(API_URL + "/game" + "/" + gameService.getSessionId() + "/player/" + id + "/riskcards/tradable", result -> {
+        makeGetRequest(API_URL + "/game" + "/" + gameService.getSessionId() + PLAYERSTRING + id + "/riskcards/tradable", result -> {
             Log.e("Data", result);
             boolean canTrade = gson.fromJson(result, boolean.class);
             callback.onSuccess(canTrade);
-
         }, callback::onError);
     }
 
@@ -213,7 +288,7 @@ public class BackendService {
     }
 
     public void getPlayerTradeRiskCardsRequest(String id, PlayerTradeRiskCardsCallback callback) {
-        makeGetRequest(API_URL + "/game" + "/" + gameService.getSessionId() + "/player/" + id + "/riskcards/trade", result -> {
+        makeGetRequest(API_URL + "/game" + "/" + gameService.getSessionId() + PLAYERSTRING + id + "/riskcards/trade", result -> {
             Log.e("Data", result);
             callback.onSuccess();
 
@@ -240,7 +315,6 @@ public class BackendService {
         }
 
         Request request = requestBuilder.build();
-
         executeRequest(request, callback, errorCallback);
     }
 

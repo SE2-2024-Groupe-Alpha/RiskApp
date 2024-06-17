@@ -8,7 +8,7 @@ import java.util.UUID;
 
 import javax.inject.Inject;
 
-import se2.alpha.riskapp.model.dol.Player;
+import se2.alpha.riskapp.dol.Player;
 import se2.alpha.riskapp.model.websocket.AttackWebsocketMessage;
 import se2.alpha.riskapp.model.websocket.CreateGameWebsocketMessage;
 import se2.alpha.riskapp.model.websocket.EndTurnWebsocketMessage;
@@ -60,7 +60,7 @@ public class GameLogicService {
 
     private ArrayList<Player> getPlayers()
     {
-        ArrayList<Player> players = new ArrayList<Player>();
+        ArrayList<Player> players = new ArrayList<>();
         int playerCount = 0;
         for(String player: gameService.getUserStates().getValue().keySet())
         {
@@ -84,7 +84,8 @@ public class GameLogicService {
                 return Color.MAGENTA;
             case 6:
                 return Color.CYAN;
+            default:
+                return Color.WHITE;
         }
-        return 0;
     }
 }

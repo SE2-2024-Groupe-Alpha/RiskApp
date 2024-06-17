@@ -8,8 +8,8 @@ import lombok.Getter;
 @AllArgsConstructor
 @Getter
 public class UserSyncWebsocketMessage implements IGameWebsocketMessage {
-    private static final CustomWebsocketMessageType type = CustomWebsocketMessageType.GAME;
-    private static final GameWebsocketMessageAction action = GameWebsocketMessageAction.USER_SYNC;
+    private final CustomWebsocketMessageType type = CustomWebsocketMessageType.GAME;
+    private final GameWebsocketMessageAction action = GameWebsocketMessageAction.USER_SYNC;
     private Map<String, Boolean> userStates;
 
     @Override

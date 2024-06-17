@@ -1,4 +1,4 @@
-package se2.alpha.riskapp.model.dol;
+package se2.alpha.riskapp.dol;
 
 import java.util.ArrayList;
 
@@ -19,6 +19,10 @@ public class Continent extends Area{
 
     public void setCountries(ArrayList<Country> countries) {
         this.countries = countries;
+    }
+
+    public ArrayList<Country> getCountries() {
+        return countries;
     }
 
     public void addCountry(Country c)

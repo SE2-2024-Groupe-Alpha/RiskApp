@@ -1,8 +1,9 @@
-package se2.alpha.riskapp.model.dol;
+package se2.alpha.riskapp.dol;
 
 public class RiskCard {
     private RiskCardType type;
     private Country country;
+    private String countryName;
 
     public RiskCard(RiskCardType type, Country country) {
         this.type = type;
@@ -26,5 +27,10 @@ public class RiskCard {
 
     public void setCountry(Country country) {
         this.country = country;
+    }
+
+    public String getCountryName()
+    {
+        return countryName;
     }
 }

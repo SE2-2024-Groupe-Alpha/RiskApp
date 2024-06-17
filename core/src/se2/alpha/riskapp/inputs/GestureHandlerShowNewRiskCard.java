@@ -1,9 +1,7 @@
-package se2.alpha.riskapp;
+package se2.alpha.riskapp.inputs;
 
 import com.badlogic.gdx.input.GestureDetector;
-import com.badlogic.gdx.scenes.scene2d.ui.ImageButton;
 
-import se2.alpha.riskapp.ui.OverlayShowAllRiskCards;
 import se2.alpha.riskapp.ui.OverlayShowNewRiskCard;
 
 public class GestureHandlerShowNewRiskCard extends GestureDetector.GestureAdapter {

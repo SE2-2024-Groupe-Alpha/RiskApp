@@ -13,8 +13,8 @@ import androidx.lifecycle.Observer;
 import se2.alpha.riskapp.R;
 import se2.alpha.riskapp.data.PlayerArrayAdapter;
 import se2.alpha.riskapp.data.RiskApplication;
-import se2.alpha.riskapp.model.dol.Player;
-import se2.alpha.riskapp.model.dol.RiskCard;
+import se2.alpha.riskapp.dol.Player;
+import se2.alpha.riskapp.dol.RiskCard;
 import se2.alpha.riskapp.model.game.UserState;
 import se2.alpha.riskapp.service.BackendService;
 import se2.alpha.riskapp.service.GameLogicService;
@@ -45,6 +45,7 @@ public class Lobby extends AppCompatActivity {
 
     @Inject
     RiskCardService riskCardService;
+
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -78,7 +79,7 @@ public class Lobby extends AppCompatActivity {
                 userStateList.add(userState);
             }
 
-            if(userStateList.size() >= 3)
+            if(userStateList.size() >= 1 && userStateList.stream().allMatch(UserState::getIsReady))
                 buttonCreateGame.setEnabled(true);
             else
                 buttonCreateGame.setEnabled(false);
@@ -97,9 +98,6 @@ public class Lobby extends AppCompatActivity {
                 }
             }
         });
-
-        if(!(bundle != null && bundle.getBoolean("host")))
-            buttonCreateGame.setVisibility(View.INVISIBLE);
     }
 
     @Override

@@ -41,13 +41,15 @@ public class Login extends AppCompatActivity {
                 buttonLogin.setEnabled(true);
                 buttonRegisterNow.setEnabled(true);
                 scheduler.shutdown();
-                Toast.makeText(Login.this, "Backend reached!", Toast.LENGTH_LONG).show();
+//                Toast.makeText(Login.this, "Backend reached!", Toast.LENGTH_LONG).show();
                 isLoggedIn();
             }
 
             @Override
             public void onError(String error) {
                 Toast.makeText(Login.this, "Server currently unreachable!", Toast.LENGTH_LONG).show();
+                backendService.saveSessionToken(null);
+                backendService.saveUserName(null);
             }
         });
     }
@@ -66,6 +68,7 @@ public class Login extends AppCompatActivity {
                             startActivity(intent);
                             finish();
                         } else {
+                            backendService.saveUserName(null);
                             backendService.saveSessionToken(null);
                             Toast.makeText(Login.this, "Please login again", Toast.LENGTH_SHORT).show();
                         }
@@ -73,11 +76,13 @@ public class Login extends AppCompatActivity {
 
                     @Override
                     public void onError(String error) {
+                        backendService.saveUserName(null);
                         backendService.saveSessionToken(null);
                         Toast.makeText(Login.this, "Token validation failed, please login again", Toast.LENGTH_LONG).show();
                     }
                 });
             } catch (JSONException e) {
+                backendService.saveUserName(null);
                 backendService.saveSessionToken(null);
                 Toast.makeText(Login.this, "Token validation request error", Toast.LENGTH_SHORT).show();
             }
@@ -138,7 +143,7 @@ public class Login extends AppCompatActivity {
                     Toast.makeText(Login.this, "Login successful", Toast.LENGTH_SHORT).show();
 
                     backendService.saveSessionToken(response.getToken());
-
+                    backendService.saveUserName(username);
                     Intent intent = new Intent(Login.this, MainMenu.class);
                     startActivity(intent);
                     finish();

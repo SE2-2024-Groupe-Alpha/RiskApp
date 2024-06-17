@@ -6,8 +6,8 @@ import lombok.Getter;
 @AllArgsConstructor
 @Getter
 public class PlayerEliminatedWebsocketMessage implements IGameWebsocketMessage {
-    private static final CustomWebsocketMessageType type = CustomWebsocketMessageType.GAME;
-    private static final GameWebsocketMessageAction action = GameWebsocketMessageAction.PLAYER_ELIMINATED;
+    private final CustomWebsocketMessageType type = CustomWebsocketMessageType.GAME;
+    private final GameWebsocketMessageAction action = GameWebsocketMessageAction.PLAYER_ELIMINATED;
     private String eliminatedPlayerId;
 
     @Override

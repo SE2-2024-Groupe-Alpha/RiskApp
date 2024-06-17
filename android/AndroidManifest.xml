@@ -20,7 +20,7 @@
         android:usesCleartextTraffic="true">
         <activity
             android:permission=""
-            android:name=".activities.Game"
+            android:name=".activities.Login"
 
             android:configChanges="keyboard|keyboardHidden|navigation|orientation|screenSize|screenLayout"
             android:exported="true">
@@ -49,6 +49,16 @@
         <activity android:permission=""
                   android:name="se2.alpha.riskapp.activities.Lobby"
                   android:exported="true">
+        </activity>
+
+        <activity android:permission=""
+                  android:name="se2.alpha.riskapp.activities.Game"
+                  android:exported="true">
+        </activity>
+
+        <activity android:permission=""
+            android:name="se2.alpha.riskapp.activities.EndOfGame"
+            android:exported="true">
         </activity>
 
     </application>
