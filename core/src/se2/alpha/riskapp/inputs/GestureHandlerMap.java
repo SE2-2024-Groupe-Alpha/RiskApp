@@ -32,7 +32,7 @@ public class GestureHandlerMap extends GestureAdapter {
     private boolean attackNext = false;
 
     private TerritoryNode moveTroopFrom;
-    private boolean moveTroopNext = false;
+    public static boolean moveTroopNext = false;
 
     public GestureHandlerMap(OrthographicCamera camera, Texture background, float screenScaleFactor, GameMap gameMap) {
         this.camera = camera;
@@ -47,6 +47,10 @@ public class GestureHandlerMap extends GestureAdapter {
 
         EventBus.registerCallback(InitiateMoveTroopEvent.class, event -> {
             moveTroopNext = true;
+        });
+
+        EventBus.registerCallback(FinishMoveTroopEvent.class, event -> {
+            moveTroopNext = false;
         });
     }
 
@@ -135,12 +139,10 @@ public class GestureHandlerMap extends GestureAdapter {
                     movingTroopPlayer.getName(),
                         moveFromCountry.getName(),
                         moveToCountry.getName(),
-                        moveFromCountry.getNumberOfTroops()/2
+                        1
                 );
 
                 EventBus.invoke(moveTroopEvent);
-
-                moveTroopNext = false;
             }
 
         } else {

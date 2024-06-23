@@ -13,6 +13,7 @@ import com.badlogic.gdx.utils.Disposable;
 import com.badlogic.gdx.utils.viewport.ScreenViewport;
 
 import se2.alpha.riskapp.events.*;
+import se2.alpha.riskapp.inputs.GestureHandlerMap;
 import se2.alpha.riskapp.logic.EventBus;
 
 public class BottomBar implements Disposable {
@@ -153,7 +154,14 @@ public class BottomBar implements Disposable {
             @Override
             public void changed(ChangeEvent event, Actor actor) {
                 System.out.println("Clicked Move Troop");
-                EventBus.invoke(new InitiateMoveTroopEvent());
+
+                if (GestureHandlerMap.moveTroopNext){
+                    EventBus.invoke(new FinishMoveTroopEvent());
+                }else {
+                    buttonMoveTroops.setText("Stop Moving");
+                    EventBus.invoke(new InitiateMoveTroopEvent());
+                }
+
                 event.stop();
             }
         });
