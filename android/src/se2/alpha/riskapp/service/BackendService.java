@@ -21,10 +21,7 @@ import se2.alpha.riskapp.model.game.CreateLobbyRequest;
 import se2.alpha.riskapp.model.game.CreateLobbyResponse;
 import se2.alpha.riskapp.model.game.GameSession;
 import se2.alpha.riskapp.dol.RiskCard;
-import se2.alpha.riskapp.model.websocket.AttackWebsocketMessage;
-import se2.alpha.riskapp.model.websocket.EndTurnWebsocketMessage;
-import se2.alpha.riskapp.model.websocket.ICustomWebsocketMessage;
-import se2.alpha.riskapp.model.websocket.StrengthenCountryWebsocketMessage;
+import se2.alpha.riskapp.model.websocket.*;
 import se2.alpha.riskapp.utils.TerritoryNode;
 
 import javax.inject.Inject;
@@ -91,6 +88,20 @@ public class BackendService {
             sendMessage(reinfoceMessage);
         });
 
+        // Move Troops
+        EventBus.registerCallback(MoveTroopEvent.class, event ->{
+            MoveTroopEvent moveTroopEvent = (MoveTroopEvent) event;
+
+            MoveTroopsWebsocketMessage moveTroopsWebsocketMessage = new MoveTroopsWebsocketMessage(
+                    gameService.getSessionId(),
+                    moveTroopEvent.getPlayerId(),
+                    moveTroopEvent.getMoveFromCountryName(),
+                    moveTroopEvent.getMoveToCountryName(),
+                    moveTroopEvent.getNumberOfTroops()
+            );
+
+            sendMessage(moveTroopsWebsocketMessage);
+        });
 
         EventBus.registerCallback(EndTurnEvent.class, event -> {
             EndTurnWebsocketMessage endTurnWebsocketMessage = new EndTurnWebsocketMessage(

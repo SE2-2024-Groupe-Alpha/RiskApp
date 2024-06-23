@@ -31,6 +31,9 @@ public class GestureHandlerMap extends GestureAdapter {
     private TerritoryNode attackFrom;
     private boolean attackNext = false;
 
+    private TerritoryNode moveTroopFrom;
+    private boolean moveTroopNext = false;
+
     public GestureHandlerMap(OrthographicCamera camera, Texture background, float screenScaleFactor, GameMap gameMap) {
         this.camera = camera;
         this.background = background;
@@ -40,6 +43,10 @@ public class GestureHandlerMap extends GestureAdapter {
 
         EventBus.registerCallback(InitiateAttackEvent.class, event -> {
             attackNext = true;
+        });
+
+        EventBus.registerCallback(InitiateMoveTroopEvent.class, event -> {
+            moveTroopNext = true;
         });
     }
 
@@ -69,6 +76,11 @@ public class GestureHandlerMap extends GestureAdapter {
                     Objects.equals(gameMap.board.getCountryByName(selectedTerritory.getName()).getOwner().getName(), gameMap.board.playerName)
             ) {
                 attackFrom = selectedTerritory;
+
+                if (!moveTroopNext) {
+                    moveTroopFrom = selectedTerritory;
+                }
+
                 TerritoryClickedEvent territoryClickedEvent = new TerritoryClickedEvent(selectedTerritory);
                 EventBus.invoke(territoryClickedEvent);
                 gameMap.onCountryClickedApplyTextureMask(selectedTerritory.getMask());
@@ -103,11 +115,39 @@ public class GestureHandlerMap extends GestureAdapter {
                 EventBus.registerCallback(FinishAttackEvent.class, event ->{
                     EventBus.invoke(territoryAttackEvent);
                 });
+
+                attackNext = false;
             }
+
+            if (gameMap.board.getCountryByName(selectedTerritory.getName()).getOwner() != null &&
+                    (Objects.equals(gameMap.board.getCountryByName(selectedTerritory.getName()).getOwner().getName(), gameMap.board.playerName)) &&
+                    moveTroopNext && selectedTerritory.getAdjTerritories().contains(moveTroopFrom)
+            ){
+                Player movingTroopPlayer = RiskGame.getInstance().getPlayers().stream()
+                        .filter(player -> gameMap.board.playerName.equals(player.getName()))
+                        .findFirst()
+                        .orElse(null);
+
+                Country moveFromCountry = gameMap.board.getCountryByName(moveTroopFrom.getName());
+                Country moveToCountry = gameMap.board.getCountryByName(selectedTerritory.getName());
+
+                MoveTroopEvent moveTroopEvent = new MoveTroopEvent(
+                    movingTroopPlayer.getName(),
+                        moveFromCountry.getName(),
+                        moveToCountry.getName(),
+                        moveFromCountry.getNumberOfTroops()/2
+                );
+
+                EventBus.invoke(moveTroopEvent);
+
+                moveTroopNext = false;
+            }
+
         } else {
             gameMap.clearCountryTextureMasks();
             TerritoryClickedClearEvent territoryClickedClearEvent = new TerritoryClickedClearEvent();
             EventBus.invoke(territoryClickedClearEvent);
+            moveTroopNext = false;
         }
 
         return true;

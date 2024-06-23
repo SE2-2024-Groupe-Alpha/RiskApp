@@ -109,6 +109,8 @@ public class RiskWebsocket extends WebSocketListener {
     public void handleCountryChanged(String text) {
         CountryChangedWebsocketMessage countryChangedWebsocketMessage = gson.fromJson(text, CountryChangedWebsocketMessage.class);
         System.out.println("country changed - " + countryChangedWebsocketMessage.getCountryName() + " " + countryChangedWebsocketMessage.getOwnerId() + " " + countryChangedWebsocketMessage.getNumberOfTroops());
+
+
     }
 
     public void handlePlayerEliminated(String text) {

@@ -149,10 +149,11 @@ public class BottomBar implements Disposable {
         buttonMoveTroops.setPosition(screenWidth - buttonDiceRoll.getWidth() - 20, 350);
 
         buttonMoveTroops.addListener(new ChangeListener() {
+//            TODO insert correct behaviour here currently same behaviour as reinforce
             @Override
             public void changed(ChangeEvent event, Actor actor) {
-                System.out.println("Clicked REINFORCE");
-                EventBus.invoke(new TerritoryReinforceEvent());
+                System.out.println("Clicked Move Troop");
+                EventBus.invoke(new InitiateMoveTroopEvent());
                 event.stop();
             }
         });
