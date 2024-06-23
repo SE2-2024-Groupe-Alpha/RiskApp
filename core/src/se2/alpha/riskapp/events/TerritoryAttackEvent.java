@@ -1,6 +1,5 @@
 package se2.alpha.riskapp.events;
 
-import se2.alpha.riskapp.utils.TerritoryNode;
 
 public class TerritoryAttackEvent {
     private final String attackerPlayerId;

@@ -19,7 +19,7 @@ public class BottomBar implements Disposable {
     private Stage stage;
     private OrthographicCamera uiCamera;
     private TextButton buttonRiskCards, buttonDiceRoll;
-    private TextButton buttonAttack, buttonReinforce, buttonEndTurn;
+    private TextButton buttonAttack, buttonReinforce, buttonEndTurn, buttonMoveTroops;
     private int screenHeight;
     private int screenWidth;
 
@@ -144,11 +144,25 @@ public class BottomBar implements Disposable {
             }
         });
 
+        buttonMoveTroops = new TextButton("Move Troop", skin);
+        buttonMoveTroops.setSize(400, 100);
+        buttonMoveTroops.setPosition(screenWidth - buttonDiceRoll.getWidth() - 20, 350);
+
+        buttonMoveTroops.addListener(new ChangeListener() {
+            @Override
+            public void changed(ChangeEvent event, Actor actor) {
+                System.out.println("Clicked REINFORCE");
+                EventBus.invoke(new TerritoryReinforceEvent());
+                event.stop();
+            }
+        });
+
         stage.addActor(buttonRiskCards);
         stage.addActor(buttonDiceRoll);
         stage.addActor(buttonAttack);
         stage.addActor(buttonReinforce);
         stage.addActor(buttonEndTurn);
+        stage.addActor(buttonMoveTroops);
     }
 
     public void draw() {
@@ -168,6 +182,7 @@ public class BottomBar implements Disposable {
     public void disableButtons(boolean inactive) {
         buttonRiskCards.setDisabled(inactive);
 
+        buttonMoveTroops.setDisabled(inactive);
         buttonAttack.setDisabled(inactive);
         if(reinforceEnabled) {
             buttonReinforce.setDisabled(inactive);
@@ -177,6 +192,8 @@ public class BottomBar implements Disposable {
 
     public void disableButtonsTerritoryClicked(boolean inactive) {
         buttonAttack.setDisabled(inactive);
+        buttonMoveTroops.setDisabled(inactive);
+
         if(reinforceEnabled) {
             buttonReinforce.setDisabled(inactive);
         }
