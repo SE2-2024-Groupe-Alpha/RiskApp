@@ -66,6 +66,8 @@ public class Register extends AppCompatActivity {
                         Toast.makeText(Register.this, "Registration successful", Toast.LENGTH_SHORT).show();
 
                         backendService.saveSessionToken(response.getToken());
+                        backendService.saveUserName(username);
+
 
                         Intent intent = new Intent(Register.this, MainMenu.class);
                         startActivity(intent);

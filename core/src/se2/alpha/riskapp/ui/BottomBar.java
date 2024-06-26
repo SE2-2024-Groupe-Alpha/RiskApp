@@ -31,6 +31,8 @@ public class BottomBar implements Disposable {
     private boolean reinforceEnabled = true;
     private boolean isAttacking = false;
 
+    private boolean isPlayerActive = false;
+
     public BottomBar(int screenHeight, int screenWidth, Skin skin) {
         this.screenWidth = screenWidth;
         this.screenHeight = screenHeight;
@@ -156,6 +158,7 @@ public class BottomBar implements Disposable {
                 System.out.println("Clicked Move Troop");
 
                 if (GestureHandlerMap.moveTroopNext){
+                    buttonMoveTroops.setText("Move Troop");
                     EventBus.invoke(new FinishMoveTroopEvent());
                 }else {
                     buttonMoveTroops.setText("Stop Moving");
@@ -189,22 +192,24 @@ public class BottomBar implements Disposable {
     }
 
     public void disableButtons(boolean inactive) {
-        buttonRiskCards.setDisabled(inactive);
+            buttonRiskCards.setDisabled(inactive);
 
-        buttonMoveTroops.setDisabled(inactive);
-        buttonAttack.setDisabled(inactive);
-        if(reinforceEnabled) {
-            buttonReinforce.setDisabled(inactive);
-        }
-        buttonEndTurn.setDisabled(inactive);
+            buttonMoveTroops.setDisabled(inactive);
+            buttonAttack.setDisabled(inactive);
+            if (reinforceEnabled) {
+                buttonReinforce.setDisabled(inactive);
+            }
+            buttonEndTurn.setDisabled(inactive);
     }
 
     public void disableButtonsTerritoryClicked(boolean inactive) {
-        buttonAttack.setDisabled(inactive);
-        buttonMoveTroops.setDisabled(inactive);
+        if (isPlayerActive) {
+            buttonAttack.setDisabled(inactive);
+            buttonMoveTroops.setDisabled(inactive);
 
-        if(reinforceEnabled) {
-            buttonReinforce.setDisabled(inactive);
+            if(reinforceEnabled) {
+                buttonReinforce.setDisabled(inactive);
+            }
         }
     }
 
@@ -221,5 +226,13 @@ public class BottomBar implements Disposable {
             EventBus.invoke(new FinishAttackEvent());
             lastAccelerometer.set(x, y, z);
         }
+    }
+
+    public boolean isPlayerActive() {
+        return isPlayerActive;
+    }
+
+    public void setPlayerActive(boolean playerActive) {
+        isPlayerActive = playerActive;
     }
 }

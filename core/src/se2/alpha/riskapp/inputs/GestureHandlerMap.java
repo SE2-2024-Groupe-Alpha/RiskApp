@@ -86,6 +86,7 @@ public class GestureHandlerMap extends GestureAdapter {
                 }
 
                 TerritoryClickedEvent territoryClickedEvent = new TerritoryClickedEvent(selectedTerritory);
+
                 EventBus.invoke(territoryClickedEvent);
                 gameMap.onCountryClickedApplyTextureMask(selectedTerritory.getMask());
                 gameMap.onCountryClickedApplyTextureMaskToNeighbouringCountries(selectedTerritory.getNeighborMasks());
@@ -115,10 +116,12 @@ public class GestureHandlerMap extends GestureAdapter {
                         defendingCountry.getName()
                 );
 
+                if(attackingCountry.getNumberOfTroops() > 1) {
+                    EventBus.registerCallback(FinishAttackEvent.class, event ->{
+                        EventBus.invoke(territoryAttackEvent);
+                    });
+                }
 
-                EventBus.registerCallback(FinishAttackEvent.class, event ->{
-                    EventBus.invoke(territoryAttackEvent);
-                });
 
                 attackNext = false;
             }

@@ -146,6 +146,7 @@ public class RiskGame extends ApplicationAdapter {
 		Gdx.app.log("RiskGame", "Game components initialized.");
 
 		Gdx.input.setInputProcessor(multiplexer);
+		bottomBar.setPlayerActive(isActive);
 		bottomBar.disableButtons(!isActive);
 	}
 
@@ -160,8 +161,10 @@ public class RiskGame extends ApplicationAdapter {
 
 	public void setActive(boolean active) {
 		isActive = active;
-		if(bottomBar != null)
+		if(bottomBar != null) {
+			bottomBar.setPlayerActive(active);
 			bottomBar.disableButtons(!isActive);
+		}
 	}
 
 	public void setPlayerName(String playerName) {

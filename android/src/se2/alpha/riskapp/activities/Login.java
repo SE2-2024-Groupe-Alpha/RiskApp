@@ -144,6 +144,7 @@ public class Login extends AppCompatActivity {
 
                     backendService.saveSessionToken(response.getToken());
                     backendService.saveUserName(username);
+
                     Intent intent = new Intent(Login.this, MainMenu.class);
                     startActivity(intent);
                     finish();
