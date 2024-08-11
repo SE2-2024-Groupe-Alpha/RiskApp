@@ -5,6 +5,7 @@ import android.content.Context;
 import androidx.lifecycle.MutableLiveData;
 import lombok.Getter;
 import lombok.Setter;
+import lombok.var;
 import se2.alpha.riskapp.RiskGame;
 import se2.alpha.riskapp.dol.Player;
 import se2.alpha.riskapp.events.UpdateFreeTroopsEvent;
@@ -60,6 +61,23 @@ public class GameService {
             }
     }
 
+    public void forfeitGame(String playerName){
+        System.out.println("gameservice.forfeitGame()");
+       Optional<Player> player1 = Objects.requireNonNull(players.getValue()).stream().filter(m->m.getName().equals(playerName)).findFirst();
+        player1.ifPresent(player -> players.getValue().remove(player));
+        System.out.println("Removed player");
+
+       if(!players.getValue().isEmpty()) {
+           updateWinner(players.getValue().get(0).getId());
+           System.out.println("Player updated!");
+       }else {
+           stopGame();
+           System.out.println("Game stopped!");
+
+       }
+
+    }
+
     public void setActivePlayer(Player newActivePlayer){
         activePlayer.postValue(newActivePlayer);
         checkIfActivePlayer(newActivePlayer.getName());
@@ -74,6 +92,14 @@ public class GameService {
         riskGame.setPlayers(players.getValue());
         riskGame.setPlayerName(playerName);
         return riskGame;
+    }
+
+    public void stopGame(){
+        riskGame = RiskGame.getInstance();
+        riskGame.setPlayers(null);
+        riskGame.setPlayerName(null);
+        riskGame.setActive(false);
+
     }
 
     public void setPlayerName(String playerName) {

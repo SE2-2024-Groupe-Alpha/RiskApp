@@ -111,6 +111,15 @@ public class BackendService {
             sendMessage(endTurnWebsocketMessage);
         });
 
+
+        EventBus.registerCallback(ForfeitGameEvent.class, event -> {
+            ForfeitGameWebSocketMessage forfeitWebSocketMessage= new ForfeitGameWebSocketMessage(
+                    gameService.getSessionId(),gameService.getPlayerId()
+            );
+
+            sendMessage(forfeitWebSocketMessage);
+        });
+
         EventBus.registerCallback(ShowAllRiskCardsEvent.class, event -> {
             System.out.println("show all riskcards clicked");
 

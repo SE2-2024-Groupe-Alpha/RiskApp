@@ -58,7 +58,9 @@ public class RiskWebsocket extends WebSocketListener {
                 handlePlayerEliminated(text);
             } else if (action == GameWebsocketMessageAction.PLAYER_WON) {
                 handlePlayerWon(text);
-            }
+            }else if (action == GameWebsocketMessageAction.FORFEIT_GAME) {
+                System.out.println("Text: " + text);
+                handleForfeitGame(text);}
         });
 
         Log.d("THE SOCKET IS TALKING", text);
@@ -121,5 +123,13 @@ public class RiskWebsocket extends WebSocketListener {
         PlayerWonWebsocketMessage playerWonWebsocketMessage = gson.fromJson(text, PlayerWonWebsocketMessage.class);
         System.out.println("risklog player won " + playerWonWebsocketMessage.getWinningPlayerId());
         gameService.updateWinner(playerWonWebsocketMessage.getWinningPlayerId());
+    }
+    public void handleForfeitGame(String text) {
+        System.out.println("RiskWebSocket.handleForfeitGame()");
+        System.out.println("Tekst: " + text);
+        ForfeitGameWebSocketMessage forfeitGameWebSocketMessage = gson.fromJson(text, ForfeitGameWebSocketMessage.class);
+        System.out.println("risklog player forfeit " +forfeitGameWebSocketMessage.getPlayerId());
+     //   gameService.forfeitGame(forfeitGameWebSocketMessage.getPlayerId());
+
     }
 }

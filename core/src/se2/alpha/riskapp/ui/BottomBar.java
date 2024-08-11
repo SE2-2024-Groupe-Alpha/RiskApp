@@ -12,6 +12,7 @@ import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
 import com.badlogic.gdx.utils.Disposable;
 import com.badlogic.gdx.utils.viewport.ScreenViewport;
 
+import se2.alpha.riskapp.RiskGame;
 import se2.alpha.riskapp.events.*;
 import se2.alpha.riskapp.inputs.GestureHandlerMap;
 import se2.alpha.riskapp.logic.EventBus;
@@ -19,7 +20,7 @@ import se2.alpha.riskapp.logic.EventBus;
 public class BottomBar implements Disposable {
     private Stage stage;
     private OrthographicCamera uiCamera;
-    private TextButton buttonRiskCards, buttonDiceRoll;
+    private TextButton buttonRiskCards, buttonDiceRoll,buttonForfeit;
     private TextButton buttonAttack, buttonReinforce, buttonEndTurn, buttonMoveTroops;
     private int screenHeight;
     private int screenWidth;
@@ -62,6 +63,7 @@ public class BottomBar implements Disposable {
     }
 
     private void initializeButtons(Skin skin) {
+
         buttonRiskCards = new TextButton("Show Cards", skin);
         buttonRiskCards.setSize(400, 100);
         buttonRiskCards.setPosition(20, 70);
@@ -78,6 +80,8 @@ public class BottomBar implements Disposable {
                 event.stop();
             }
         });
+
+
 
         buttonDiceRoll.addListener(new ChangeListener() {
             @Override
@@ -134,6 +138,7 @@ public class BottomBar implements Disposable {
             }
         });
 
+
         buttonEndTurn = new TextButton("End Turn", skin);
         buttonEndTurn.setSize(400, 100);
         buttonEndTurn.setPosition(20, 350);
@@ -146,6 +151,17 @@ public class BottomBar implements Disposable {
                 event.stop();
             }
         });
+
+
+
+
+
+
+
+
+
+
+
 
         buttonMoveTroops = new TextButton("Move Troop", skin);
         buttonMoveTroops.setSize(400, 100);
@@ -169,12 +185,35 @@ public class BottomBar implements Disposable {
             }
         });
 
+        buttonForfeit = new TextButton("Forfeit Game", skin);
+        buttonForfeit.setSize(400, 100);
+        buttonForfeit.setPosition(20, 500);
+
+        buttonForfeit.addListener(new ChangeListener() {
+            //            TODO insert correct behaviour here currently same behaviour as reinforce
+            @Override
+            public void changed(ChangeEvent event, Actor actor) {
+                System.out.println("Clicked Forfeit Game");
+              //  GameService.stopGame();
+                EventBus.invoke(new ForfeitGameEvent());
+                System.out.println("End of event2!");
+                event.stop();
+
+
+
+            }
+
+        });
+
+
+
         stage.addActor(buttonRiskCards);
         stage.addActor(buttonDiceRoll);
         stage.addActor(buttonAttack);
         stage.addActor(buttonReinforce);
         stage.addActor(buttonEndTurn);
         stage.addActor(buttonMoveTroops);
+        stage.addActor(buttonForfeit);
     }
 
     public void draw() {

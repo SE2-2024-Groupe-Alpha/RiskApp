@@ -144,6 +144,7 @@ public class GameMap implements Disposable {
     }
 
     public void drawPlayerColors(){
+
         for (Continent continent: board.getContinents()){
             for (Country country: continent.getCountries()){
                 if (country.getOwner()!= null){
@@ -151,6 +152,10 @@ public class GameMap implements Disposable {
                         Texture territoryMask = Territories.getTerritoryByName(country.getName()).getMask();
                         country.setMask(territoryMask);
                     }
+                    //if(RiskGame.getInstance() == null || !RiskGame.getInstance().isActive()){
+                      //  System.out.println("drawPlayerColors() is null!");
+                        //return;
+                    //}
 
                     Color color = RiskGame.getInstance().getPlayerColor(country.getOwner().getId());
 

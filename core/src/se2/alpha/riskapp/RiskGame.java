@@ -39,6 +39,10 @@ public class RiskGame extends ApplicationAdapter {
 
 
 	public Color getPlayerColor(String id) {
+		if(players==null || players.isEmpty()) {
+			System.out.println("Players is null!");
+			return null;
+		}
 		for (Player player : players) {
 			if (player.getId().equals(id)) {
 				switch(player.getColor())
@@ -120,6 +124,10 @@ public class RiskGame extends ApplicationAdapter {
 	}
 
 	private void initializeGameComponents() {
+		if(players == null || players.isEmpty()) {
+			System.out.println("initializeGameComponents: players is null!" );
+			return;
+		}
 		Skin skin = new Skin(Gdx.files.internal("defaultUIskin/uiskin.json"));
 
 		InputMultiplexer multiplexer = new InputMultiplexer();
